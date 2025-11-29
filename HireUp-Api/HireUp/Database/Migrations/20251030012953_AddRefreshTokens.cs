@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace HireUp.Persistence.Migrations
+namespace HireUp.Database.Migrations
 {
     /// <inheritdoc />
     public partial class AddRefreshTokens : Migration

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace HireUp.Persistence.EntitiesConfiguration;
+namespace HireUp.Database.EntitiesConfiguration;
 
 public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 {
@@ -14,7 +14,15 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
             .WithOwner()
             .HasForeignKey("UserId");
 
-        builder.Property(x => x.FirstName).HasMaxLength(100);
-        builder.Property(x => x.LastName).HasMaxLength(100);
+        builder.Property(x => x.FirstName)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.Property(x => x.LastName)
+            .IsRequired()
+            .HasMaxLength(150);
+
+        builder.Property(x => x.CreatedAt)
+            .HasDefaultValueSql("GETUTCDATE()");
     }
 }

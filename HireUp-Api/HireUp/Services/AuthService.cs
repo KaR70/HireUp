@@ -1,8 +1,6 @@
 ﻿using HireUp.Authentication;
 using HireUp.DTOs.Authentication;
-using HireUp.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging.Abstractions;
 using System.Security.Cryptography;
 
 namespace HireUp.Services;

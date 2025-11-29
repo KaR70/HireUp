@@ -1,6 +1,5 @@
 ﻿using HireUp.Authentication;
-using HireUp.Entities;
-using HireUp.Persistence;
+using HireUp.Database;
 using HireUp.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -19,15 +18,29 @@ public static class DependencyInjection
         services.AddSwaggerGen();
         #endregion
 
-        services.AddAuthConfig(configuration);
-
         #region Add Database
         var connectionString = configuration.GetConnectionString("DefaultConnection") ??
              throw new InvalidOperationException("Connection string 'DefaultConnection' not found");
 
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
-        #endregion 
+        #endregion
 
+        #region Database Retry Logic
+        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString,
+        // --- THIS IS THE FIX ---
+        // This tells EF Core to be resilient and retry connecting to the database
+        // if it encounters a transient (temporary) error, like the DB container
+        // not being ready yet.
+        sqlServerOptionsAction: sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5, // It will try up to 5 times
+                maxRetryDelay: TimeSpan.FromSeconds(30), // With up to a 30-second delay between tries
+                errorNumbersToAdd: null);
+        })); 
+        #endregion
+
+        services.AddAuthConfig(configuration);
         services.AddScoped<IAuthService, AuthService>();
 
         return services;

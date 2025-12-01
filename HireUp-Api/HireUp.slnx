@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="docker-compose.dcproj">
-    <Build />
-  </Project>
-  <Project Path="HireUp/HireUp.csproj" />
-</Solution>

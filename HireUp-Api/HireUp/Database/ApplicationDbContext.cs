@@ -12,6 +12,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<JobListing> JobListings { get; set; }
     public DbSet<MockInterview> MockInterviews { get; set; }
     public DbSet<JobApplication> Applications { get; set; }
+    public DbSet<DisabilityType> DisabilityTypes { get; set; }
+    public DbSet<UserDisabilityType> UserDisabilityTypes { get; set; }
+    
+    public DbSet<AccessibilityNeed> AccessibilityNeed { get; set; }
+    public DbSet<UserAccessibilityNeed> UserAccessibilityNeed { get; set; }
+
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {

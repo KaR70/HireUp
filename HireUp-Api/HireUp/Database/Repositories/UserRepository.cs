@@ -18,7 +18,9 @@ namespace HireUp.Database.Repositories
         public async Task<IEnumerable<ApplicationUser>> GetUsersWithDisabilitiesAsync()
             => await _context.Users
                 .AsNoTracking()
-                .Where(u => !string.IsNullOrEmpty(u.DisabilityType) && u.IsActive)
+                .Where(u => u.UserDisabilityTypes.Any() && u.IsActive)
+                .Include(u => u.UserDisabilityTypes)
+                    .ThenInclude(udt => udt.DisabilityType)
                 .Include(u => u.Skills)
                 .ToListAsync();
 

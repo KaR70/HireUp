@@ -10,6 +10,10 @@ services:
     ports:
       # Map port 8088 on your computer to port 8080 inside the container
       - "8089:8080"
+    volumes:
+      # Maps a folder named 'uploads' in your project root
+      # to the '/app/wwwroot/images' folder inside the container.
+      - ./uploads:/app/wwwroot/images
     environment:
       # This connection string points to the 'db' service below
       - ConnectionStrings__DefaultConnection=Server=db;Database=HireUp-DB;User Id=sa;Password=Your_Super_Secret_Password123;TrustServerCertificate=True

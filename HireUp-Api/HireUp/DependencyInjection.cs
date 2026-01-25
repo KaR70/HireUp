@@ -1,10 +1,14 @@
 ﻿using HireUp.Authentication;
 using HireUp.Database;
 using HireUp.Services;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
+using FluentValidation.AspNetCore;
+using HireUp.Mapping;
+using HireUp.Settings;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace HireUp;
 
@@ -20,9 +24,9 @@ public static class DependencyInjection
 
         #region Add Database
         var connectionString = configuration.GetConnectionString("DefaultConnection") ??
-             throw new InvalidOperationException("Connection string 'DefaultConnection' not found");
+            throw new InvalidOperationException("Connection string 'DefaultConnection' not found");
 
-        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+        // services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
         #endregion
 
         #region Database Retry Logic
@@ -40,16 +44,30 @@ public static class DependencyInjection
         })); 
         #endregion
 
-        services.AddAuthConfig(configuration);
-        services.AddScoped<IAuthService, AuthService>();
+        
+        services
+            .AddMapsterConf()
+            .AddAuthConfig(configuration)
+            .AddFluentValidationConfig();
 
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IFileService, FileService>();
+        services.AddScoped<IEmailSender, EmailService>();
+        services.AddScoped<UrlBuilderService>();
+
+        services.Configure<ApplicationSettings>(configuration.GetSection(ApplicationSettings.SectionName));
+        services.Configure<MailSettings>(configuration.GetSection(nameof(MailSettings)));
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
         return services;
     }
 
     private static IServiceCollection AddAuthConfig(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
         services.AddSingleton<IJwtProvider, JwtProvider>();
 
@@ -80,6 +98,32 @@ public static class DependencyInjection
                     ValidAudience = jwtSettings?.Audience,
                 };
             });
+        
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.Password.RequiredLength = 8;
+            options.SignIn.RequireConfirmedEmail = true;
+            options.User.RequireUniqueEmail = true;
+        });
+
+        return services;
+    }
+
+    private static IServiceCollection AddMapsterConf(this IServiceCollection services)
+    {
+        var mappingConfig = TypeAdapterConfig.GlobalSettings;
+        mappingConfig.Scan(Assembly.GetExecutingAssembly());
+
+        services.AddSingleton<IMapper>(new Mapper(mappingConfig));
+
+        return services;
+    }
+    
+    private static IServiceCollection AddFluentValidationConfig(this IServiceCollection services)
+    {
+        services
+            .AddFluentValidationAutoValidation()
+            .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         return services;
     }

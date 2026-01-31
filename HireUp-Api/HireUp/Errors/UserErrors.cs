@@ -28,4 +28,10 @@ public static class UserErrors
     
     public static readonly Error DuplicatedConfirmation = 
         new("User.DuplicatedConfirmation", "Email already confirmed", StatusCodes.Status400BadRequest);
+    
+    public static readonly Error InvalidResetCode = 
+        new("User.InvalidResetCode", "The code is invalid or has expired. Please try again or request a new one.", StatusCodes.Status400BadRequest);
+    
+    public static readonly Error ResetPasswordFailed = 
+            new("User.ResetPasswordFailed", "Unable to reset password. Please try again.", StatusCodes.Status400BadRequest);
 }

@@ -1,8 +1,4 @@
-﻿using HireUp.Abstraction;
-using HireUp.Authentication;
-using HireUp.DTOs.Authentication;
-using HireUp.Errors;
-using Microsoft.AspNetCore.Identity;
+﻿using HireUp.Authentication;
 using System.Security.Cryptography;
 using System.Text;
 using HireUp.Helpers;
@@ -134,6 +130,10 @@ public class AuthService : IAuthService
 
         var user = request.Adapt<ApplicationUser>();
 
+        
+        // disabling the RequireConfirmedAccount at the sign in until figuring out an email service for the confirmation email 
+        user.EmailConfirmed = true;
+        
         var result = await _userManager.CreateAsync(user, request.Password);
 
         if (result.Succeeded)
@@ -204,6 +204,50 @@ public class AuthService : IAuthService
         return Result.Success();
     }
 
+    public async Task<Result> SendResetPasswordCodeAsync(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        
+        if (user is null)
+            return Result.Success();
+
+        var code = new Random().Next(10000, 100000).ToString();
+
+        user.PasswordResetCode = code;
+        user.PasswordResetCodeExpiry = DateTime.UtcNow.AddMinutes(10);
+            
+        await _userManager.UpdateAsync(user);
+        
+        _logger.LogInformation($"Reset Code: {code}");
+        
+        await SendResetPasswordEmail(user, code);
+        
+        return Result.Success();
+    }
+
+    public async Task<Result> ResetPasswordAsync(ResetPasswordRequest request)
+    {
+        var user = await  _userManager.FindByEmailAsync(request.Email);
+        
+        if (user is null)
+            return Result.Failure(UserErrors.ResetPasswordFailed);
+
+        if (user.PasswordResetCode != request.Code || user.PasswordResetCodeExpiry <= DateTime.UtcNow)
+            return Result.Failure(UserErrors.InvalidResetCode);
+        
+        user.PasswordResetCode = null;
+        user.PasswordResetCodeExpiry = null;
+        
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await _userManager.ResetPasswordAsync(user, token, request.NewPassword);
+        
+        if (result.Succeeded)
+            return Result.Success();
+        
+        var error = result.Errors.First();
+        return Result.Failure(new Error(error.Code, error.Description, StatusCodes.Status400BadRequest));
+    }
+    
     private static string GenerateRefreshToken()
     {
         return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
@@ -221,6 +265,21 @@ public class AuthService : IAuthService
             }
         );
 
-        await _emailSender.SendEmailAsync(user.Email!, "☑ Survey Basket: Email Confirmation", emailBody);
+        await _emailSender.SendEmailAsync(user.Email!, "☑ HireUp: Email Confirmation", emailBody);
+    }
+    
+    private async Task SendResetPasswordEmail(ApplicationUser user, string code)
+    {
+        //var origin = _httpContextAccessor.HttpContext?.Request.Headers.Origin;
+            
+        var emailBody = EmailBodyBuilder.GenerateEmailBody("ForgetPassword",
+            new Dictionary<string, string>
+            {
+                { "{{name}}", user.FirstName },
+                { "{{code}}", code }
+            }
+        );
+
+        await _emailSender.SendEmailAsync(user.Email!, "☑ HireUp: Change Password", emailBody);
     }
 }

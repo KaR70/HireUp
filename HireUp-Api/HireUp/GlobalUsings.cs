@@ -5,6 +5,7 @@ global using HireUp.DTOs.AccessibilityNeed;
 global using HireUp.DTOs.Authentication;
 global using HireUp.DTOs.DisabilityType;
 global using HireUp.DTOs.User;
+global using HireUp.Abstraction.Consts;
 
 global using Mapster;
 global using Microsoft.AspNetCore.Identity;

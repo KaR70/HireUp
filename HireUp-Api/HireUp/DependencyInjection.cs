@@ -9,6 +9,7 @@ using FluentValidation.AspNetCore;
 using HireUp.Mapping;
 using HireUp.Settings;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.OpenApi.Models;
 
 namespace HireUp;
 
@@ -19,7 +20,54 @@ public static class DependencyInjection
         #region System Services
         services.AddControllers();
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(options =>
+        {
+            // Add XML comments documentation
+            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
+            if (File.Exists(xmlPath))
+            {
+                options.IncludeXmlComments(xmlPath);
+            }
+
+            // Add JWT Bearer authentication to Swagger
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\""
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] { }
+                }
+            });
+
+            // API Info
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "HireUp API",
+                Version = "v1",
+                Description = "Authentication and User Management API for HireUp",
+                Contact = new OpenApiContact
+                {
+                    Name = "HireUp Support",
+                    Url = new Uri("https://github.com/KaR70/HireUp")
+                }
+            });
+        });
         #endregion
 
         #region Add Database

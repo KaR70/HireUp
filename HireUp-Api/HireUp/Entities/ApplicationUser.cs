@@ -10,6 +10,8 @@ public class ApplicationUser : IdentityUser
     public string? ProfilePicture { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
+    public string? PasswordResetCode { get; set; }
+    public DateTime? PasswordResetCodeExpiry { get; set; }
 
 
     public ICollection<Skill> Skills { get; set; } = new List<Skill>();

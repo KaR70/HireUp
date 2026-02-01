@@ -6,13 +6,12 @@ public class ApplicationUser : IdentityUser
 {
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
-    public string? DisabilityType { get; set; }
-    public string? AccessibilityNeeds { get; set; }
     public string? Bio { get; set; }
     public string? ProfilePicture { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
-
+    public string? PasswordResetCode { get; set; }
+    public DateTime? PasswordResetCodeExpiry { get; set; }
 
 
     public ICollection<Skill> Skills { get; set; } = new List<Skill>();
@@ -20,5 +19,7 @@ public class ApplicationUser : IdentityUser
     public ICollection<MockInterview> InterviewsAsSeeker { get; set; } = new List<MockInterview>();
     public ICollection<MockInterview> InterviewsAsInterviewer { get; set; } = new List<MockInterview>();
     public ICollection<JobApplication> Applications { get; set; } = new List<JobApplication>();
+    public virtual ICollection<UserDisabilityType> UserDisabilityTypes { get; set; } = new List<UserDisabilityType>();
+    public virtual ICollection<UserAccessibilityNeed> UserAccessibilityNeeds { get; set; } = new List<UserAccessibilityNeed>();
     public List<RefreshToken> RefreshTokens { get; set; } = [];
 }

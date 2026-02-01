@@ -24,5 +24,13 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 
         builder.Property(x => x.CreatedAt)
             .HasDefaultValueSql("GETUTCDATE()");
+
+        builder.HasMany(u => u.UserDisabilityTypes)
+            .WithOne(udt => udt.User)
+            .HasForeignKey(udt => udt.UserId);
+
+        builder.HasMany(u => u.UserAccessibilityNeeds)
+            .WithOne(uan => uan.User)
+            .HasForeignKey(uan => uan.UserId);
     }
 }

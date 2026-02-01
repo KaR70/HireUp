@@ -22,6 +22,28 @@ namespace HireUp.Database.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("HireUp.Entities.AccessibilityNeed", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AccessibilityNeed");
+                });
+
             modelBuilder.Entity("HireUp.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -29,9 +51,6 @@ namespace HireUp.Database.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
-
-                    b.Property<string>("AccessibilityNeeds")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Bio")
                         .HasColumnType("nvarchar(max)");
@@ -44,9 +63,6 @@ namespace HireUp.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<string>("DisabilityType")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -85,6 +101,12 @@ namespace HireUp.Database.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PasswordResetCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("PasswordResetCodeExpiry")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -115,6 +137,28 @@ namespace HireUp.Database.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("HireUp.Entities.DisabilityType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DisabilityTypes");
                 });
 
             modelBuilder.Entity("HireUp.Entities.JobApplication", b =>
@@ -293,6 +337,39 @@ namespace HireUp.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Skills");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.UserAccessibilityNeed", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessibilityNeedId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "AccessibilityNeedId");
+
+                    b.HasIndex("AccessibilityNeedId");
+
+                    b.ToTable("UserAccessibilityNeed");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.UserDisabilityType", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("DisabilityTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("UserId", "DisabilityTypeId");
+
+                    b.HasIndex("DisabilityTypeId");
+
+                    b.ToTable("UserDisabilityTypes");
                 });
 
             modelBuilder.Entity("JobListingSkills", b =>
@@ -543,6 +620,44 @@ namespace HireUp.Database.Migrations
                     b.Navigation("JobSeeker");
                 });
 
+            modelBuilder.Entity("HireUp.Entities.UserAccessibilityNeed", b =>
+                {
+                    b.HasOne("HireUp.Entities.AccessibilityNeed", "AccessibilityNeed")
+                        .WithMany("UserAccessibilityNeeds")
+                        .HasForeignKey("AccessibilityNeedId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HireUp.Entities.ApplicationUser", "User")
+                        .WithMany("UserAccessibilityNeeds")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AccessibilityNeed");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.UserDisabilityType", b =>
+                {
+                    b.HasOne("HireUp.Entities.DisabilityType", "DisabilityType")
+                        .WithMany("UserDisabilityTypes")
+                        .HasForeignKey("DisabilityTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HireUp.Entities.ApplicationUser", "User")
+                        .WithMany("UserDisabilityTypes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DisabilityType");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("JobListingSkills", b =>
                 {
                     b.HasOne("HireUp.Entities.JobListing", null)
@@ -624,6 +739,11 @@ namespace HireUp.Database.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("HireUp.Entities.AccessibilityNeed", b =>
+                {
+                    b.Navigation("UserAccessibilityNeeds");
+                });
+
             modelBuilder.Entity("HireUp.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("Applications");
@@ -633,6 +753,15 @@ namespace HireUp.Database.Migrations
                     b.Navigation("InterviewsAsSeeker");
 
                     b.Navigation("JobListings");
+
+                    b.Navigation("UserAccessibilityNeeds");
+
+                    b.Navigation("UserDisabilityTypes");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.DisabilityType", b =>
+                {
+                    b.Navigation("UserDisabilityTypes");
                 });
 
             modelBuilder.Entity("HireUp.Entities.JobListing", b =>

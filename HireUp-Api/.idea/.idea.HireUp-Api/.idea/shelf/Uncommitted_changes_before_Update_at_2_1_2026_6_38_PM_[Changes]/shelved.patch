@@ -1,0 +1,18 @@
+Index: HireUp/Controllers/AuthController.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using HireUp.Authentication;\r\nusing HireUp.DTOs.Authentication;\r\nusing HireUp.Services;\r\nusing Microsoft.AspNetCore.Http;\r\nusing Microsoft.AspNetCore.Mvc;\r\nusing Microsoft.Extensions.Options;\r\n\r\nnamespace HireUp.Controllers;\r\n\r\n[Route(\"[controller]\")]\r\n[ApiController]\r\npublic class AuthController : ControllerBase\r\n{\r\n    private readonly IAuthService _authService;\r\n    private readonly JwtOptions _jwtOptions;\r\n\r\n    public AuthController(IAuthService authService, IOptions<JwtOptions> jwtOptions)\r\n    {\r\n        _authService = authService;\r\n        _jwtOptions = jwtOptions.Value;\r\n    }\r\n\r\n    [HttpPost(\"\")]\r\n    public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request, CancellationToken cancellationToken = default)\r\n    {\r\n        var authResult = await _authService.GetTokenAsync(request.Email, request.Password, cancellationToken);\r\n\r\n        return authResult is null ? BadRequest(\"Invalid email/password\") : Ok(authResult);\r\n    }\r\n\r\n    [HttpPost(\"refresh\")]\r\n    public async Task<IActionResult> RefreshAsync([FromBody] RefreshTokenRequest request, CancellationToken cancellationToken = default)\r\n    {\r\n        var authResult = await _authService.GetRefreshTokenAsync(request.Token, request.RefreshToken, cancellationToken);\r\n\r\n        return authResult is null ? BadRequest(\"Invalid token\") : Ok(authResult);\r\n    }\r\n\r\n    [HttpPost(\"revoke-refresh-token\")]\r\n    public async Task<IActionResult> RevokeRefreshAsync([FromBody] RefreshTokenRequest request, CancellationToken cancellationToken = default)\r\n    {\r\n        var isRevoked = await _authService.RevokeRefreshTokenAsync(request.Token, request.RefreshToken, cancellationToken);\r\n\r\n        return isRevoked ? Ok() : BadRequest(\"Operation failed\");\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/HireUp/Controllers/AuthController.cs b/HireUp/Controllers/AuthController.cs
+--- a/HireUp/Controllers/AuthController.cs	(revision 4b64a6f80cf7d4995dc7c870c7bcbde90696061a)
++++ b/HireUp/Controllers/AuthController.cs	(date 1769950961014)
+@@ -1,7 +1,6 @@
+ using HireUp.Authentication;
+ using HireUp.DTOs.Authentication;
+ using HireUp.Services;
+-using Microsoft.AspNetCore.Http;
+ using Microsoft.AspNetCore.Mvc;
+ using Microsoft.Extensions.Options;
+ 

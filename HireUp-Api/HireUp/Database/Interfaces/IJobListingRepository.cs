@@ -7,5 +7,7 @@
         Task<IEnumerable<JobListing>> GetListingsBySkillsAsync(IEnumerable<int> skillIds);
         Task<IEnumerable<JobListing>> SearchListingsAsync(string searchTerm, string location);
         Task<IEnumerable<JobListing>> GetListingsByEmployerAsync(string employerId);
+        Task<IEnumerable<JobListing>> GetFeaturedAsync();
+        Task<IEnumerable<JobListing>> GetPopularAsync();
     }
 }

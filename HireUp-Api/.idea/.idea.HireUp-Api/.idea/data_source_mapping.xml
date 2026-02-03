@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
-    <file url="file://$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/queries/Query.sql" value="6f90b83c-498e-4309-a33e-cb5f6f7ba975" />
+    <file url="file://$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/queries/Query_1.sql" value="f8896a25-ad73-457c-b34d-50e0d4878348" />
+    <file url="file://$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/queries/Query_2.sql" value="e0579269-4c5c-4ef7-9b0e-a754c4fe5cfa" />
   </component>
 </project>

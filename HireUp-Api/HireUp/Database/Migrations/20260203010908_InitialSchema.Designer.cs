@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HireUp.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260131111001_AddedResetPasswordPropertiesToUser")]
-    partial class AddedResetPasswordPropertiesToUser
+    [Migration("20260203010908_InitialSchema")]
+    partial class InitialSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -142,6 +142,33 @@ namespace HireUp.Database.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("HireUp.Entities.Company", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Logo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
+                });
+
             modelBuilder.Entity("HireUp.Entities.DisabilityType", b =>
                 {
                     b.Property<int>("Id")
@@ -162,6 +189,51 @@ namespace HireUp.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DisabilityTypes");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.ExperienceLevel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ExperienceLevels");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Entry-Level"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Junior"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Mid-Level"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Senior"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Lead"
+                        });
                 });
 
             modelBuilder.Entity("HireUp.Entities.JobApplication", b =>
@@ -203,6 +275,41 @@ namespace HireUp.Database.Migrations
                     b.ToTable("Applications");
                 });
 
+            modelBuilder.Entity("HireUp.Entities.JobCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JobCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "IT"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Design"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Marketing"
+                        });
+                });
+
             modelBuilder.Entity("HireUp.Entities.JobListing", b =>
                 {
                     b.Property<int>("Id")
@@ -211,8 +318,8 @@ namespace HireUp.Database.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CompanyName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -230,21 +337,37 @@ namespace HireUp.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("ExperienceLevelId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ExpiryDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsFeatured")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
                     b.Property<bool>("IsInclusiveHiring")
                         .HasColumnType("bit");
+
+                    b.Property<int>("JobCategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Requirements")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal?>("Salary")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Title")
@@ -255,9 +378,20 @@ namespace HireUp.Database.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
+                    b.Property<int>("ViewCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasIndex("EmployerId");
+
+                    b.HasIndex("ExperienceLevelId");
+
+                    b.HasIndex("JobCategoryId");
 
                     b.ToTable("JobListings");
                 });
@@ -596,13 +730,37 @@ namespace HireUp.Database.Migrations
 
             modelBuilder.Entity("HireUp.Entities.JobListing", b =>
                 {
+                    b.HasOne("HireUp.Entities.Company", "Company")
+                        .WithMany("JobListings")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("HireUp.Entities.ApplicationUser", "Employer")
                         .WithMany("JobListings")
                         .HasForeignKey("EmployerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("HireUp.Entities.ExperienceLevel", "ExperienceLevel")
+                        .WithMany("JobListings")
+                        .HasForeignKey("ExperienceLevelId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HireUp.Entities.JobCategory", "JobCategory")
+                        .WithMany("JobListings")
+                        .HasForeignKey("JobCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
                     b.Navigation("Employer");
+
+                    b.Navigation("ExperienceLevel");
+
+                    b.Navigation("JobCategory");
                 });
 
             modelBuilder.Entity("HireUp.Entities.MockInterview", b =>
@@ -762,9 +920,24 @@ namespace HireUp.Database.Migrations
                     b.Navigation("UserDisabilityTypes");
                 });
 
+            modelBuilder.Entity("HireUp.Entities.Company", b =>
+                {
+                    b.Navigation("JobListings");
+                });
+
             modelBuilder.Entity("HireUp.Entities.DisabilityType", b =>
                 {
                     b.Navigation("UserDisabilityTypes");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.ExperienceLevel", b =>
+                {
+                    b.Navigation("JobListings");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.JobCategory", b =>
+                {
+                    b.Navigation("JobListings");
                 });
 
             modelBuilder.Entity("HireUp.Entities.JobListing", b =>

@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using HireUp.Database.Interfaces;
+﻿using HireUp.Database.Interfaces;
 
 namespace HireUp.Database.Repositories
 {

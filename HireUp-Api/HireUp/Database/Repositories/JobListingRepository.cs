@@ -43,5 +43,36 @@ namespace HireUp.Database.Repositories
                           .Include(j => j.RequiredSkills)
                           .Include(j => j.Applications)
                           .ToListAsync();
+
+        public async Task<IEnumerable<JobListing>> GetFeaturedAsync()
+        {
+            return await _dbSet
+                .Where(j => j.IsFeatured && j.IsActive && j.ExpiryDate > DateTime.UtcNow)
+                .Include(j => j.Company)
+                .Include(j => j.ExperienceLevel)
+                .Include(j => j.JobCategory)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<JobListing>> GetPopularAsync()
+        {
+            return await _dbSet
+                .Where(j => j.IsActive && j.ExpiryDate > DateTime.UtcNow)
+                .OrderByDescending(j => j.ViewCount)
+                .Take(10)
+                .Include(j => j.Company)
+                .Include(j => j.ExperienceLevel)
+                .Include(j => j.JobCategory)
+                .ToListAsync();
+        }
+        
+        public override async Task<JobListing?> GetByIdAsync(int id)
+        {
+            return await _dbSet
+                .Include(j => j.Company)
+                .Include(j => j.ExperienceLevel)
+                .Include(j => j.JobCategory)
+                .FirstOrDefaultAsync(j => j.Id == id);
+        }
     }
 }

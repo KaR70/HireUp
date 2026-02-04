@@ -12,45 +12,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="07c7f11a-bfb6-4f5d-86f3-816a8b43877d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/HireUp/Controllers/JobListingsController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/DTOs/JobListing/JobListingDetailResponse.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/DTOs/JobListing/JobListingSummaryResponse.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/CompanyConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/ExperienceLevelConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/JobCategoryConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/JobListingConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260203010908_InitialSchema.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Entities/Company.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Entities/ExperienceLevel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Entities/JobCategory.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Errors/JobListingErrors.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Services/IJobListingService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Services/JobListingService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/data_source_mapping.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/data_source_mapping.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/sqldialects.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/db-forest-config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/db-forest-config.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Data/DataSeeder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Data/DataSeeder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/ApplicationDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/AccessibilityNeedConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/AccessibilityNeedConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/UserConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/UserConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/Interfaces/IJobListingRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Interfaces/IJobListingRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/Migrations/20251030012953_AddRefreshTokens.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/Migrations/20251030012953_AddRefreshTokens.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/Migrations/20251129191817_initial-migration.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/Migrations/20251129191817_initial-migration.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/Migrations/20251203173436_CreateDisabilityTypeSchema.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/Migrations/20251203173436_CreateDisabilityTypeSchema.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/Migrations/20251203191300_AddAccessibilityNeedSchema.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/Migrations/20251203191300_AddAccessibilityNeedSchema.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/Migrations/20260131111001_AddedResetPasswordPropertiesToUser.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260203010908_InitialSchema.Designer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/Migrations/20260131111001_AddedResetPasswordPropertiesToUser.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/Migrations/ApplicationDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/ApplicationDbContextModelSnapshot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/Repositories/BaseRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Repositories/BaseRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Database/Repositories/JobListingRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Repositories/JobListingRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/DependencyInjection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DependencyInjection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Entities/JobListing.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Entities/JobListing.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Mapping/MappingConfigurations.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Mapping/MappingConfigurations.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Services/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/UserService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +89,7 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Home-Page&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,

@@ -122,4 +122,9 @@ public class UserService : IUserService
         return Result.Success(newPictureRelativePath);
     }
 
+    // public async Task<Result<string>> GetProfilePictureAsync(string currentUserId, CancellationToken cancellationToken = default)
+    // {
+    //     
+    // }
+
 }

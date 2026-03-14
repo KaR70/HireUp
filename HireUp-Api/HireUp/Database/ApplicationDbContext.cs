@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using System.Reflection.Emit;
 
 namespace HireUp.Database;
 
@@ -11,7 +10,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Skill> Skills { get; set; }
     public DbSet<JobListing> JobListings { get; set; }
     public DbSet<MockInterview> MockInterviews { get; set; }
-    public DbSet<JobApplication> Applications { get; set; }
+
+    // تم الإبقاء على اسم واحد فقط وهو الصحيح للجدول
+    public DbSet<JobApplication> JobApplications { get; set; }
+
     public DbSet<DisabilityType> DisabilityTypes { get; set; }
     public DbSet<UserDisabilityType> UserDisabilityTypes { get; set; }
     public DbSet<AccessibilityNeed> AccessibilityNeed { get; set; }
@@ -20,13 +22,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ExperienceLevel> ExperienceLevels { get; set; }
     public DbSet<JobCategory> JobCategories { get; set; }
 
-
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        base.OnModelCreating(builder); // يفضل وضعها في البداية عند استخدام Identity
+
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         // Many-to-Many: Users <-> Skills
@@ -58,31 +61,28 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             entity.Property(j => j.Location).IsRequired().HasMaxLength(100);
             entity.Property(j => j.CreatedAt).HasDefaultValueSql("GETDATE()");
 
-            // العلاقة مع Employer
             entity.HasOne(j => j.Employer)
                   .WithMany(u => u.JobListings)
                   .HasForeignKey(j => j.EmployerId)
                   .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // Configure MockInterview - إعداد العلاقات بوضوح
+        // Configure MockInterview
         builder.Entity<MockInterview>(entity =>
         {
             entity.HasKey(m => m.Id);
             entity.Property(m => m.Title).IsRequired().HasMaxLength(200);
             entity.Property(m => m.Industry).IsRequired().HasMaxLength(100);
 
-            // العلاقة مع JobSeeker
             entity.HasOne(m => m.JobSeeker)
                   .WithMany(u => u.InterviewsAsSeeker)
                   .HasForeignKey(m => m.JobSeekerId)
                   .OnDelete(DeleteBehavior.Restrict);
 
-            // العلاقة مع Interviewer (Optional)
             entity.HasOne(m => m.Interviewer)
                   .WithMany(u => u.InterviewsAsInterviewer)
                   .HasForeignKey(m => m.InterviewerId)
-                  .IsRequired(false)  // علشان InterviewerId nullable
+                  .IsRequired(false)
                   .OnDelete(DeleteBehavior.Restrict);
         });
 
@@ -103,7 +103,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                   .HasForeignKey(a => a.JobSeekerId)
                   .OnDelete(DeleteBehavior.Cascade);
         });
-
-        base.OnModelCreating(builder);
     }
 }

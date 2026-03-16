@@ -6,6 +6,7 @@ using HireUp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace HireUp.Controllers;
 
@@ -25,7 +26,37 @@ public class UserController : ControllerBase
         _userService = userService;
         _urlBuilderService = urlBuilderService;
     }
+    
+    /// <summary>
+    /// Retrieves the authenticated user's profile header information.
+    /// </summary>
+    /// <remarks>
+    /// This includes basic information used in the profile header such as name, profile picture URL, etc.
+    /// </remarks>
+    /// <param name="cancellationToken">Cancellation token for the async operation</param>
+    /// <returns>Returns the authenticated user's profile header information</returns>
+    /// <response code="200">Successfully retrieved user profile header</response>
+    /// <response code="401">Unauthorized - invalid, expired, or missing JWT token</response>
+    /// <response code="404">User profile not found</response>
+    [HttpGet("me/profile-header")]
+    [Authorize]
+    [ProducesResponseType(typeof(ProfileHeaderResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProfileHeader(CancellationToken cancellationToken = default)
+    {
+        string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
 
+        var result = await _userService.GetProfileHeaderAsync(userId, cancellationToken);
+
+        return result.IsSuccess
+            ? Ok(result.Value)
+            : result.ToProblem();
+    }
+    
     /// <summary>
     /// Retrieves the authenticated user's profile information.
     /// </summary>
@@ -190,5 +221,36 @@ public class UserController : ControllerBase
         var profilePictureUrl = _urlBuilderService.ToAbsoluteUrl(result.Value);
         
         return Ok(new { profilePictureUrl });
+    }
+
+    /// <summary>
+    /// Retrieves the authenticated user's profile picture.
+    /// </summary>
+    /// <remarks>
+    /// This endpoint returns the URL of the user's profile picture.
+    /// </remarks>
+    /// <param name="cancellationToken">Cancellation token for the async operation</param>
+    /// <returns>Returns the URL of the user's profile picture</returns>
+    /// <response code="200">Successfully retrieved profile picture URL</response>
+    /// <response code="401">Unauthorized - invalid, expired, or missing JWT token</response>
+    /// <response code="404">User not found</response>
+    /// <response code="500">Internal server error</response>
+    [HttpGet("me/profile-picture")]
+    [Authorize]
+    [ProducesResponseType(typeof(ProfilePictureResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProfilePicture(CancellationToken cancellationToken = default)
+    {
+        string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var result = await _userService.GetProfilePictureAsync(userId, cancellationToken);
+
+        return result.IsSuccess
+            ? Ok(result.Value)
+            : result.ToProblem();
     }
 }

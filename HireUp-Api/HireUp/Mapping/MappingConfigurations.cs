@@ -6,6 +6,9 @@ public class MappingConfigurations : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
+        config.NewConfig<ApplicationUser, ProfileHeaderResponse>()
+            .Map(dest => dest.FullName, src => $"{src.FirstName} {src.LastName}");
+        
         config.NewConfig<ApplicationUser, MyProfileResponse>()
             .Map(dest => dest.UserId, src => src.Id)
             .Map(dest => dest.DisabilityTypes, src => src.UserDisabilityTypes.Select(udt => udt.DisabilityType))

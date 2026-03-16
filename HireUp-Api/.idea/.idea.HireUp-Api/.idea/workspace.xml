@@ -12,9 +12,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="07c7f11a-bfb6-4f5d-86f3-816a8b43877d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/db-forest-config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/db-forest-config.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Services/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/UserService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +53,8 @@
     <setting file="file://$PROJECT_DIR$/HireUp/Controllers/JobListingsController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/DTOs/JobListing/JobListingDetailResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/DTOs/JobListing/JobListingSummaryResponse.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/DTOs/User/ProfileHeaderResponse.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/DTOs/User/ProfilePictureResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/CompanyConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/ExperienceLevelConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/JobCategoryConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
@@ -70,6 +70,10 @@
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
 }</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
@@ -84,19 +88,20 @@
     &quot;.NET Launch Settings Profile.HireUp: https.executor&quot;: &quot;Run&quot;,
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;User-Profile&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
@@ -249,6 +254,23 @@
       <workItem from="1770050319050" duration="8635000" />
       <workItem from="1770080358780" duration="7884000" />
       <workItem from="1770134296345" duration="7476000" />
+      <workItem from="1770381061080" duration="11567000" />
+      <workItem from="1770798584264" duration="885000" />
+      <workItem from="1770806366718" duration="705000" />
+      <workItem from="1771003859844" duration="3251000" />
+      <workItem from="1771009893311" duration="1833000" />
+      <workItem from="1771247606342" duration="344000" />
+      <workItem from="1772721822844" duration="517000" />
+      <workItem from="1772722412364" duration="4928000" />
+      <workItem from="1773405888552" duration="5382000" />
+      <workItem from="1773415377995" duration="156000" />
+      <workItem from="1773428024375" duration="3250000" />
+      <workItem from="1773490383846" duration="5187000" />
+      <workItem from="1773609231872" duration="549000" />
+      <workItem from="1773616898515" duration="675000" />
+      <workItem from="1773663772348" duration="5999000" />
+      <workItem from="1773674857653" duration="315000" />
+      <workItem from="1773675699175" duration="548000" />
     </task>
     <task id="LOCAL-00001" summary="Register,User Profile, File Service">
       <option name="closed" value="true" />

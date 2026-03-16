@@ -6,13 +6,35 @@ public class UserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IFileService _fileService;
+    private readonly UrlBuilderService _urlBuilderService;
 
-    public UserService(UserManager<ApplicationUser> userManager, IFileService fileService)
+    public UserService(UserManager<ApplicationUser> userManager, IFileService fileService, UrlBuilderService urlBuilderService)
     {
         _userManager = userManager;
         _fileService = fileService;
+        _urlBuilderService = urlBuilderService;
     }
 
+    public async Task<Result<ProfileHeaderResponse>> GetProfileHeaderAsync(string currentUserId, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
+        
+        if (user is null)
+            return Result.Failure<ProfileHeaderResponse>(UserErrors.UserNotFound);
+
+        var response = user.Adapt<ProfileHeaderResponse>();
+
+        if (!string.IsNullOrEmpty(user.ProfilePicture))
+            response.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(user.ProfilePicture);
+        
+        // TODO: Implement the real user verification logic. For now, all users are considered verified.
+        response.IsVerified = true;
+        
+        return Result.Success(response);
+    }
+    
     public async Task<Result<MyProfileResponse>> GetMyProfileAsync(string currentUserId, CancellationToken cancellationToken = default)
     {
         var user = await _userManager.Users
@@ -122,9 +144,27 @@ public class UserService : IUserService
         return Result.Success(newPictureRelativePath);
     }
 
-    // public async Task<Result<string>> GetProfilePictureAsync(string currentUserId, CancellationToken cancellationToken = default)
-    // {
-    //     
-    // }
+    public async Task<Result<ProfilePictureResponse>> GetProfilePictureAsync(string currentUserId, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.Users.
+            AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
+
+        if (user is null)
+            return Result.Failure<ProfilePictureResponse>(UserErrors.UserNotFound);
+
+        var relativePath = user.ProfilePicture;
+        string? absoluteUrl = null;
+
+        if (!string.IsNullOrEmpty(relativePath))
+            absoluteUrl = _urlBuilderService.ToAbsoluteUrl(relativePath);
+
+        var result = new ProfilePictureResponse()
+        {
+            ProfilePictureUrl = absoluteUrl
+        };
+        
+        return Result.Success(result);
+    }
 
 }

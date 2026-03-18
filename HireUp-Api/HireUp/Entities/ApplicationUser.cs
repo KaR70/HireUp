@@ -22,4 +22,10 @@ public class ApplicationUser : IdentityUser
     public virtual ICollection<UserDisabilityType> UserDisabilityTypes { get; set; } = new List<UserDisabilityType>();
     public virtual ICollection<UserAccessibilityNeed> UserAccessibilityNeeds { get; set; } = new List<UserAccessibilityNeed>();
     public List<RefreshToken> RefreshTokens { get; set; } = [];
+
+    public virtual ICollection<UserJobTypePreference> UserJobTypePreferences { get; set; } = new HashSet<UserJobTypePreference>();
+    public virtual ICollection<UserLocationPreference> UserLocationPreferences { get; set; } = new HashSet<UserLocationPreference>();
+    public virtual ICollection<UserOfficeTypePreference> UserOfficeTypePreferences { get; set; } = new HashSet<UserOfficeTypePreference>();
+    public virtual ICollection<UserJobCategoryPreference> UserJobCategoryPreferences { get; set; } = new HashSet<UserJobCategoryPreference>();
+    public virtual ICollection<UserJobRolePreference> UserJobRolePreferences { get; set; } = new HashSet<UserJobRolePreference>();
 }

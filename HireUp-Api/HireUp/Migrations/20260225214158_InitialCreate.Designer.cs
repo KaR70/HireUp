@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace HireUp.Database.Migrations
+namespace HireUp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260203010908_InitialSchema")]
-    partial class InitialSchema
+    [Migration("20260225214158_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -375,7 +375,7 @@ namespace HireUp.Database.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("Type")
+                    b.Property<int>("TypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("ViewCount")
@@ -393,7 +393,60 @@ namespace HireUp.Database.Migrations
 
                     b.HasIndex("JobCategoryId");
 
+                    b.HasIndex("TypeId");
+
                     b.ToTable("JobListings");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.JobRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JobRoles");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.JobType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JobTypes");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.Location", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("HireUp.Entities.MockInterview", b =>
@@ -446,6 +499,23 @@ namespace HireUp.Database.Migrations
                     b.HasIndex("JobSeekerId");
 
                     b.ToTable("MockInterviews");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.OfficeType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OfficeTypes");
                 });
 
             modelBuilder.Entity("HireUp.Entities.Skill", b =>
@@ -507,6 +577,96 @@ namespace HireUp.Database.Migrations
                     b.HasIndex("DisabilityTypeId");
 
                     b.ToTable("UserDisabilityTypes");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.UserJobCategoryPreference", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("JobCategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "JobCategoryId");
+
+                    b.HasIndex("JobCategoryId");
+
+                    b.ToTable("UserJobCategoryPreferences");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.UserJobRolePreference", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("JobRoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "JobRoleId");
+
+                    b.HasIndex("JobRoleId");
+
+                    b.ToTable("UserJobRolePreferences");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.UserJobTypePreference", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("JobTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("JobRoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OfficeTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "JobTypeId");
+
+                    b.HasIndex("JobRoleId");
+
+                    b.HasIndex("JobTypeId");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("OfficeTypeId");
+
+                    b.ToTable("UserJobTypePreferences");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.UserLocationPreference", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("LocationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "LocationId");
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("UserLocationPreferences");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.UserOfficeTypePreference", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("OfficeTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "OfficeTypeId");
+
+                    b.HasIndex("OfficeTypeId");
+
+                    b.ToTable("UserOfficeTypePreferences");
                 });
 
             modelBuilder.Entity("JobListingSkills", b =>
@@ -754,6 +914,12 @@ namespace HireUp.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("HireUp.Entities.JobType", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Company");
 
                     b.Navigation("Employer");
@@ -761,6 +927,8 @@ namespace HireUp.Database.Migrations
                     b.Navigation("ExperienceLevel");
 
                     b.Navigation("JobCategory");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HireUp.Entities.MockInterview", b =>
@@ -815,6 +983,113 @@ namespace HireUp.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("DisabilityType");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.UserJobCategoryPreference", b =>
+                {
+                    b.HasOne("HireUp.Entities.JobCategory", "JobCategory")
+                        .WithMany()
+                        .HasForeignKey("JobCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HireUp.Entities.ApplicationUser", "User")
+                        .WithMany("UserJobCategoryPreferences")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JobCategory");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.UserJobRolePreference", b =>
+                {
+                    b.HasOne("HireUp.Entities.JobRole", "JobRole")
+                        .WithMany()
+                        .HasForeignKey("JobRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HireUp.Entities.ApplicationUser", "User")
+                        .WithMany("UserJobRolePreferences")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JobRole");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.UserJobTypePreference", b =>
+                {
+                    b.HasOne("HireUp.Entities.JobRole", null)
+                        .WithMany("UserPreferences")
+                        .HasForeignKey("JobRoleId");
+
+                    b.HasOne("HireUp.Entities.JobType", "JobType")
+                        .WithMany("UserJobTypePreferences")
+                        .HasForeignKey("JobTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HireUp.Entities.Location", null)
+                        .WithMany("UserPreferences")
+                        .HasForeignKey("LocationId");
+
+                    b.HasOne("HireUp.Entities.OfficeType", null)
+                        .WithMany("UserPreferences")
+                        .HasForeignKey("OfficeTypeId");
+
+                    b.HasOne("HireUp.Entities.ApplicationUser", "User")
+                        .WithMany("UserJobTypePreferences")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JobType");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.UserLocationPreference", b =>
+                {
+                    b.HasOne("HireUp.Entities.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HireUp.Entities.ApplicationUser", "User")
+                        .WithMany("UserLocationPreferences")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.UserOfficeTypePreference", b =>
+                {
+                    b.HasOne("HireUp.Entities.OfficeType", "OfficeType")
+                        .WithMany()
+                        .HasForeignKey("OfficeTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HireUp.Entities.ApplicationUser", "User")
+                        .WithMany("UserOfficeTypePreferences")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OfficeType");
 
                     b.Navigation("User");
                 });
@@ -918,6 +1193,16 @@ namespace HireUp.Database.Migrations
                     b.Navigation("UserAccessibilityNeeds");
 
                     b.Navigation("UserDisabilityTypes");
+
+                    b.Navigation("UserJobCategoryPreferences");
+
+                    b.Navigation("UserJobRolePreferences");
+
+                    b.Navigation("UserJobTypePreferences");
+
+                    b.Navigation("UserLocationPreferences");
+
+                    b.Navigation("UserOfficeTypePreferences");
                 });
 
             modelBuilder.Entity("HireUp.Entities.Company", b =>
@@ -943,6 +1228,26 @@ namespace HireUp.Database.Migrations
             modelBuilder.Entity("HireUp.Entities.JobListing", b =>
                 {
                     b.Navigation("Applications");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.JobRole", b =>
+                {
+                    b.Navigation("UserPreferences");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.JobType", b =>
+                {
+                    b.Navigation("UserJobTypePreferences");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.Location", b =>
+                {
+                    b.Navigation("UserPreferences");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.OfficeType", b =>
+                {
+                    b.Navigation("UserPreferences");
                 });
 #pragma warning restore 612, 618
         }

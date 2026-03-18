@@ -1,109 +1,124 @@
 ﻿using HireUp.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using System.Reflection.Emit;
 
-namespace HireUp.Database;
-
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+namespace HireUp.Database
 {
-    public DbSet<Skill> Skills { get; set; }
-    public DbSet<JobListing> JobListings { get; set; }
-    public DbSet<MockInterview> MockInterviews { get; set; }
-    public DbSet<JobApplication> Applications { get; set; }
-    public DbSet<DisabilityType> DisabilityTypes { get; set; }
-    public DbSet<UserDisabilityType> UserDisabilityTypes { get; set; }
-    public DbSet<AccessibilityNeed> AccessibilityNeed { get; set; }
-    public DbSet<UserAccessibilityNeed> UserAccessibilityNeed { get; set; }
-    public DbSet<Company> Companies { get; set; }
-    public DbSet<ExperienceLevel> ExperienceLevels { get; set; }
-    public DbSet<JobCategory> JobCategories { get; set; }
-
-
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-    }
+        // الجداول القديمة (اللي كانت موجودة أصلاً)
+        public DbSet<Skill> Skills { get; set; }
+        public DbSet<JobListing> JobListings { get; set; }
+        public DbSet<MockInterview> MockInterviews { get; set; }
+        public DbSet<JobApplication> Applications { get; set; }
+        public DbSet<DisabilityType> DisabilityTypes { get; set; }
+        public DbSet<UserDisabilityType> UserDisabilityTypes { get; set; }
+        public DbSet<AccessibilityNeed> AccessibilityNeed { get; set; }
+        public DbSet<UserAccessibilityNeed> UserAccessibilityNeed { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<ExperienceLevel> ExperienceLevels { get; set; }
+        public DbSet<JobCategory> JobCategories { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        // الجداول الجديدة (شغل النهاردة - ضفناها هنا)
+        public DbSet<JobType> JobTypes { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<OfficeType> OfficeTypes { get; set; }
+        public DbSet<JobRole> JobRoles { get; set; }
+        public DbSet<UserJobCategoryPreference> UserJobCategoryPreferences { get; set; }
+        public DbSet<UserJobRolePreference> UserJobRolePreferences { get; set; }
+        public DbSet<UserJobTypePreference> UserJobTypePreferences { get; set; }
+        public DbSet<UserLocationPreference> UserLocationPreferences { get; set; }
+        public DbSet<UserOfficeTypePreference> UserOfficeTypePreferences { get; set; }
 
-        // Many-to-Many: Users <-> Skills
-        builder.Entity<ApplicationUser>()
-            .HasMany(u => u.Skills)
-            .WithMany(s => s.Users)
-            .UsingEntity<Dictionary<string, object>>(
-                "UserSkills",
-                j => j.HasOne<Skill>().WithMany().HasForeignKey("SkillId"),
-                j => j.HasOne<ApplicationUser>().WithMany().HasForeignKey("UserId"),
-                j => j.HasKey("UserId", "SkillId"));
-
-        // Many-to-Many: JobListings <-> Skills
-        builder.Entity<JobListing>()
-            .HasMany(j => j.RequiredSkills)
-            .WithMany(s => s.JobListings)
-            .UsingEntity<Dictionary<string, object>>(
-                "JobListingSkills",
-                j => j.HasOne<Skill>().WithMany().HasForeignKey("SkillId"),
-                j => j.HasOne<JobListing>().WithMany().HasForeignKey("JobListingId"),
-                j => j.HasKey("JobListingId", "SkillId"));
-
-        // Configure JobListing
-        builder.Entity<JobListing>(entity =>
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            entity.HasKey(j => j.Id);
-            entity.Property(j => j.Title).IsRequired().HasMaxLength(200);
-            entity.Property(j => j.Description).IsRequired();
-            entity.Property(j => j.Location).IsRequired().HasMaxLength(100);
-            entity.Property(j => j.CreatedAt).HasDefaultValueSql("GETDATE()");
+        }
 
-            // العلاقة مع Employer
-            entity.HasOne(j => j.Employer)
-                  .WithMany(u => u.JobListings)
-                  .HasForeignKey(j => j.EmployerId)
-                  .OnDelete(DeleteBehavior.Restrict);
-        });
-
-        // Configure MockInterview - إعداد العلاقات بوضوح
-        builder.Entity<MockInterview>(entity =>
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            entity.HasKey(m => m.Id);
-            entity.Property(m => m.Title).IsRequired().HasMaxLength(200);
-            entity.Property(m => m.Industry).IsRequired().HasMaxLength(100);
+            base.OnModelCreating(builder); 
 
-            // العلاقة مع JobSeeker
-            entity.HasOne(m => m.JobSeeker)
-                  .WithMany(u => u.InterviewsAsSeeker)
-                  .HasForeignKey(m => m.JobSeekerId)
-                  .OnDelete(DeleteBehavior.Restrict);
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            // العلاقة مع Interviewer (Optional)
-            entity.HasOne(m => m.Interviewer)
-                  .WithMany(u => u.InterviewsAsInterviewer)
-                  .HasForeignKey(m => m.InterviewerId)
-                  .IsRequired(false)  // علشان InterviewerId nullable
-                  .OnDelete(DeleteBehavior.Restrict);
-        });
+            builder.Entity<UserJobCategoryPreference>().HasKey(pc => new { pc.UserId, pc.JobCategoryId });
+            builder.Entity<UserJobRolePreference>().HasKey(pr => new { pr.UserId, pr.JobRoleId });
+            builder.Entity<UserJobTypePreference>().HasKey(pt => new { pt.UserId, pt.JobTypeId });
+            builder.Entity<UserLocationPreference>().HasKey(pl => new { pl.UserId, pl.LocationId });
+            builder.Entity<UserOfficeTypePreference>().HasKey(po => new { po.UserId, po.OfficeTypeId });
 
-        // Configure JobApplication
-        builder.Entity<JobApplication>(entity =>
-        {
-            entity.HasKey(a => a.Id);
-            entity.Property(a => a.CoverLetter).IsRequired();
-            entity.Property(a => a.AppliedAt).HasDefaultValueSql("GETDATE()");
+            // Many-to-Many: Users <-> Skills
+            builder.Entity<ApplicationUser>()
+                .HasMany(u => u.Skills)
+                .WithMany(s => s.Users)
+                .UsingEntity<Dictionary<string, object>>(
+                    "UserSkills",
+                    j => j.HasOne<Skill>().WithMany().HasForeignKey("SkillId"),
+                    j => j.HasOne<ApplicationUser>().WithMany().HasForeignKey("UserId"),
+                    j => j.HasKey("UserId", "SkillId"));
 
-            entity.HasOne(a => a.JobListing)
-                  .WithMany(j => j.Applications)
-                  .HasForeignKey(a => a.JobListingId)
-                  .OnDelete(DeleteBehavior.Cascade);
+            // Many-to-Many: JobListings <-> Skills
+            builder.Entity<JobListing>()
+                .HasMany(j => j.RequiredSkills)
+                .WithMany(s => s.JobListings)
+                .UsingEntity<Dictionary<string, object>>(
+                    "JobListingSkills",
+                    j => j.HasOne<Skill>().WithMany().HasForeignKey("SkillId"),
+                    j => j.HasOne<JobListing>().WithMany().HasForeignKey("JobListingId"),
+                    j => j.HasKey("JobListingId", "SkillId"));
 
-            entity.HasOne(a => a.JobSeeker)
-                  .WithMany(u => u.Applications)
-                  .HasForeignKey(a => a.JobSeekerId)
-                  .OnDelete(DeleteBehavior.Cascade);
-        });
+            // Configure JobListing
+            builder.Entity<JobListing>(entity =>
+            {
+                entity.HasKey(j => j.Id);
+                entity.Property(j => j.Title).IsRequired().HasMaxLength(200);
+                entity.Property(j => j.Description).IsRequired();
+                entity.Property(j => j.Location).IsRequired().HasMaxLength(100);
+                entity.Property(j => j.CreatedAt).HasDefaultValueSql("GETDATE()");
 
-        base.OnModelCreating(builder);
+                entity.HasOne(j => j.Employer)
+                      .WithMany(u => u.JobListings)
+                      .HasForeignKey(j => j.EmployerId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // Configure MockInterview
+            builder.Entity<MockInterview>(entity =>
+            {
+                entity.HasKey(m => m.Id);
+                entity.Property(m => m.Title).IsRequired().HasMaxLength(200);
+                entity.Property(m => m.Industry).IsRequired().HasMaxLength(100);
+
+                entity.HasOne(m => m.JobSeeker)
+                      .WithMany(u => u.InterviewsAsSeeker)
+                      .HasForeignKey(m => m.JobSeekerId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(m => m.Interviewer)
+                      .WithMany(u => u.InterviewsAsInterviewer)
+                      .HasForeignKey(m => m.InterviewerId)
+                      .IsRequired(false)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // Configure JobApplication
+            builder.Entity<JobApplication>(entity =>
+            {
+                entity.HasKey(a => a.Id);
+                entity.Property(a => a.CoverLetter).IsRequired();
+                entity.Property(a => a.AppliedAt).HasDefaultValueSql("GETDATE()");
+
+                entity.HasOne(a => a.JobListing)
+                      .WithMany(j => j.Applications)
+                      .HasForeignKey(a => a.JobListingId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(a => a.JobSeeker)
+                      .WithMany(u => u.Applications)
+                      .HasForeignKey(a => a.JobSeekerId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+        }
     }
 }

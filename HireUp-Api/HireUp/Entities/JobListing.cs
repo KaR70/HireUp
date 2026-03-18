@@ -17,25 +17,26 @@ namespace HireUp.Entities
         [Required, MaxLength(100)]
         public string Location { get; set; } = string.Empty;
 
-        public JobType Type { get; set; }
         public decimal? Salary { get; set; }
 
         public bool IsInclusiveHiring { get; set; }
-        public string? DisabilitySupport { get; set; }  
+        public string? DisabilitySupport { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime ExpiryDate { get; set; }
         public bool IsActive { get; set; } = true;
         public bool IsFeatured { get; set; }
         public int ViewCount { get; set; }
         public string Requirements { get; set; }
-        
-        // Foreign Keys
+
         public string EmployerId { get; set; }
         public int ExperienceLevelId { get; set; }
         public int CompanyId { get; set; }
         public int JobCategoryId { get; set; }
 
-        // Navigation Properties
+       
+        public int JobTypeId { get; set; } 
+        public JobType JobType { get; set; } 
+        
         public ApplicationUser Employer { get; set; } = null!;
         public ExperienceLevel ExperienceLevel { get; set; }
         public Company Company { get; set; }
@@ -44,8 +45,5 @@ namespace HireUp.Entities
         public ICollection<JobApplication> Applications { get; set; } = new List<JobApplication>();
     }
 
-    public enum JobType
-    {
-        FullTime, PartTime, Contract, Freelance, Remote
-    }
+   
 }

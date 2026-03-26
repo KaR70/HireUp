@@ -12,7 +12,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="07c7f11a-bfb6-4f5d-86f3-816a8b43877d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/HireUp/DTOs/Location/LocationSummaryResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/DTOs/Skill/SkillResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/FollowsConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/LocationConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/ReviewConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Interfaces/IFollowsRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Interfaces/ILocationRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Interfaces/IReviewRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260317120352_addedLocationTable.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Repositories/FollowsRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Repositories/LocationRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Repositories/ReviewRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Entities/Follows.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Entities/Location.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Entities/Review.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/data_source_mapping.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/data_source_mapping.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/db-forest-config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/db-forest-config.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Controllers/UserController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/MyProfileResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/MyProfileResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/PublicProfileResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/PublicProfileResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/UpdateProfileRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/UpdateProfileRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/UpdateProfileRequestValidator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/UpdateProfileRequestValidator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/ApplicationDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/UserConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/UserConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/UserDisabilityTypeConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/UserDisabilityTypeConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/Interfaces/IRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Interfaces/IRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/Interfaces/IUnitOfWork.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Interfaces/IUnitOfWork.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/Migrations/ApplicationDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/ApplicationDbContextModelSnapshot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/Repositories/BaseRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Repositories/BaseRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/Repositories/UnitOfWork.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Repositories/UnitOfWork.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Entities/ApplicationUser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Entities/ApplicationUser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Entities/Skill.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Entities/Skill.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Mapping/MappingConfigurations.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Mapping/MappingConfigurations.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Services/IUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/IUserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Services/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/UserService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,15 +89,28 @@
     <setting file="file://$PROJECT_DIR$/HireUp/Controllers/JobListingsController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/DTOs/JobListing/JobListingDetailResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/DTOs/JobListing/JobListingSummaryResponse.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/DTOs/Location/LocationSummaryResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/DTOs/User/ProfileHeaderResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/DTOs/User/ProfilePictureResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/CompanyConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/ExperienceLevelConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/FollowsConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/JobCategoryConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/JobListingConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/LocationConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/ReviewConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Interfaces/IFollowsRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Interfaces/ILocationRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Interfaces/IReviewRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Repositories/FollowsRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Repositories/LocationRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Repositories/ReviewRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Entities/Company.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Entities/ExperienceLevel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Entities/Follows.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Entities/JobCategory.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Entities/Location.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Entities/Review.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Errors/JobListingErrors.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Services/IJobListingService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Services/JobListingService.cs" root0="FORCE_HIGHLIGHTING" />
@@ -94,7 +143,7 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;User-Profile&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -271,6 +320,10 @@
       <workItem from="1773663772348" duration="5999000" />
       <workItem from="1773674857653" duration="315000" />
       <workItem from="1773675699175" duration="548000" />
+      <workItem from="1773734175643" duration="1552000" />
+      <workItem from="1773741165413" duration="10727000" />
+      <workItem from="1774016757516" duration="5966000" />
+      <workItem from="1774487963813" duration="17355000" />
     </task>
     <task id="LOCAL-00001" summary="Register,User Profile, File Service">
       <option name="closed" value="true" />

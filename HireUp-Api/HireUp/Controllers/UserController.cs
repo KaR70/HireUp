@@ -92,14 +92,9 @@ public class UserController : ControllerBase
         
         var result = await _userService.GetMyProfileAsync(currentUserId, cancellationToken);
 
-        if (result.IsFaliure)
-            return result.ToProblem();
-
-        var profile = result.Value;
-        
-        profile.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(profile.ProfilePictureUrl);
-        
-        return Ok(profile);
+        return result.IsSuccess
+            ? Ok(result.Value)
+            : result.ToProblem();
     }
 
     /// <summary>
@@ -159,21 +154,20 @@ public class UserController : ControllerBase
     /// <response code="422">Validation error in profile data (invalid field values, etc.)</response>
     [HttpPut("me")]
     [Authorize]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(MyProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateProfileRequest request, CancellationToken cancellationToken = default)
     {
-        string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrEmpty(currentUserId))
-            return Unauthorized();
+        string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
         
         var result = await _userService.UpdateMyProfileAsync(currentUserId, request, cancellationToken);
         
-        return result.IsSuccess ? NoContent() : result.ToProblem();
+        return result.IsSuccess 
+            ? Ok(result.Value) 
+            : result.ToProblem();
     }
     
     /// <summary>

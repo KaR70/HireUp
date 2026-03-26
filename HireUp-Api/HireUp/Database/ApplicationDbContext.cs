@@ -21,6 +21,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Company> Companies { get; set; }
     public DbSet<ExperienceLevel> ExperienceLevels { get; set; }
     public DbSet<JobCategory> JobCategories { get; set; }
+    public DbSet<Location> Locations { get; set; }
+    public DbSet<Review> Review { get; set; }
+    public DbSet<Follows> Follows { get; set; }
+    
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {

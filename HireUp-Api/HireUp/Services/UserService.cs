@@ -1,4 +1,5 @@
-﻿using HireUp.DTOs.User;
+﻿using HireUp.Database.Interfaces;
+using HireUp.DTOs.User;
 
 namespace HireUp.Services;
 
@@ -7,12 +8,14 @@ public class UserService : IUserService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IFileService _fileService;
     private readonly UrlBuilderService _urlBuilderService;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UserService(UserManager<ApplicationUser> userManager, IFileService fileService, UrlBuilderService urlBuilderService)
+    public UserService(UserManager<ApplicationUser> userManager, IFileService fileService, UrlBuilderService urlBuilderService, IUnitOfWork unitOfWork)
     {
         _userManager = userManager;
         _fileService = fileService;
         _urlBuilderService = urlBuilderService;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<ProfileHeaderResponse>> GetProfileHeaderAsync(string currentUserId, CancellationToken cancellationToken = default)
@@ -30,6 +33,7 @@ public class UserService : IUserService
             response.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(user.ProfilePicture);
         
         // TODO: Implement the real user verification logic. For now, all users are considered verified.
+        // TODO: Implement the JobRole. for now its null always
         response.IsVerified = true;
         
         return Result.Success(response);
@@ -37,80 +41,105 @@ public class UserService : IUserService
     
     public async Task<Result<MyProfileResponse>> GetMyProfileAsync(string currentUserId, CancellationToken cancellationToken = default)
     {
-        var user = await _userManager.Users
+        // TODO : Modify this to include the JobTitle
+        var userProfile = await _userManager.Users
+            .Where(u => u.Id == currentUserId)
+            .ProjectToType<MyProfileResponse>()
             .AsNoTracking()
-            .Include(u => u.UserDisabilityTypes)
-                .ThenInclude(udt => udt.DisabilityType)
-            .Include(u => u.UserAccessibilityNeeds)
-                .ThenInclude(uan => uan.AccessibilityNeed)
-            .FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
 
-        if (user is null)
-        {
+        if (userProfile is null)
             return Result.Failure<MyProfileResponse>(UserErrors.UserNotFound);
-        }
-
-        var response = user.Adapt<MyProfileResponse>();
-
-        return Result.Success(response);
+        
+        if (!string.IsNullOrEmpty(userProfile.ProfilePictureUrl))
+            userProfile.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(userProfile.ProfilePictureUrl);
+        
+        return Result.Success(userProfile);
     }
 
     public async Task<Result<PublicProfileResponse>> GetUserPublicProfileAsync(string userId, CancellationToken cancellationToken = default)
     {
         var user = await _userManager.Users
+            .Where(u => u.Id == userId)
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
-
+            .ProjectToType<PublicProfileResponse>()
+            .FirstOrDefaultAsync(cancellationToken);
+        
         if (user is null)
             return Result.Failure<PublicProfileResponse>(UserErrors.UserNotFound);
 
-        var response = user.Adapt<PublicProfileResponse>();
+        var Rating = await _unitOfWork.Reviews.GetAverageRatingForUserAsync(userId, cancellationToken);
+        var followerCount = await _unitOfWork.Follows.CountAsync(f => f.FollowingId == userId, cancellationToken);
 
-        return Result.Success(response);
+        // TODO: implement Project Logic
+        user.ProjectCount = 0;
+        user.Rating = Rating ?? 0;
+        user.FollowersCount = followerCount;
+        
+        return Result.Success(user);
     }
 
-    public async Task<Result> UpdateMyProfileAsync(string currentUserId, UpdateProfileRequest request, CancellationToken cancellationToken = default)
+    public async Task<Result<MyProfileResponse>> UpdateMyProfileAsync(string currentUserId, UpdateProfileRequest request, CancellationToken cancellationToken = default)
     {
         var currentUser = await _userManager.Users
-            .Include(u => u.UserDisabilityTypes)
-            .Include(u => u.UserAccessibilityNeeds)
+            // TODO: Implement this after fixing the Git problem
+            //.Include(u => u.JobTitle)
+            .Include(u => u.Location)
             .FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
 
         if (currentUser is null)
-            return Result.Failure(UserErrors.UserNotFound);
+            return Result.Failure<MyProfileResponse>(UserErrors.UserNotFound);
 
+        if (string.IsNullOrEmpty(request.City) || string.IsNullOrEmpty(request.Country))
+        {
+            currentUser.Location = null;
+        }
+        else
+        {
+            var Location = await _unitOfWork.Locations
+                .FirstOrDefaultAsync(l => l.City == request.City && l.Country == request.Country, cancellationToken);
+
+            if (Location is null)
+            {
+                Location = new Location { City = request.City, Country = request.Country };
+                _unitOfWork.Locations.AddAsync(Location);
+            }
+            
+            currentUser.Location = Location;
+        }
+        
         currentUser.FirstName = request.FirstName;
         currentUser.LastName = request.LastName;
+        currentUser.Birthday = request.Birthday;
+        currentUser.PhoneNumber = request.PhoneNumber;
+        currentUser.Header = request.Header;
         currentUser.Bio = request.Bio;
-        currentUser.UserDisabilityTypes.Clear();
-        currentUser.UserAccessibilityNeeds.Clear();
+        // TODO: implement this after solving the git problem
+        //currentUser.jobTitle = request.JobTitleId;
 
-        foreach (var disabilityTypeId in request.DisabilityTypeIds)
+        if (string.IsNullOrEmpty(request.Gender))
         {
-            currentUser.UserDisabilityTypes.Add(new UserDisabilityType
-            {
-                UserId = currentUserId,
-                DisabilityTypeId = disabilityTypeId
-            });
+            currentUser.Gender = null;
         }
-
-        foreach (var accessibilityNeedIds in request.AccessibilityNeedsIds)
+        else if (Enum.TryParse<Gender>(request.Gender, true, out var genderEnum))
         {
-            currentUser.UserAccessibilityNeeds.Add(new UserAccessibilityNeed
-            {
-                UserId = currentUserId,
-                AccessibilityNeedId = accessibilityNeedIds
-            });
+            currentUser.Gender = genderEnum;
         }
-
+        else
+        {
+            currentUser.Gender = null; 
+        }
+        
         var updatedResult = await _userManager.UpdateAsync(currentUser);
-
         if (!updatedResult.Succeeded)
-        {
-            return Result.Failure(UserErrors.UserUpdateFailed);
-        }
-
-        return Result.Success();
+            return Result.Failure<MyProfileResponse>(UserErrors.UserUpdateFailed);
+    
+        var response = currentUser.Adapt<MyProfileResponse>();
+        
+        if(!string.IsNullOrEmpty(response.ProfilePictureUrl))
+            response.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(response.ProfilePictureUrl);
+        
+        return Result.Success(response);
     }
 
     public async Task<Result<string>> UpdateProfilePictureAsync(string currentUserId, IFormFile profilePicture, CancellationToken cancellationToken = default)

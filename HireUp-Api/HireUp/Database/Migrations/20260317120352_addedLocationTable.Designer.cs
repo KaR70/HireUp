@@ -4,6 +4,7 @@ using HireUp.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HireUp.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260317120352_addedLocationTable")]
+    partial class addedLocationTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,10 +84,6 @@ namespace HireUp.Database.Migrations
 
                     b.Property<int?>("Gender")
                         .HasColumnType("int");
-
-                    b.Property<string>("Header")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -246,24 +245,6 @@ namespace HireUp.Database.Migrations
                             Id = 5,
                             Name = "Lead"
                         });
-                });
-
-            modelBuilder.Entity("HireUp.Entities.Follows", b =>
-                {
-                    b.Property<string>("FollowerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FollowingId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("FollowerId", "FollowingId");
-
-                    b.HasIndex("FollowingId");
-
-                    b.ToTable("Follows");
                 });
 
             modelBuilder.Entity("HireUp.Entities.JobApplication", b =>
@@ -506,46 +487,6 @@ namespace HireUp.Database.Migrations
                     b.HasIndex("JobSeekerId");
 
                     b.ToTable("MockInterviews");
-                });
-
-            modelBuilder.Entity("HireUp.Entities.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Comment")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("JobApplicationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReviewedUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("JobApplicationId");
-
-                    b.HasIndex("ReviewedUserId");
-
-                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("HireUp.Entities.Skill", b =>
@@ -816,25 +757,6 @@ namespace HireUp.Database.Migrations
                     b.Navigation("RefreshTokens");
                 });
 
-            modelBuilder.Entity("HireUp.Entities.Follows", b =>
-                {
-                    b.HasOne("HireUp.Entities.ApplicationUser", "Follower")
-                        .WithMany("Following")
-                        .HasForeignKey("FollowerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("HireUp.Entities.ApplicationUser", "Following")
-                        .WithMany("Followers")
-                        .HasForeignKey("FollowingId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Follower");
-
-                    b.Navigation("Following");
-                });
-
             modelBuilder.Entity("HireUp.Entities.JobApplication", b =>
                 {
                     b.HasOne("HireUp.Entities.JobListing", "JobListing")
@@ -905,33 +827,6 @@ namespace HireUp.Database.Migrations
                     b.Navigation("Interviewer");
 
                     b.Navigation("JobSeeker");
-                });
-
-            modelBuilder.Entity("HireUp.Entities.Review", b =>
-                {
-                    b.HasOne("HireUp.Entities.ApplicationUser", "Author")
-                        .WithMany("ReviewsWritten")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("HireUp.Entities.JobApplication", "JobApplication")
-                        .WithMany()
-                        .HasForeignKey("JobApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HireUp.Entities.ApplicationUser", "ReviewedUser")
-                        .WithMany("ReviewsReceived")
-                        .HasForeignKey("ReviewedUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-
-                    b.Navigation("JobApplication");
-
-                    b.Navigation("ReviewedUser");
                 });
 
             modelBuilder.Entity("HireUp.Entities.UserAccessibilityNeed", b =>
@@ -1062,19 +957,11 @@ namespace HireUp.Database.Migrations
                 {
                     b.Navigation("Applications");
 
-                    b.Navigation("Followers");
-
-                    b.Navigation("Following");
-
                     b.Navigation("InterviewsAsInterviewer");
 
                     b.Navigation("InterviewsAsSeeker");
 
                     b.Navigation("JobListings");
-
-                    b.Navigation("ReviewsReceived");
-
-                    b.Navigation("ReviewsWritten");
 
                     b.Navigation("UserAccessibilityNeeds");
 

@@ -58,10 +58,28 @@ public class UserController : ControllerBase
     }
     
     /// <summary>
-    /// Retrieves the authenticated user's profile information.
+    /// Retrieves the authenticated user's complete profile information.
     /// </summary>
     /// <remarks>
     /// This endpoint requires a valid JWT Bearer token in the Authorization header.
+    /// Returns comprehensive profile details including personal information, location, job title, and profile picture.
+    ///
+    /// Sample success response (200):
+    ///
+    ///     {
+    ///       "userId": "user-123",
+    ///       "email": "john.doe@example.com",
+    ///       "fullName": "John Doe",
+    ///       "jobTitle": "Senior Software Engineer",
+    ///       "birthday": "1990-05-15",
+    ///       "gender": "Male",
+    ///       "phoneNumber": "+1-555-0123",
+    ///       "location": {
+    ///         "city": "San Francisco",
+    ///         "country": "United States"
+    ///       },
+    ///       "profilePictureUrl": "https://api.example.com/images/profile/user-123.jpg"
+    ///     }
     ///
     /// Sample error response (401 - Unauthorized):
     ///
@@ -102,7 +120,30 @@ public class UserController : ControllerBase
     /// </summary>
     /// <remarks>
     /// This endpoint is publicly accessible and does not require authentication.
-    /// It returns a limited subset of user information available for public viewing.
+    /// It returns comprehensive public profile information including skills, rating, followers count, and projects count.
+    ///
+    /// Sample success response (200):
+    ///
+    ///     {
+    ///       "userId": "user-456",
+    ///       "fullName": "Jane Smith",
+    ///       "header": "Full Stack Developer",
+    ///       "aboutMe": "Passionate about building innovative solutions",
+    ///       "projectCount": 12,
+    ///       "followersCount": 245,
+    ///       "rating": 4.8,
+    ///       "profilePicture": "https://api.example.com/images/profile/user-456.jpg",
+    ///       "skills": [
+    ///         {
+    ///           "id": 1,
+    ///           "name": "React"
+    ///         },
+    ///         {
+    ///           "id": 2,
+    ///           "name": ".NET"
+    ///         }
+    ///       ]
+    ///     }
     /// </remarks>
     /// <param name="userId">The unique identifier of the user whose profile to retrieve</param>
     /// <param name="cancellationToken">Cancellation token for the async operation</param>
@@ -131,8 +172,40 @@ public class UserController : ControllerBase
     /// Updates the authenticated user's profile information.
     /// </summary>
     /// <remarks>
-    /// Allows updating profile details such as firstName, lastName, bio, skills, and accessibility needs.
-    /// Returns 204 No Content on success (no response body).
+    /// Allows updating profile details such as firstName, lastName, bio, location, birthday, phone, gender, and job title.
+    /// Returns 200 OK with the updated profile on success.
+    ///
+    /// Sample request:
+    ///
+    ///     {
+    ///       "firstName": "John",
+    ///       "lastName": "Doe",
+    ///       "jobTitleId": 1,
+    ///       "birthday": "1990-05-15",
+    ///       "gender": "Male",
+    ///       "phoneNumber": "+1-555-0123",
+    ///       "country": "United States",
+    ///       "city": "San Francisco",
+    ///       "header": "Senior Software Engineer",
+    ///       "bio": "Passionate about building scalable applications"
+    ///     }
+    ///
+    /// Sample success response (200 - OK):
+    ///
+    ///     {
+    ///       "userId": "user-123",
+    ///       "email": "john.doe@example.com",
+    ///       "fullName": "John Doe",
+    ///       "jobTitle": "Senior Software Engineer",
+    ///       "birthday": "1990-05-15",
+    ///       "gender": "Male",
+    ///       "phoneNumber": "+1-555-0123",
+    ///       "location": {
+    ///         "city": "San Francisco",
+    ///         "country": "United States"
+    ///       },
+    ///       "profilePictureUrl": "https://api.example.com/images/profile/user-123.jpg"
+    ///     }
     ///
     /// Sample error response (400 - Update failed):
     ///
@@ -144,10 +217,10 @@ public class UserController : ControllerBase
     ///       "error": ["Update.Failed", "Could not update user profile."]
     ///     }
     /// </remarks>
-    /// <param name="request">The updated profile details (firstName, lastName, bio, skills, accessibility needs, etc.)</param>
+    /// <param name="request">The updated profile details (firstName, lastName, jobTitle, birthday, gender, phoneNumber, country, city, header, bio)</param>
     /// <param name="cancellationToken">Cancellation token for the async operation</param>
-    /// <returns>Returns 204 No Content if update was successful</returns>
-    /// <response code="204">Profile updated successfully - no response body returned</response>
+    /// <returns>Returns the updated profile with all details</returns>
+    /// <response code="200">Profile updated successfully - returns updated MyProfileResponse</response>
     /// <response code="400">Invalid request format, validation error, or update operation failed</response>
     /// <response code="401">Unauthorized - invalid or missing JWT token</response>
     /// <response code="404">User not found</response>

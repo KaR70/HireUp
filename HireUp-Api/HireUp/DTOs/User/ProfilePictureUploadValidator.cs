@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using HireUp.DTOs.Common;
+using HireUp.Settings;
 
 namespace HireUp.DTOs.User;
 

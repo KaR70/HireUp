@@ -15,6 +15,9 @@ namespace HireUp.Database.Repositories
             JobListings = new JobListingRepository(_context);
             MockInterviews = new MockInterviewRepository(_context);
             Applications = new ApplicationRepository(_context);
+            Locations = new LocationRepository(_context);
+            Reviews = new ReviewRepository(_context);
+            Follows = new FollowsRepository(_context);
         }
 
         public IUserRepository Users { get; }
@@ -22,6 +25,9 @@ namespace HireUp.Database.Repositories
         public IJobListingRepository JobListings { get; }
         public IMockInterviewRepository MockInterviews { get; }
         public IApplicationRepository Applications { get; }
+        public ILocationRepository Locations { get; }
+        public IReviewRepository Reviews { get; set; }
+        public IFollowsRepository Follows { get; set; }
 
         public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
 

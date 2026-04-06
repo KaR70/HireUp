@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddDependecies(builder.Configuration);
 
@@ -22,8 +24,14 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 #region Creating Database in Docker
-// =================== Migrations Block ======================
 if (Environment.GetEnvironmentVariable("RUN_MIGRATIONS_ON_STARTUP") == "true")
 {
     try
@@ -40,7 +48,6 @@ if (Environment.GetEnvironmentVariable("RUN_MIGRATIONS_ON_STARTUP") == "true")
         logger.LogError(ex, "An error occurred while migrating the database.");
     }
 }
-// =========================================================== 
 #endregion
 
 using (var scope = app.Services.CreateScope())
@@ -49,24 +56,12 @@ using (var scope = app.Services.CreateScope())
     await DataSeeder.SeedAllAsync(services);
 }
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-app.UseExceptionHandler();
-
 app.UseHttpsRedirection();
 
-app.UseStaticFiles(); 
-
+app.UseStaticFiles();
+app.UseRouting(); 
 app.UseAuthorization();
 
 app.MapControllers();
-
-
-
-
 
 app.Run();

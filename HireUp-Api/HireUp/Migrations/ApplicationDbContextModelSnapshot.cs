@@ -55,6 +55,9 @@ namespace HireUp.Migrations
                     b.Property<string>("Bio")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateOnly?>("Birthday")
+                        .HasColumnType("date");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -76,6 +79,13 @@ namespace HireUp.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Header")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -83,6 +93,9 @@ namespace HireUp.Migrations
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -127,6 +140,8 @@ namespace HireUp.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LocationId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -233,6 +248,24 @@ namespace HireUp.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HireUp.Entities.Follows", b =>
+                {
+                    b.Property<string>("FollowerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FollowingId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("FollowerId", "FollowingId");
+
+                    b.HasIndex("FollowingId");
+
+                    b.ToTable("Follows");
+                });
+
             modelBuilder.Entity("HireUp.Entities.JobApplication", b =>
                 {
                     b.Property<int>("Id")
@@ -260,6 +293,10 @@ namespace HireUp.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ResumeUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -269,7 +306,7 @@ namespace HireUp.Migrations
 
                     b.HasIndex("JobSeekerId");
 
-                    b.ToTable("Applications");
+                    b.ToTable("JobApplications");
                 });
 
             modelBuilder.Entity("HireUp.Entities.JobCategory", b =>
@@ -428,7 +465,7 @@ namespace HireUp.Migrations
 
                     b.ToTable("JobTypes");
                 });
-
+            
             modelBuilder.Entity("HireUp.Entities.Location", b =>
                 {
                     b.Property<int>("Id")
@@ -437,11 +474,20 @@ namespace HireUp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Country", "City")
+                        .IsUnique();
 
                     b.ToTable("Locations");
                 });
@@ -513,6 +559,46 @@ namespace HireUp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OfficeTypes");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("JobApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReviewedUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("JobApplicationId");
+
+                    b.HasIndex("ReviewedUserId");
+
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("HireUp.Entities.Skill", b =>
@@ -831,6 +917,11 @@ namespace HireUp.Migrations
 
             modelBuilder.Entity("HireUp.Entities.ApplicationUser", b =>
                 {
+                    b.HasOne("HireUp.Entities.Location", "Location")
+                        .WithMany("Users")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.OwnsMany("HireUp.Entities.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("UserId")
@@ -863,7 +954,28 @@ namespace HireUp.Migrations
                                 .HasForeignKey("UserId");
                         });
 
+                    b.Navigation("Location");
+
                     b.Navigation("RefreshTokens");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.Follows", b =>
+                {
+                    b.HasOne("HireUp.Entities.ApplicationUser", "Follower")
+                        .WithMany("Following")
+                        .HasForeignKey("FollowerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HireUp.Entities.ApplicationUser", "Following")
+                        .WithMany("Followers")
+                        .HasForeignKey("FollowingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Follower");
+
+                    b.Navigation("Following");
                 });
 
             modelBuilder.Entity("HireUp.Entities.JobApplication", b =>
@@ -944,6 +1056,33 @@ namespace HireUp.Migrations
                     b.Navigation("Interviewer");
 
                     b.Navigation("JobSeeker");
+                });
+
+            modelBuilder.Entity("HireUp.Entities.Review", b =>
+                {
+                    b.HasOne("HireUp.Entities.ApplicationUser", "Author")
+                        .WithMany("ReviewsWritten")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HireUp.Entities.JobApplication", "JobApplication")
+                        .WithMany()
+                        .HasForeignKey("JobApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HireUp.Entities.ApplicationUser", "ReviewedUser")
+                        .WithMany("ReviewsReceived")
+                        .HasForeignKey("ReviewedUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("JobApplication");
+
+                    b.Navigation("ReviewedUser");
                 });
 
             modelBuilder.Entity("HireUp.Entities.UserAccessibilityNeed", b =>
@@ -1181,11 +1320,19 @@ namespace HireUp.Migrations
                 {
                     b.Navigation("Applications");
 
+                    b.Navigation("Followers");
+
+                    b.Navigation("Following");
+
                     b.Navigation("InterviewsAsInterviewer");
 
                     b.Navigation("InterviewsAsSeeker");
 
                     b.Navigation("JobListings");
+
+                    b.Navigation("ReviewsReceived");
+
+                    b.Navigation("ReviewsWritten");
 
                     b.Navigation("UserAccessibilityNeeds");
 
@@ -1240,6 +1387,7 @@ namespace HireUp.Migrations
             modelBuilder.Entity("HireUp.Entities.Location", b =>
                 {
                     b.Navigation("UserPreferences");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("HireUp.Entities.OfficeType", b =>

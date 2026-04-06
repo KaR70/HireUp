@@ -1,4 +1,6 @@
-﻿namespace HireUp.Database.Interfaces
+﻿using System.Linq.Expressions;
+
+namespace HireUp.Database.Interfaces
 {
     public interface IRepository<T> where T : class
     {
@@ -8,5 +10,8 @@
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
         Task<bool> ExistsAsync(int id);
+        Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> criteria, CancellationToken cancellationToken = default);
+        Task<int> CountAsync(Expression<Func<T, bool>> criteria, CancellationToken cancellationToken = default);
+        Task<int> CountAsync(CancellationToken cancellationToken = default);
     }
 }

@@ -4,43 +4,45 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace HireUp.Database
-{
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
-    {
-        // الجداول القديمة (اللي كانت موجودة أصلاً)
-        public DbSet<Skill> Skills { get; set; }
-        public DbSet<JobListing> JobListings { get; set; }
-        public DbSet<MockInterview> MockInterviews { get; set; }
-        public DbSet<JobApplication> Applications { get; set; }
-        public DbSet<DisabilityType> DisabilityTypes { get; set; }
-        public DbSet<UserDisabilityType> UserDisabilityTypes { get; set; }
-        public DbSet<AccessibilityNeed> AccessibilityNeed { get; set; }
-        public DbSet<UserAccessibilityNeed> UserAccessibilityNeed { get; set; }
-        public DbSet<Company> Companies { get; set; }
-        public DbSet<ExperienceLevel> ExperienceLevels { get; set; }
-        public DbSet<JobCategory> JobCategories { get; set; }
+namespace HireUp.Database;
 
-        // الجداول الجديدة (شغل النهاردة - ضفناها هنا)
-        public DbSet<JobType> JobTypes { get; set; }
-        public DbSet<Location> Locations { get; set; }
-        public DbSet<OfficeType> OfficeTypes { get; set; }
-        public DbSet<JobRole> JobRoles { get; set; }
-        public DbSet<UserJobCategoryPreference> UserJobCategoryPreferences { get; set; }
-        public DbSet<UserJobRolePreference> UserJobRolePreferences { get; set; }
-        public DbSet<UserJobTypePreference> UserJobTypePreferences { get; set; }
-        public DbSet<UserLocationPreference> UserLocationPreferences { get; set; }
-        public DbSet<UserOfficeTypePreference> UserOfficeTypePreferences { get; set; }
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+{
+    public DbSet<Skill> Skills { get; set; }
+    public DbSet<JobListing> JobListings { get; set; }
+    public DbSet<MockInterview> MockInterviews { get; set; }
+    public DbSet<JobApplication> Applications { get; set; }
+    public DbSet<DisabilityType> DisabilityTypes { get; set; }
+    public DbSet<UserDisabilityType> UserDisabilityTypes { get; set; }
+    public DbSet<AccessibilityNeed> AccessibilityNeed { get; set; }
+    public DbSet<UserAccessibilityNeed> UserAccessibilityNeed { get; set; }
+    public DbSet<Company> Companies { get; set; }
+    public DbSet<ExperienceLevel> ExperienceLevels { get; set; }
+    public DbSet<JobCategory> JobCategories { get; set; }
+
+    // الجداول الجديدة (شغل النهاردة - ضفناها هنا)
+    public DbSet<JobType> JobTypes { get; set; }
+    public DbSet<Location> Locations { get; set; }
+    public DbSet<OfficeType> OfficeTypes { get; set; }
+    public DbSet<JobRole> JobRoles { get; set; }
+    public DbSet<UserJobCategoryPreference> UserJobCategoryPreferences { get; set; }
+    public DbSet<UserJobRolePreference> UserJobRolePreferences { get; set; }
+    public DbSet<UserJobTypePreference> UserJobTypePreferences { get; set; }
+    public DbSet<UserLocationPreference> UserLocationPreferences { get; set; }
+    public DbSet<UserOfficeTypePreference> UserOfficeTypePreferences { get; set; }
+    public DbSet<Review> Review { get; set; }
+    public DbSet<Follows> Follows { get; set; }
+    
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder); 
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder); // يفضل وضعها في البداية عند استخدام Identity
 
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             builder.Entity<UserJobCategoryPreference>().HasKey(pc => new { pc.UserId, pc.JobCategoryId });
             builder.Entity<UserJobRolePreference>().HasKey(pr => new { pr.UserId, pr.JobRoleId });
@@ -114,11 +116,10 @@ namespace HireUp.Database
                       .HasForeignKey(a => a.JobListingId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(a => a.JobSeeker)
-                      .WithMany(u => u.Applications)
-                      .HasForeignKey(a => a.JobSeekerId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-        }
+            entity.HasOne(a => a.JobSeeker)
+                  .WithMany(u => u.Applications)
+                  .HasForeignKey(a => a.JobSeekerId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
     }
 }

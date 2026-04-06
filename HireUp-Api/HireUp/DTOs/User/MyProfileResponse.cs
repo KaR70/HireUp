@@ -1,5 +1,4 @@
-﻿using HireUp.DTOs.AccessibilityNeed;
-using HireUp.DTOs.DisabilityType;
+﻿using HireUp.DTOs.Location;
 
 namespace HireUp.DTOs.User;
 
@@ -7,10 +6,11 @@ public class MyProfileResponse
 {
     public string UserId { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string? Bio { get; set; }
+    public string FullName { get; set; }
+    public string? JobTitle { get; set; }
+    public DateOnly? Birthday { get; set; }
+    public string? Gender { get; set; }
+    public string? PhoneNumber { get; set; }
+    public LocationSummaryResponse? Location { get; set; }
     public string? ProfilePictureUrl { get; set; }
-    public List<DisabilityTypeResponse> DisabilityTypes { get; set; } = new();
-    public List<AccessibilityNeedResponse> AccessibilityNeeds { get; set; } = new();
 }

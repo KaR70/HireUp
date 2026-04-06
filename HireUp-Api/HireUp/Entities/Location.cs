@@ -7,7 +7,6 @@ public class Location
     public string City { get; set; }
 
     public ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
-        public ICollection<UserJobTypePreference> UserPreferences { get; set; } = new List<UserJobTypePreference>();
-    }
+    public ICollection<UserJobTypePreference> UserPreferences { get; set; } = new List<UserJobTypePreference>();
 }
 

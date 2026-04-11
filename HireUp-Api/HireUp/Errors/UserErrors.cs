@@ -34,4 +34,5 @@ public static class UserErrors
     
     public static readonly Error ResetPasswordFailed = 
             new("User.ResetPasswordFailed", "Unable to reset password. Please try again.", StatusCodes.Status400BadRequest);
+    
 }

@@ -11,11 +11,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="07c7f11a-bfb6-4f5d-86f3-816a8b43877d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/db-forest-config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/db-forest-config.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Services/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/UserService.cs" afterDir="false" />
-    </list>
+    <list default="true" id="07c7f11a-bfb6-4f5d-86f3-816a8b43877d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -55,13 +51,28 @@
     <setting file="file://$PROJECT_DIR$/HireUp/Controllers/JobListingsController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/DTOs/JobListing/JobListingDetailResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/DTOs/JobListing/JobListingSummaryResponse.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/DTOs/Location/LocationSummaryResponse.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/DTOs/User/ProfileHeaderResponse.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/DTOs/User/ProfilePictureResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/CompanyConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/ExperienceLevelConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/FollowsConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/JobCategoryConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/JobListingConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/LocationConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/ReviewConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Interfaces/IFollowsRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Interfaces/ILocationRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Interfaces/IReviewRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Repositories/FollowsRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Repositories/LocationRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Repositories/ReviewRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Entities/Company.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Entities/ExperienceLevel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Entities/Follows.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Entities/JobCategory.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Entities/Location.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Entities/Review.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Errors/JobListingErrors.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Services/IJobListingService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Services/JobListingService.cs" root0="FORCE_HIGHLIGHTING" />
@@ -70,6 +81,10 @@
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
 }</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
@@ -84,6 +99,7 @@
     &quot;.NET Launch Settings Profile.HireUp: https.executor&quot;: &quot;Run&quot;,
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
@@ -96,7 +112,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
@@ -249,6 +265,27 @@
       <workItem from="1770050319050" duration="8635000" />
       <workItem from="1770080358780" duration="7884000" />
       <workItem from="1770134296345" duration="7476000" />
+      <workItem from="1770381061080" duration="11567000" />
+      <workItem from="1770798584264" duration="885000" />
+      <workItem from="1770806366718" duration="705000" />
+      <workItem from="1771003859844" duration="3251000" />
+      <workItem from="1771009893311" duration="1833000" />
+      <workItem from="1771247606342" duration="344000" />
+      <workItem from="1772721822844" duration="517000" />
+      <workItem from="1772722412364" duration="4928000" />
+      <workItem from="1773405888552" duration="5382000" />
+      <workItem from="1773415377995" duration="156000" />
+      <workItem from="1773428024375" duration="3250000" />
+      <workItem from="1773490383846" duration="5187000" />
+      <workItem from="1773609231872" duration="549000" />
+      <workItem from="1773616898515" duration="675000" />
+      <workItem from="1773663772348" duration="5999000" />
+      <workItem from="1773674857653" duration="315000" />
+      <workItem from="1773675699175" duration="548000" />
+      <workItem from="1773734175643" duration="1552000" />
+      <workItem from="1773741165413" duration="10727000" />
+      <workItem from="1774016757516" duration="5966000" />
+      <workItem from="1774487963813" duration="17705000" />
     </task>
     <task id="LOCAL-00001" summary="Register,User Profile, File Service">
       <option name="closed" value="true" />
@@ -282,7 +319,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769965234543</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="MyProfile&amp;PublicProfileScreens">
+      <option name="closed" value="true" />
+      <created>1774507995466</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1774507995468</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -307,7 +352,8 @@
     <MESSAGE value="added forget password logic and swagger documentation" />
     <MESSAGE value="fix" />
     <MESSAGE value="fix1" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix1" />
+    <MESSAGE value="MyProfile&amp;PublicProfileScreens" />
+    <option name="LAST_COMMIT_MESSAGE" value="MyProfile&amp;PublicProfileScreens" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

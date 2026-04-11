@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+﻿using HireUp.Settings;
 
 namespace HireUp.DTOs.Common;
 

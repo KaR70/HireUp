@@ -1,4 +1,4 @@
-﻿namespace HireUp.Abstraction;
+﻿namespace HireUp.Settings;
 
 public class FileSettings
 {

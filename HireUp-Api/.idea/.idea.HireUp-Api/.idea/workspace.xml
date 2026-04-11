@@ -11,7 +11,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="07c7f11a-bfb6-4f5d-86f3-816a8b43877d" name="Changes" comment="" />
+    <list default="true" id="07c7f11a-bfb6-4f5d-86f3-816a8b43877d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260203010908_InitialSchema.Designer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260220004431_AddJobApplicationsFinal.Designer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260220004431_AddJobApplicationsFinal.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260317120352_addedLocationTable.Designer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260317120352_addedLocationTable.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260326042008_addedFollowsTable.Designer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260326042008_addedFollowsTable.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260326045409_AddedReviewTable.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260326045945_AddedHeaderPropertyToUser.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260406220627_addedMissingTables.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260410041510_MadeDescriptionInCompanyNullable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/CompanyConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/CompanyConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Entities/Company.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Entities/Company.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/20260225214158_InitialCreate.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260326045409_AddedReviewTable.Designer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/20260225214158_InitialCreate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260203010908_InitialSchema.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/20260225214428_FinalInitial.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260326045945_AddedHeaderPropertyToUser.Designer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/20260225214428_FinalInitial.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/20260225220900_FinalDatabaseSetup.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260410041510_MadeDescriptionInCompanyNullable.Designer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/20260225220900_FinalDatabaseSetup.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/ApplicationDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/ApplicationDbContextModelSnapshot.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -30,7 +52,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="main" />
+        <entry key="$PROJECT_DIR$/.." value="test" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -94,35 +116,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.HireUp: https.executor&quot;: &quot;Run&quot;,
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.HireUp: https.executor": "Run",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;ChangesTree.GroupingKeys&quot;: [
-      &quot;directory&quot;,
-      &quot;repository&quot;
+  "keyToStringList": {
+    "ChangesTree.GroupingKeys": [
+      "directory",
+      "repository"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.HireUp: https">
     <configuration name="HireUp: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/HireUp/HireUp.csproj" />
@@ -286,6 +308,9 @@
       <workItem from="1773741165413" duration="10727000" />
       <workItem from="1774016757516" duration="5966000" />
       <workItem from="1774487963813" duration="17705000" />
+      <workItem from="1775509067303" duration="4720000" />
+      <workItem from="1775786839649" duration="5268000" />
+      <workItem from="1775871018576" duration="1081000" />
     </task>
     <task id="LOCAL-00001" summary="Register,User Profile, File Service">
       <option name="closed" value="true" />
@@ -336,6 +361,32 @@
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/test" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="Nour Emad" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">

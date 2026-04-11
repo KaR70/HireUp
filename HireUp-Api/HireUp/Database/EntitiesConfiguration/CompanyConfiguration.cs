@@ -13,6 +13,7 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
             .HasMaxLength(100);
         
         builder.Property(c => c.Description)
+            .IsRequired()
             .HasMaxLength(1000);
 
         builder.HasMany(c => c.JobListings)

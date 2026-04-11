@@ -24,13 +24,19 @@ public class ApplicationUser : IdentityUser
     public ICollection<MockInterview> InterviewsAsSeeker { get; set; } = new List<MockInterview>();
     public ICollection<MockInterview> InterviewsAsInterviewer { get; set; } = new List<MockInterview>();
     public ICollection<JobApplication> Applications { get; set; } = new List<JobApplication>();
-    public List<RefreshToken> RefreshTokens { get; set; } = [];
     public ICollection<Follows> Followers { get; set; } = new List<Follows>();
     public ICollection<Follows> Following { get; set; } = new List<Follows>();
     public ICollection<Review> ReviewsWritten { get; set; } = new List<Review>();
     public ICollection<Review> ReviewsReceived { get; set; } = new List<Review>();
     public virtual ICollection<UserDisabilityType> UserDisabilityTypes { get; set; } = new List<UserDisabilityType>();
     public virtual ICollection<UserAccessibilityNeed> UserAccessibilityNeeds { get; set; } = new List<UserAccessibilityNeed>();
+    public List<RefreshToken> RefreshTokens { get; set; } = [];
+
+    public virtual ICollection<UserJobTypePreference> UserJobTypePreferences { get; set; } = new HashSet<UserJobTypePreference>();
+    public virtual ICollection<UserLocationPreference> UserLocationPreferences { get; set; } = new HashSet<UserLocationPreference>();
+    public virtual ICollection<UserOfficeTypePreference> UserOfficeTypePreferences { get; set; } = new HashSet<UserOfficeTypePreference>();
+    public virtual ICollection<UserJobCategoryPreference> UserJobCategoryPreferences { get; set; } = new HashSet<UserJobCategoryPreference>();
+    public virtual ICollection<UserJobRolePreference> UserJobRolePreferences { get; set; } = new HashSet<UserJobRolePreference>();
 }
 
 public enum Gender

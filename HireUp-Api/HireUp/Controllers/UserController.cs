@@ -232,14 +232,14 @@ public class UserController : ControllerBase
         string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
-        string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
         
+
         var result = await _userService.UpdateMyProfileAsync(currentUserId, request, cancellationToken);
-        
-        return result.IsSuccess 
-            ? Ok(result.Value) 
-            : result.ToProblem();
-        return result.IsSuccess ? NoContent() : result.ToProblem();
+
+        if (result.IsSuccess)
+            return Ok(); 
+
+        return result.ToProblem();
     }
 
 

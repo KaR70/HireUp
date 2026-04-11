@@ -7,6 +7,7 @@ using HireUp.DTOs.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Mapster;
+using Microsoft.AspNetCore.Http;
 
 namespace HireUp.Services;
 
@@ -18,17 +19,18 @@ public class UserService : IUserService
     private readonly UrlBuilderService _urlBuilderService;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UserService(UserManager<ApplicationUser> userManager, IFileService fileService, UrlBuilderService urlBuilderService, IUnitOfWork unitOfWork)
     public UserService(
         UserManager<ApplicationUser> userManager,
         IFileService fileService,
+        UrlBuilderService urlBuilderService,
+        IUnitOfWork unitOfWork,
         ApplicationDbContext context)
     {
         _userManager = userManager;
         _fileService = fileService;
-        _context = context;
         _urlBuilderService = urlBuilderService;
         _unitOfWork = unitOfWork;
+        _context = context;
     }
 
     public async Task<Result<ProfileHeaderResponse>> GetProfileHeaderAsync(string currentUserId, CancellationToken cancellationToken = default)
@@ -38,111 +40,70 @@ public class UserService : IUserService
             .Include(u => u.UserDisabilityTypes).ThenInclude(udt => udt.DisabilityType)
             .Include(u => u.UserAccessibilityNeeds).ThenInclude(uan => uan.AccessibilityNeed)
             .FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
-        
-        if (user is null)
-            return Result.Failure<ProfileHeaderResponse>(UserErrors.UserNotFound);
+
+        if (user is null) return Result.Failure<ProfileHeaderResponse>(UserErrors.UserNotFound);
 
         var response = user.Adapt<ProfileHeaderResponse>();
-
         if (!string.IsNullOrEmpty(user.ProfilePicture))
             response.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(user.ProfilePicture);
-        
-        // TODO: Implement the real user verification logic. For now, all users are considered verified.
-        // TODO: Implement the JobRole. for now its null always
+
         response.IsVerified = true;
-        
         return Result.Success(response);
     }
-    
+
     public async Task<Result<MyProfileResponse>> GetMyProfileAsync(string currentUserId, CancellationToken cancellationToken = default)
     {
-        // TODO : Modify this to include the JobTitle
-        var userProfile = await _userManager.Users
-            .Where(u => u.Id == currentUserId)
-            .ProjectToType<MyProfileResponse>()
+        var user = await _userManager.Users
             .AsNoTracking()
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
 
-        if (userProfile is null)
-            return Result.Failure<MyProfileResponse>(UserErrors.UserNotFound);
+        if (user is null) return Result.Failure<MyProfileResponse>(UserErrors.UserNotFound);
 
-        return Result.Success(user.Adapt<MyProfileResponse>());
-        
-        if (!string.IsNullOrEmpty(userProfile.ProfilePictureUrl))
-            userProfile.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(userProfile.ProfilePictureUrl);
-        
-        return Result.Success(userProfile);
+        var response = user.Adapt<MyProfileResponse>();
+        if (!string.IsNullOrEmpty(response.ProfilePictureUrl))
+            response.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(response.ProfilePictureUrl);
+
+        return Result.Success(response);
     }
 
     public async Task<Result<PublicProfileResponse>> GetUserPublicProfileAsync(string userId, CancellationToken cancellationToken = default)
     {
         var user = await _userManager.Users
-            .Where(u => u.Id == userId)
             .AsNoTracking()
-            .ProjectToType<PublicProfileResponse>()
-            .FirstOrDefaultAsync(cancellationToken);
-        
-        if (user is null)
-            return Result.Failure<PublicProfileResponse>(UserErrors.UserNotFound);
+            .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
 
-        var Rating = await _unitOfWork.Reviews.GetAverageRatingForUserAsync(userId, cancellationToken);
-        var followerCount = await _unitOfWork.Follows.CountAsync(f => f.FollowingId == userId, cancellationToken);
+        if (user is null) return Result.Failure<PublicProfileResponse>(UserErrors.UserNotFound);
 
-        // TODO: implement Project Logic
-        user.ProjectCount = 0;
-        user.Rating = Rating ?? 0;
-        user.FollowersCount = followerCount;
-        
-        return Result.Success(user);
+        var response = user.Adapt<PublicProfileResponse>();
+        response.Rating = await _unitOfWork.Reviews.GetAverageRatingForUserAsync(userId, cancellationToken) ?? 0;
+        response.FollowersCount = await _unitOfWork.Follows.CountAsync(f => f.FollowingId == userId, cancellationToken);
+        response.ProjectCount = 0;
+
+        return Result.Success(response);
     }
 
-    public async Task<Result<MyProfileResponse>> UpdateMyProfileAsync(string currentUserId, UpdateProfileRequest request, CancellationToken cancellationToken = default)
     public async Task<Result> UpdateMyProfileAsync(string currentUserId, UpdateProfileRequest request, CancellationToken cancellationToken = default)
     {
         var currentUser = await _userManager.Users
-            // TODO: Implement this after fixing the Git problem
-            //.Include(u => u.JobTitle)
             .Include(u => u.Location)
+            .Include(u => u.UserDisabilityTypes)
+            .Include(u => u.UserAccessibilityNeeds)
             .FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
 
-        if (currentUser is null)
-            return Result.Failure<MyProfileResponse>(UserErrors.UserNotFound);
+        if (currentUser is null) return Result.Failure(UserErrors.UserNotFound);
 
-        if (string.IsNullOrEmpty(request.City) || string.IsNullOrEmpty(request.Country))
-        {
-            currentUser.Location = null;
-        }
-        else
-        {
-            var Location = await _unitOfWork.Locations
-                .FirstOrDefaultAsync(l => l.City == request.City && l.Country == request.Country, cancellationToken);
+        request.Adapt(currentUser);
 
-            if (Location is null)
+        if (!string.IsNullOrEmpty(request.City) && !string.IsNullOrEmpty(request.Country))
+        {
+            var location = await _unitOfWork.Locations.FirstOrDefaultAsync(l => l.City == request.City && l.Country == request.Country, cancellationToken);
+            if (location is null)
             {
-                Location = new Location { City = request.City, Country = request.Country };
-                _unitOfWork.Locations.AddAsync(Location);
+                location = new Location { City = request.City, Country = request.Country };
+                await _unitOfWork.Locations.AddAsync(location);
             }
-            
-            currentUser.Location = Location;
+            currentUser.Location = location;
         }
-        
-        currentUser.FirstName = request.FirstName;
-        currentUser.LastName = request.LastName;
-        currentUser.Birthday = request.Birthday;
-        currentUser.PhoneNumber = request.PhoneNumber;
-        currentUser.Header = request.Header;
-        currentUser.Bio = request.Bio;
-            return Result.Failure(UserErrors.UserNotFound);
-
-        request.Adapt(currentUser); 
-
-        // TODO: implement this after solving the git problem
-        //currentUser.jobTitle = request.JobTitleId;
-
-        foreach (var disabilityTypeId in request.DisabilityTypeIds)
-        {
-        request.DisabilityTypeIds?.ForEach(id => currentUser.UserDisabilityTypes.Add(new UserDisabilityType { UserId = currentUserId, DisabilityTypeId = id }));
-        request.AccessibilityNeedsIds?.ForEach(id => currentUser.UserAccessibilityNeeds.Add(new UserAccessibilityNeed { UserId = currentUserId, AccessibilityNeedId = id }));
 
         var updatedResult = await _userManager.UpdateAsync(currentUser);
         return updatedResult.Succeeded ? Result.Success() : Result.Failure(UserErrors.UserUpdateFailed);
@@ -165,7 +126,7 @@ public class UserService : IUserService
         {
             JobTypes = user.UserJobTypePreferences.Select(p => new LookupDto { Id = p.JobTypeId, Name = p.JobType.Name }).ToList(),
             OfficeTypes = user.UserOfficeTypePreferences.Select(p => new LookupDto { Id = p.OfficeTypeId, Name = p.OfficeType.Name }).ToList(),
-            Locations = user.UserLocationPreferences.Select(p => new LookupDto { Id = p.LocationId, Name = p.Location.Name }).ToList(),
+            Locations = user.UserLocationPreferences.Select(p => new LookupDto { Id = p.LocationId, Name = p.Location.City }).ToList(),
             JobCategories = user.UserJobCategoryPreferences.Select(p => new LookupDto { Id = p.JobCategoryId, Name = p.JobCategory.Name }).ToList(),
             JobRoles = user.UserJobRolePreferences.Select(p => new LookupDto { Id = p.JobRoleId, Name = p.JobRole.Name }).ToList()
         };
@@ -207,27 +168,6 @@ public class UserService : IUserService
             await transaction.RollbackAsync();
             return Result.Failure(UserErrors.UserUpdateFailed);
         }
-            currentUser.Gender = null;
-        }
-        else if (Enum.TryParse<Gender>(request.Gender, true, out var genderEnum))
-        {
-            currentUser.Gender = genderEnum;
-        }
-        else
-        {
-            currentUser.Gender = null; 
-        }
-        
-        var updatedResult = await _userManager.UpdateAsync(currentUser);
-        if (!updatedResult.Succeeded)
-            return Result.Failure<MyProfileResponse>(UserErrors.UserUpdateFailed);
-    
-        var response = currentUser.Adapt<MyProfileResponse>();
-        
-        if(!string.IsNullOrEmpty(response.ProfilePictureUrl))
-            response.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(response.ProfilePictureUrl);
-        
-        return Result.Success(response);
     }
 
     public async Task<Result<string>> UpdateProfilePictureAsync(string currentUserId, IFormFile profilePicture, CancellationToken cancellationToken = default)
@@ -243,37 +183,15 @@ public class UserService : IUserService
 
         return updatedResult.Succeeded ? Result.Success(saveResult.Value) : Result.Failure<string>(UserErrors.UserUpdateFailed);
     }
-
-    public async Task<Result<PublicProfileResponse>> GetUserPublicProfileAsync(string userId, CancellationToken cancellationToken = default)
+    public async Task<Result<ProfilePictureResponse>> GetProfilePictureAsync(string currentUserId, CancellationToken cancellationToken = default)
     {
-        var user = await _userManager.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
-        if (user is null) return Result.Failure<PublicProfileResponse>(UserErrors.UserNotFound);
-        return Result.Success(user.Adapt<PublicProfileResponse>());
+        var user = await _userManager.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
+        if (user is null) return Result.Failure<ProfilePictureResponse>(UserErrors.UserNotFound);
+
+        var absoluteUrl = !string.IsNullOrEmpty(user.ProfilePicture)
+            ? _urlBuilderService.ToAbsoluteUrl(user.ProfilePicture)
+            : null;
+
+        return Result.Success(new ProfilePictureResponse { ProfilePictureUrl = absoluteUrl });
     }
-
-// public async Task<Result<string>> GetProfilePictureAsync(string currentUserId, CancellationToken cancellationToken = default)
-
-    // public async Task<Result<string>> GetProfilePictureAsync(string currentUserId, CancellationToken cancellationToken = default)
-    // {
-    //     
-    // }
-
-}
-    var relativePath = user.ProfilePicture;
-    string? absoluteUrl = null;
-
-    if (!string.IsNullOrEmpty(relativePath))
-        absoluteUrl = _urlBuilderService.ToAbsoluteUrl(relativePath);
-
-    var result = new ProfilePictureResponse()
-    {
-        ProfilePictureUrl = absoluteUrl
-    };
-
-    return Result.Success(result);
-}
-    // {
-    //     
-    // }
-
 }

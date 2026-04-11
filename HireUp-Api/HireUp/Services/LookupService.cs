@@ -26,12 +26,12 @@ public class LookupService : ILookupService
             .ToListAsync();
 
         var locations = await _context.Locations
-            .Select(x => new LookupDto
-            {
-                Id = x.Id,
-                Name = x.Name
-            })
-            .ToListAsync();
+        .Select(l => new LookupDto
+        {
+            Id = l.Id,
+            Name = l.City
+        })
+    .ToListAsync();
 
         return new JobPreferencesLookupsResponse
         {

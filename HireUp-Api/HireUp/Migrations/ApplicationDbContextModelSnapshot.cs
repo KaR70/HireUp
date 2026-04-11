@@ -465,7 +465,7 @@ namespace HireUp.Migrations
 
                     b.ToTable("JobTypes");
                 });
-            
+
             modelBuilder.Entity("HireUp.Entities.Location", b =>
                 {
                     b.Property<int>("Id")
@@ -1387,6 +1387,7 @@ namespace HireUp.Migrations
             modelBuilder.Entity("HireUp.Entities.Location", b =>
                 {
                     b.Navigation("UserPreferences");
+
                     b.Navigation("Users");
                 });
 

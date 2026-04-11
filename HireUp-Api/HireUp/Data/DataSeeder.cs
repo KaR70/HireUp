@@ -67,11 +67,23 @@ public static class DataSeeder
         if (!await context.Companies.AnyAsync())
         {
             await context.Companies.AddRangeAsync(new List<Company>
-            {
-                new() { Name = "Facebook", Logo = "http://localhost:8089/Logos/Facebook.png" },
-                new() { Name = "Google", Logo = "http://localhost:8089/Logos/Google.png" },
-                new() { Name = "Inclusive Tech Inc.", Logo = "http://localhost:8089/Logos/InclusiveTech.png" }
-            });
+    {
+        new() {
+            Name = "Facebook",
+            Description = "Social media and technology company.",
+            Logo = "http://localhost:8089/Logos/Facebook.png"
+        },
+        new() {
+            Name = "Google",
+            Description = "Search engine and cloud computing services.",
+            Logo = "http://localhost:8089/Logos/Google.png"
+        },
+        new() {
+            Name = "Inclusive Tech Inc.",
+            Description = "Focused on accessibility in technology.",
+            Logo = "http://localhost:8089/Logos/InclusiveTech.png"
+        }
+    });
         }
 
         await context.SaveChangesAsync();

@@ -11,29 +11,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="07c7f11a-bfb6-4f5d-86f3-816a8b43877d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Abstraction/ILookupService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/ILookupService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Abstraction/IUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/IUserService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Controllers/UserController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/Authentication/RegisterRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/Authentication/RegisterRequest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/JobPreferencesLookupsResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/JobPreferencesLookupsResponse.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/UpdateUserPreferencesRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/UpdateUserPreferencesRequest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/UserPreferencesResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/UserPreferencesResponse.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/HireUp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/HireUp.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/20260406220627_addedMissingTables.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/20260406220627_addedMissingTables.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/20260410041510_MadeDescriptionInCompanyNullable.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/20260410041510_MadeDescriptionInCompanyNullable.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/20260411081410_Modified-Relation-Of-User-And-JobRole-To-OneToMany.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/20260411081410_Modified-Relation-Of-User-And-JobRole-To-OneToMany.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/20260411133943_ResetDatabaseSchema.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/20260411133943_ResetDatabaseSchema.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260412100507_initialSchema.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Migrations/ApplicationDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/ApplicationDbContextModelSnapshot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Services/AuthService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/AuthService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Services/LookupService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/LookupService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Services/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/UserService.cs" afterDir="false" />
-    </list>
+    <list default="true" id="07c7f11a-bfb6-4f5d-86f3-816a8b43877d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -371,7 +349,15 @@
       <option name="project" value="LOCAL" />
       <updated>1775874622104</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Fix 2">
+      <option name="closed" value="true" />
+      <created>1775993027919</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1775993027919</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -435,7 +421,8 @@
     <MESSAGE value="MyProfile&amp;PublicProfileScreens" />
     <MESSAGE value="Added Part of UserPreferences Task" />
     <MESSAGE value="some changes in the dataSeeder" />
-    <option name="LAST_COMMIT_MESSAGE" value="some changes in the dataSeeder" />
+    <MESSAGE value="Fix 2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix 2" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

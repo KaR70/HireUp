@@ -97,6 +97,9 @@ public class UserController : ControllerBase
     /// <response code="404">User profile not found</response>
     [HttpGet("")]
     [Authorize]
+    [ProducesResponseType(typeof(MyProfileResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetMyProfile(CancellationToken cancellationToken = default)
     {
         string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -235,19 +238,43 @@ public class UserController : ControllerBase
         string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
-        
-
         var result = await _userService.UpdateMyProfileAsync(currentUserId, request, cancellationToken);
 
-        if (result.IsSuccess)
-            return Ok(); 
-
-        return result.ToProblem();
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
     }
 
 
+    /// <summary>
+    /// Retrieves the authenticated user's job preferences.
+    /// </summary>
+    /// <remarks>
+    /// Returns the user's preferred job types, office types, locations, and job role.
+    ///
+    /// Sample success response (200):
+    ///
+    ///     {
+    ///       "jobTypes": [
+    ///         { "id": 1, "name": "Full-Time" },
+    ///         { "id": 2, "name": "Part-Time" }
+    ///       ],
+    ///       "officeTypes": [
+    ///         { "id": 1, "name": "Remote" },
+    ///         { "id": 2, "name": "On-Site" }
+    ///       ],
+    ///       "locations": [
+    ///         { "id": 1, "name": "San Francisco" },
+    ///         { "id": 2, "name": "New York" }
+    ///       ],
+    ///       "jobRole": { "id": 5, "name": "Senior Software Engineer" }
+    ///     }
+    /// </remarks>
+    /// <returns>Returns the user's job preferences</returns>
+    /// <response code="200">Successfully retrieved user preferences</response>
+    /// <response code="401">Unauthorized - invalid or missing JWT token</response>
     [HttpGet("me/preferences")]
     [Authorize]
+    [ProducesResponseType(typeof(UserPreferencesResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetMyPreferences()
     {
         string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -257,8 +284,32 @@ public class UserController : ControllerBase
         return Ok(preferences);
     }
 
+    /// <summary>
+    /// Updates the authenticated user's job preferences.
+    /// </summary>
+    /// <remarks>
+    /// Allows updating user's preferred job types, office types, locations, and job role.
+    /// Returns 204 No Content on success.
+    ///
+    /// Sample request:
+    ///
+    ///     {
+    ///       "jobTypeIds": [1, 2, 3],
+    ///       "officeTypeIds": [1, 2],
+    ///       "locationIds": [1, 3, 5],
+    ///       "jobRoleId": 7
+    ///     }
+    /// </remarks>
+    /// <param name="request">The user's updated job preferences (jobTypeIds, officeTypeIds, locationIds, jobRoleId)</param>
+    /// <returns>Returns 204 No Content if update was successful</returns>
+    /// <response code="204">Preferences updated successfully - no response body returned</response>
+    /// <response code="400">Invalid request format or update operation failed</response>
+    /// <response code="401">Unauthorized - invalid or missing JWT token</response>
     [HttpPut("me/preferences")]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> UpdateMyPreferences([FromBody] UpdateUserPreferencesRequest request)
     {
         string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

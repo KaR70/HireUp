@@ -11,7 +11,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="07c7f11a-bfb6-4f5d-86f3-816a8b43877d" name="Changes" comment="" />
+    <list default="true" id="07c7f11a-bfb6-4f5d-86f3-816a8b43877d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/HireUp/DTOs/JobRole/JobRoleResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260411081410_Modified-Relation-Of-User-And-JobRole-To-OneToMany.Designer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260411081410_Modified-Relation-Of-User-And-JobRole-To-OneToMany.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/MyProfileResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/MyProfileResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/ProfileHeaderResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/ProfileHeaderResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/UpdateProfileRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/UpdateProfileRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/UpdateProfileRequestValidator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/UpdateProfileRequestValidator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/ApplicationDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/CompanyConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/CompanyConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/Migrations/ApplicationDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/ApplicationDbContextModelSnapshot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Entities/ApplicationUser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Entities/ApplicationUser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Entities/Company.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Entities/Company.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Entities/JobRole.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Entities/JobRole.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Entities/UserJobRolePreference.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Mapping/MappingConfigurations.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Mapping/MappingConfigurations.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Services/JobListingService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/JobListingService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Services/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/UserService.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -30,7 +49,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="main" />
+        <entry key="$PROJECT_DIR$/.." value="test" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -286,6 +305,9 @@
       <workItem from="1773741165413" duration="10727000" />
       <workItem from="1774016757516" duration="5966000" />
       <workItem from="1774487963813" duration="17705000" />
+      <workItem from="1775509067303" duration="4720000" />
+      <workItem from="1775786839649" duration="5268000" />
+      <workItem from="1775871018576" duration="1081000" />
     </task>
     <task id="LOCAL-00001" summary="Register,User Profile, File Service">
       <option name="closed" value="true" />
@@ -327,7 +349,23 @@
       <option name="project" value="LOCAL" />
       <updated>1774507995468</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Added Part of UserPreferences Task">
+      <option name="closed" value="true" />
+      <created>1775874534486</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1775874534486</updated>
+    </task>
+    <task id="LOCAL-00007" summary="some changes in the dataSeeder">
+      <option name="closed" value="true" />
+      <created>1775874622104</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1775874622104</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -336,6 +374,42 @@
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="main" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="test" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/test" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="Nour Emad" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
@@ -353,7 +427,9 @@
     <MESSAGE value="fix" />
     <MESSAGE value="fix1" />
     <MESSAGE value="MyProfile&amp;PublicProfileScreens" />
-    <option name="LAST_COMMIT_MESSAGE" value="MyProfile&amp;PublicProfileScreens" />
+    <MESSAGE value="Added Part of UserPreferences Task" />
+    <MESSAGE value="some changes in the dataSeeder" />
+    <option name="LAST_COMMIT_MESSAGE" value="some changes in the dataSeeder" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

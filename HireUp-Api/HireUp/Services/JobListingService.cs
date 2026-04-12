@@ -1,5 +1,6 @@
 ﻿using HireUp.Database.Interfaces;
 using HireUp.DTOs.JobListing;
+using Microsoft.IdentityModel.Tokens;
 
 namespace HireUp.Services;
 
@@ -15,6 +16,12 @@ public class JobListingService : IJobListingService
     public async Task<Result<IEnumerable<JobListingSummaryResponse>>> GetFeaturedAsync()
     {
         var featuredJobListings = await _jobListingRepository.GetFeaturedAsync();
+        
+        // TODO: Fix here and the method below it to check if the result is empty before Mapping
+        if (featuredJobListings.IsNullOrEmpty())
+        {
+            
+        }
         
         var response = featuredJobListings.Adapt<IEnumerable<JobListingSummaryResponse>>();
 

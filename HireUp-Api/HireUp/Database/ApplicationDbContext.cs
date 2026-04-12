@@ -26,7 +26,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<OfficeType> OfficeTypes { get; set; }
     public DbSet<JobRole> JobRoles { get; set; }
     public DbSet<UserJobCategoryPreference> UserJobCategoryPreferences { get; set; }
-    public DbSet<UserJobRolePreference> UserJobRolePreferences { get; set; }
     public DbSet<UserJobTypePreference> UserJobTypePreferences { get; set; }
     public DbSet<UserLocationPreference> UserLocationPreferences { get; set; }
     public DbSet<UserOfficeTypePreference> UserOfficeTypePreferences { get; set; }
@@ -45,7 +44,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             builder.Entity<UserJobCategoryPreference>().HasKey(pc => new { pc.UserId, pc.JobCategoryId });
-            builder.Entity<UserJobRolePreference>().HasKey(pr => new { pr.UserId, pr.JobRoleId });
             builder.Entity<UserJobTypePreference>().HasKey(pt => new { pt.UserId, pt.JobTypeId });
             builder.Entity<UserLocationPreference>().HasKey(pl => new { pl.UserId, pl.LocationId });
             builder.Entity<UserOfficeTypePreference>().HasKey(po => new { po.UserId, po.OfficeTypeId });

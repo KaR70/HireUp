@@ -9,6 +9,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace HireUp.Controllers;
 
+/// <summary>
+/// Provides endpoints for user profile management including viewing, updating, and managing profile pictures.
+/// </summary>
 [Route("[controller]")]
 [ApiController]
 [Produces("application/json")]

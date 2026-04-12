@@ -33,28 +33,30 @@ public class UserService : IUserService
         _context = context;
     }
 
-    public async Task<Result<ProfileHeaderResponse>> GetProfileHeaderAsync(string currentUserId, CancellationToken cancellationToken = default)
+    public async Task<Result<ProfileHeaderResponse>> GetProfileHeaderAsync(string currentUserId,
+        CancellationToken cancellationToken = default)
     {
         var user = await _userManager.Users
             .Include(u => u.JobRole)
             .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken);
-        
+
         if (user is null)
             return Result.Failure<ProfileHeaderResponse>(UserErrors.UserNotFound);
 
         var response = user.Adapt<ProfileHeaderResponse>();
         if (!string.IsNullOrEmpty(user.ProfilePicture))
             response.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(user.ProfilePicture);
-        
+
         // TODO: Implement the real user verification logic. For now, all users are considered verified.
         response.JobRole = user.JobRole?.Name;
         response.IsVerified = true;
-        
+
         return Result.Success(response);
     }
 
-    public async Task<Result<MyProfileResponse>> GetMyProfileAsync(string currentUserId, CancellationToken cancellationToken = default)
+    public async Task<Result<MyProfileResponse>> GetMyProfileAsync(string currentUserId,
+        CancellationToken cancellationToken = default)
     {
         var userProfile = await _userManager.Users
             .Where(u => u.Id == currentUserId)
@@ -64,21 +66,22 @@ public class UserService : IUserService
 
         if (userProfile is null)
             return Result.Failure<MyProfileResponse>(UserErrors.UserNotFound);
-        
+
         if (!string.IsNullOrEmpty(userProfile.ProfilePictureUrl))
             userProfile.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(userProfile.ProfilePictureUrl);
-        
+
         return Result.Success(userProfile);
     }
 
-    public async Task<Result<PublicProfileResponse>> GetUserPublicProfileAsync(string userId, CancellationToken cancellationToken = default)
+    public async Task<Result<PublicProfileResponse>> GetUserPublicProfileAsync(string userId,
+        CancellationToken cancellationToken = default)
     {
         var user = await _userManager.Users
             .Where(u => u.Id == userId)
             .AsNoTracking()
             .ProjectToType<PublicProfileResponse>()
             .FirstOrDefaultAsync(cancellationToken);
-        
+
         if (user is null)
             return Result.Failure<PublicProfileResponse>(UserErrors.UserNotFound);
 
@@ -89,7 +92,7 @@ public class UserService : IUserService
         user.ProjectCount = 0;
         user.Rating = Rating ?? 0;
         user.FollowersCount = followerCount;
-        
+
         return Result.Success(user);
     }
 
@@ -117,10 +120,10 @@ public class UserService : IUserService
                 Location = new Location { City = request.City, Country = request.Country };
                 _unitOfWork.Locations.AddAsync(Location);
             }
-            
+
             currentUser.Location = Location;
         }
-        
+
         currentUser.FirstName = request.FirstName;
         currentUser.LastName = request.LastName;
         currentUser.Birthday = request.Birthday;
@@ -139,21 +142,21 @@ public class UserService : IUserService
         }
         else
         {
-            currentUser.Gender = null; 
+            currentUser.Gender = null;
         }
-        
+
         var updatedResult = await _userManager.UpdateAsync(currentUser);
         if (!updatedResult.Succeeded)
             return Result.Failure<MyProfileResponse>(UserErrors.UserUpdateFailed);
-    
+
         var response = currentUser.Adapt<MyProfileResponse>();
-        
-        if(!string.IsNullOrEmpty(response.ProfilePictureUrl))
+
+        if (!string.IsNullOrEmpty(response.ProfilePictureUrl))
             response.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(response.ProfilePictureUrl);
-        
+
         return Result.Success(response);
     }
-    
+
     public async Task<UserPreferencesResponse> GetUserPreferencesAsync(string userId)
     {
         var user = await _userManager.Users
@@ -162,24 +165,31 @@ public class UserService : IUserService
             .Include(u => u.UserOfficeTypePreferences).ThenInclude(p => p.OfficeType)
             .Include(u => u.UserLocationPreferences).ThenInclude(p => p.Location)
             .Include(u => u.UserJobCategoryPreferences).ThenInclude(p => p.JobCategory)
-            .Include(u => u.UserJobRolePreferences).ThenInclude(p => p.JobRole)
+            .Include(u => u.JobRole)
             .FirstOrDefaultAsync(u => u.Id == userId);
 
         if (user is null) return new UserPreferencesResponse();
 
         return new UserPreferencesResponse
         {
-            JobTypes = user.UserJobTypePreferences.Select(p => new LookupDto { Id = p.JobTypeId, Name = p.JobType.Name }).ToList(),
-            OfficeTypes = user.UserOfficeTypePreferences.Select(p => new LookupDto { Id = p.OfficeTypeId, Name = p.OfficeType.Name }).ToList(),
-            Locations = user.UserLocationPreferences.Select(p => new LookupDto { Id = p.LocationId, Name = p.Location.City }).ToList(),
-            JobCategories = user.UserJobCategoryPreferences.Select(p => new LookupDto { Id = p.JobCategoryId, Name = p.JobCategory.Name }).ToList(),
-            JobRoles = user.UserJobRolePreferences.Select(p => new LookupDto { Id = p.JobRoleId, Name = p.JobRole.Name }).ToList()
+            JobTypes = user.UserJobTypePreferences
+                .Select(p => new LookupDto { Id = p.JobTypeId, Name = p.JobType.Name }).ToList(),
+            OfficeTypes = user.UserOfficeTypePreferences
+                .Select(p => new LookupDto { Id = p.OfficeTypeId, Name = p.OfficeType.Name }).ToList(),
+            Locations = user.UserLocationPreferences
+                .Select(p => new LookupDto { Id = p.LocationId, Name = p.Location.City }).ToList(),
+            //TODO: Decide wether to keep this or not
+            // JobCategories = user.UserJobCategoryPreferences
+            //     .Select(p => new LookupDto { Id = p.JobCategoryId, Name = p.JobCategory.Name }).ToList(),
+            JobRole = user.JobRole != null 
+                ? new LookupDto { Id = user.JobRole.Id, Name = user.JobRole.Name } 
+                : null
         };
     }
 
     public async Task<Result> UpdateUserPreferencesAsync(string userId, UpdateUserPreferencesRequest request)
     {
-        using var transaction = await _context.Database.BeginTransactionAsync();
+        //using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
             var user = await _userManager.Users
@@ -187,7 +197,7 @@ public class UserService : IUserService
                 .Include(u => u.UserOfficeTypePreferences)
                 .Include(u => u.UserLocationPreferences)
                 .Include(u => u.UserJobCategoryPreferences)
-                .Include(u => u.UserJobRolePreferences)
+                .Include(u => u.JobRole)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user is null) return Result.Failure(UserErrors.UserNotFound);
@@ -196,41 +206,50 @@ public class UserService : IUserService
             user.UserOfficeTypePreferences.Clear();
             user.UserLocationPreferences.Clear();
             user.UserJobCategoryPreferences.Clear();
-            user.UserJobRolePreferences.Clear();
 
-            request.JobTypeIds?.ForEach(id => user.UserJobTypePreferences.Add(new UserJobTypePreference { JobTypeId = id }));
-            request.OfficeTypeIds?.ForEach(id => user.UserOfficeTypePreferences.Add(new UserOfficeTypePreference { OfficeTypeId = id }));
-            request.LocationIds?.ForEach(id => user.UserLocationPreferences.Add(new UserLocationPreference { LocationId = id }));
-            request.JobCategoryIds?.ForEach(id => user.UserJobCategoryPreferences.Add(new UserJobCategoryPreference { JobCategoryId = id }));
-            request.JobRoleIds?.ForEach(id => user.UserJobRolePreferences.Add(new UserJobRolePreference { JobRoleId = id }));
+            request.JobTypeIds?.ForEach(id =>
+                user.UserJobTypePreferences.Add(new UserJobTypePreference { JobTypeId = id }));
+            request.OfficeTypeIds?.ForEach(id =>
+                user.UserOfficeTypePreferences.Add(new UserOfficeTypePreference { OfficeTypeId = id }));
+            request.LocationIds?.ForEach(id =>
+                user.UserLocationPreferences.Add(new UserLocationPreference { LocationId = id }));
+            
+            //TODO: Decide wether to keep this or not
+            // request.JobCategoryIds?.ForEach(id =>
+            //     user.UserJobCategoryPreferences.Add(new UserJobCategoryPreference { JobCategoryId = id }));
+            
+            user.JobRoleId = request.JobRoleId;
 
             await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
+            //await transaction.CommitAsync();
             return Result.Success();
         }
         catch
         {
-            await transaction.RollbackAsync();
+            //await transaction.RollbackAsync();
             return Result.Failure(UserErrors.UserUpdateFailed);
         }
+    }
 
-    public async Task<Result<string>> UpdateProfilePictureAsync(string currentUserId, IFormFile profilePicture, CancellationToken cancellationToken = default)
+    public async Task<Result<string>> UpdateProfilePictureAsync(string currentUserId, IFormFile profilePicture,
+        CancellationToken cancellationToken = default)
     {
-        var currentUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
+        var currentUser =
+            await _userManager.Users.FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
 
         if (currentUser is null)
             return Result.Failure<string>(UserErrors.UserNotFound);
-        
+
         var oldPictureRelativePath = currentUser.ProfilePicture;
-        
+
         var saveResult = await _fileService.SaveFileAsync(profilePicture, "images", cancellationToken);
-        
+
         if (saveResult.IsFaliure)
             return Result.Failure<string>(FileErrors.ProfilePictureUploadFailed);
-        
+
         var newPictureRelativePath = saveResult.Value;
         currentUser.ProfilePicture = newPictureRelativePath;
-        
+
         var updatedResult = await _userManager.UpdateAsync(currentUser);
 
         if (!updatedResult.Succeeded)
@@ -241,14 +260,14 @@ public class UserService : IUserService
 
         if (!string.IsNullOrEmpty(oldPictureRelativePath))
             _fileService.DeleteFile("images", Path.GetFileName(oldPictureRelativePath)!);
-        
+
         return Result.Success(newPictureRelativePath);
     }
 
-    public async Task<Result<ProfilePictureResponse>> GetProfilePictureAsync(string currentUserId, CancellationToken cancellationToken = default)
+    public async Task<Result<ProfilePictureResponse>> GetProfilePictureAsync(string currentUserId,
+        CancellationToken cancellationToken = default)
     {
-        var user = await _userManager.Users.
-            AsNoTracking()
+        var user = await _userManager.Users.AsNoTracking()
             .FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
 
         if (user is null)
@@ -264,7 +283,7 @@ public class UserService : IUserService
         {
             ProfilePictureUrl = absoluteUrl
         };
-        
+
         return Result.Success(result);
     }
 }

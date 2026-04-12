@@ -19,7 +19,6 @@ public class AuthService : IAuthService
     private readonly ILogger<AuthService> _logger;
     private readonly IEmailSender _emailSender;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ApplicationDbContext _context;
     
 
     private readonly int _refreshTokenExpiryDays = 14;
@@ -30,8 +29,7 @@ public class AuthService : IAuthService
         SignInManager<ApplicationUser> signInManager,
         ILogger<AuthService> logger,
         IEmailSender emailSender,
-        IHttpContextAccessor httpContextAccessor,
-        ApplicationDbContext context) 
+        IHttpContextAccessor httpContextAccessor) 
     {
         _userManager = userManager;
         _jwtProvider = jwtProvider;
@@ -39,7 +37,6 @@ public class AuthService : IAuthService
         _logger = logger;
         _emailSender = emailSender;
         _httpContextAccessor = httpContextAccessor;
-        _context = context; 
     }
 
     
@@ -145,37 +142,14 @@ public class AuthService : IAuthService
             return Result.Failure(UserErrors.DuplicatedEmail);
 
         var user = request.Adapt<ApplicationUser>();
-
+        
+        // disabling the RequireConfirmedAccount at the sign in until figuring out an email service for the confirmation email 
         user.EmailConfirmed = true;
 
         var result = await _userManager.CreateAsync(user, request.Password);
 
         if (result.Succeeded)
         {
-           
-            if (request.SelectedJobTypeIds != null && request.SelectedJobTypeIds.Any())
-            {
-                var userJobTypes = request.SelectedJobTypeIds.Select(typeId => new UserJobTypePreference
-                {
-                    UserId = user.Id,
-                    JobTypeId = typeId
-                });
-                await _context.UserJobTypePreferences.AddRangeAsync(userJobTypes);
-            }
-
-            
-            if (request.SelectedLocationIds != null && request.SelectedLocationIds.Any())
-            {
-                var userLocations = request.SelectedLocationIds.Select(locId => new UserLocationPreference
-                {
-                    UserId = user.Id,
-                    LocationId = locId
-                });
-                await _context.UserLocationPreferences.AddRangeAsync(userLocations);
-            }
-
-            await _context.SaveChangesAsync(cancellationToken);
-
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 

@@ -30,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Database\Migrations\" />
     <Folder Include="wwwroot\images\profilePictures\" />
     <Folder Include="wwwroot\uploads\resumes\" />
   </ItemGroup>

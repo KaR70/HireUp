@@ -31,12 +31,30 @@ public class LookupService : ILookupService
             Id = l.Id,
             Name = l.City
         })
-    .ToListAsync();
-
+        .ToListAsync();
+    
+        var officeTypes = await _context.OfficeTypes
+            .Select(x => new LookupDto
+            {
+                Id = x.Id,
+                Name = x.Name
+            })
+            .ToListAsync();
+        
+        var jobRoles = await _context.JobRoles
+            .Select(x => new LookupDto
+            {
+                Id = x.Id,
+                Name = x.Name
+            })
+            .ToListAsync();
+        
         return new JobPreferencesLookupsResponse
         {
+            JobRoles = jobRoles,
+            Locations = locations,
             JobTypes = jobTypes,
-            Locations = locations
+            WorkModes = officeTypes
         };
     }
 

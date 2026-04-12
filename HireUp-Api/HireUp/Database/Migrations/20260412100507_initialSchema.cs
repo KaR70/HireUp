@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace HireUp.Migrations
+namespace HireUp.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class ResetDatabaseSchema : Migration
+    public partial class initialSchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,7 +48,7 @@ namespace HireUp.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     Logo = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -203,6 +203,7 @@ namespace HireUp.Migrations
                     Gender = table.Column<int>(type: "int", nullable: true),
                     Header = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     LocationId = table.Column<int>(type: "int", nullable: true),
+                    JobRoleId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -221,6 +222,11 @@ namespace HireUp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_JobRoles_JobRoleId",
+                        column: x => x.JobRoleId,
+                        principalTable: "JobRoles",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_AspNetUsers_Locations_LocationId",
                         column: x => x.LocationId,
@@ -529,36 +535,11 @@ namespace HireUp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserJobRolePreferences",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    JobRoleId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserJobRolePreferences", x => new { x.UserId, x.JobRoleId });
-                    table.ForeignKey(
-                        name: "FK_UserJobRolePreferences_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserJobRolePreferences_JobRoles_JobRoleId",
-                        column: x => x.JobRoleId,
-                        principalTable: "JobRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserJobTypePreferences",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     JobTypeId = table.Column<int>(type: "int", nullable: false),
-                    JobRoleId = table.Column<int>(type: "int", nullable: true),
                     LocationId = table.Column<int>(type: "int", nullable: true),
                     OfficeTypeId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -571,11 +552,6 @@ namespace HireUp.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserJobTypePreferences_JobRoles_JobRoleId",
-                        column: x => x.JobRoleId,
-                        principalTable: "JobRoles",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_UserJobTypePreferences_JobTypes_JobTypeId",
                         column: x => x.JobTypeId,
@@ -812,6 +788,11 @@ namespace HireUp.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_JobRoleId",
+                table: "AspNetUsers",
+                column: "JobRoleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_LocationId",
                 table: "AspNetUsers",
                 column: "LocationId");
@@ -915,16 +896,6 @@ namespace HireUp.Migrations
                 column: "JobCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserJobRolePreferences_JobRoleId",
-                table: "UserJobRolePreferences",
-                column: "JobRoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserJobTypePreferences_JobRoleId",
-                table: "UserJobTypePreferences",
-                column: "JobRoleId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserJobTypePreferences_JobTypeId",
                 table: "UserJobTypePreferences",
                 column: "JobTypeId");
@@ -998,9 +969,6 @@ namespace HireUp.Migrations
                 name: "UserJobCategoryPreferences");
 
             migrationBuilder.DropTable(
-                name: "UserJobRolePreferences");
-
-            migrationBuilder.DropTable(
                 name: "UserJobTypePreferences");
 
             migrationBuilder.DropTable(
@@ -1025,9 +993,6 @@ namespace HireUp.Migrations
                 name: "DisabilityTypes");
 
             migrationBuilder.DropTable(
-                name: "JobRoles");
-
-            migrationBuilder.DropTable(
                 name: "OfficeTypes");
 
             migrationBuilder.DropTable(
@@ -1050,6 +1015,9 @@ namespace HireUp.Migrations
 
             migrationBuilder.DropTable(
                 name: "JobTypes");
+
+            migrationBuilder.DropTable(
+                name: "JobRoles");
 
             migrationBuilder.DropTable(
                 name: "Locations");

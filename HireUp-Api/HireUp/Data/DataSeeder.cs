@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 public static class DataSeeder
 {
+    // Main method to orchestrate all seeding
     public static async Task SeedAllAsync(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
@@ -19,6 +20,7 @@ public static class DataSeeder
         await SeedFeaturesAsync(context);
     }
 
+    // LEVEL 0: Foundation Entities
     private static async Task SeedLookupsAsync(ApplicationDbContext context)
     {
         if (!await context.Skills.AnyAsync())
@@ -66,12 +68,35 @@ public static class DataSeeder
 
         if (!await context.Companies.AnyAsync())
         {
-            await context.Companies.AddRangeAsync(new List<Company>
+            var companies = new List<Company>
             {
-                new() { Name = "Facebook", Logo = "http://localhost:8089/Logos/Facebook.png" },
-                new() { Name = "Google", Logo = "http://localhost:8089/Logos/Google.png" },
-                new() { Name = "Inclusive Tech Inc.", Logo = "http://localhost:8089/Logos/InclusiveTech.png" }
-            });
+                new() {
+                    Name = "Facebook",
+                    Description = "A social networking service that allows users to connect with friends and family.",
+                    Logo = "http://localhost:8089/Logos/Facebook.png"
+                },
+                new() {
+                    Name = "Google",
+                    Description = "A multinational technology company that specializes in Internet-related services and products.",
+                    Logo = "http://localhost:8089/Logos/Google.png"
+                },
+                new() {
+                    Name = "Burger King",
+                    Description = "A global chain of fast-food restaurants, famous for its flame-grilled burgers.",
+                    Logo = "http://localhost:8089/Logos/BurgerKing.png"
+                },
+                new() {
+                    Name = "Beats",
+                    Description = "A leading audio brand founded in 2006 by Dr. Dre and Jimmy Iovine.",
+                    Logo = "http://localhost:8089/Logos/Beats.png"
+                },
+                new() {
+                    Name = "Inclusive Tech Inc.",
+                    Description = "A forward-thinking technology company dedicated to building accessible products for everyone.",
+                    Logo = "http://localhost:8089/Logos/InclusiveTech.png"
+                }
+            };
+            await context.Companies.AddRangeAsync(companies);
         }
 
         await context.SaveChangesAsync();

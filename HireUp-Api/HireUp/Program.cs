@@ -1,4 +1,6 @@
 using HireUp;
+using HireUp.Abstraction; 
+using HireUp.Services;    
 using HireUp.Database;
 using HireUp.Database.Interfaces;
 using HireUp.Database.Repositories;
@@ -12,14 +14,16 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDependecies(builder.Configuration);
 
-// Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IJobListingRepository, JobListingRepository>();
 builder.Services.AddScoped<IMockInterviewRepository, MockInterviewRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 
-// Unit of Work
+builder.Services.AddScoped<ILookupService, LookupService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<UrlBuilderService>(); 
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
@@ -56,10 +60,28 @@ using (var scope = app.Services.CreateScope())
     await DataSeeder.SeedAllAsync(services);
 }
 
-app.UseHttpsRedirection();
 
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI(c => {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "HireUp API V1");
+        c.RoutePrefix = "swagger"; 
+    });
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+}
+
+app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting(); 
+
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapControllers();

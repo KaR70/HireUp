@@ -1,10 +1,9 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+﻿using HireUp.Abstraction;
 using HireUp.DTOs.User;
-using HireUp.Mapping;
 using HireUp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -18,10 +17,10 @@ namespace HireUp.Controllers;
 [Produces("application/json")]
 public class UserController : ControllerBase
 {
-    private readonly IUserService _userService;
+    private readonly HireUp.Abstraction.IUserService _userService;
     private readonly UrlBuilderService _urlBuilderService;
 
-    public UserController(IUserService userService, UrlBuilderService urlBuilderService)
+    public UserController(HireUp.Abstraction.IUserService userService, UrlBuilderService urlBuilderService)
     {
         _userService = userService;
         _urlBuilderService = urlBuilderService;
@@ -104,12 +103,14 @@ public class UserController : ControllerBase
     public async Task<IActionResult> GetMyProfile(CancellationToken cancellationToken = default)
     {
         string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        
-        if (string.IsNullOrEmpty(currentUserId))
-            return Unauthorized();
-        
-        var result = await _userService.GetMyProfileAsync(currentUserId, cancellationToken);
+        if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
+        var result = await _userService.GetMyProfileAsync(currentUserId, cancellationToken);
+        if (result.IsFaliure) return result.ToProblem();
+
+        var profile = result.Value;
+        profile.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(profile.ProfilePictureUrl);
+        return Ok(profile);
         return result.IsSuccess
             ? Ok(result.Value)
             : result.ToProblem();
@@ -234,60 +235,88 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateProfileRequest request, CancellationToken cancellationToken = default)
     {
-        string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        
+        string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
+
         var result = await _userService.UpdateMyProfileAsync(currentUserId, request, cancellationToken);
-        
-        return result.IsSuccess 
-            ? Ok(result.Value) 
-            : result.ToProblem();
+
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
     }
-    
+
+
     /// <summary>
-    /// Updates the authenticated user's profile picture.
+    /// Retrieves the authenticated user's job preferences.
     /// </summary>
     /// <remarks>
-    /// Accepts image file upload in multipart/form-data format.
-    /// Only standard image formats are accepted (jpg, jpeg, png, gif, webp).
-    /// File size must not exceed the configured limit.
+    /// Returns the user's preferred job types, office types, locations, and job role.
     ///
     /// Sample success response (200):
     ///
     ///     {
-    ///       "profilePictureUrl": "https://api.example.com/images/profile/user-123.jpg"
+    ///       "jobTypes": [
+    ///         { "id": 1, "name": "Full-Time" },
+    ///         { "id": 2, "name": "Part-Time" }
+    ///       ],
+    ///       "officeTypes": [
+    ///         { "id": 1, "name": "Remote" },
+    ///         { "id": 2, "name": "On-Site" }
+    ///       ],
+    ///       "locations": [
+    ///         { "id": 1, "name": "San Francisco" },
+    ///         { "id": 2, "name": "New York" }
+    ///       ],
+    ///       "jobRole": { "id": 5, "name": "Senior Software Engineer" }
     ///     }
     /// </remarks>
-    /// <param name="profilePicture">The profile picture file to upload (must be an image file)</param>
-    /// <param name="cancellationToken">Cancellation token for the async operation</param>
-    /// <returns>Returns the URL of the newly uploaded profile picture</returns>
-    /// <response code="200">Profile picture updated successfully - returns the new picture URL</response>
-    /// <response code="400">Invalid file format or file size exceeds limit</response>
+    /// <returns>Returns the user's job preferences</returns>
+    /// <response code="200">Successfully retrieved user preferences</response>
     /// <response code="401">Unauthorized - invalid or missing JWT token</response>
-    /// <response code="404">User not found</response>
-    /// <response code="415">Unsupported media type - file is not a valid image format</response>
-    [HttpPost("me/profile-picture")]
+    [HttpGet("me/preferences")]
     [Authorize]
-    [Consumes("multipart/form-data")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(UserPreferencesResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
-    public async Task<IActionResult> UpdateProfilePicture([FromForm] ProfilePictureUpload profilePicture, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetMyPreferences()
     {
         string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        
-        if (string.IsNullOrEmpty(currentUserId))
-            return Unauthorized();
-        
-        var result = await _userService.UpdateProfilePictureAsync(currentUserId,profilePicture.Image, cancellationToken);
-        
-        if (result.IsFaliure)
-            return result.ToProblem();
+        if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
-        var profilePictureUrl = _urlBuilderService.ToAbsoluteUrl(result.Value);
-        
-        return Ok(new { profilePictureUrl });
+        var preferences = await _userService.GetUserPreferencesAsync(currentUserId);
+        return Ok(preferences);
+    }
+
+    /// <summary>
+    /// Updates the authenticated user's job preferences.
+    /// </summary>
+    /// <remarks>
+    /// Allows updating user's preferred job types, office types, locations, and job role.
+    /// Returns 204 No Content on success.
+    ///
+    /// Sample request:
+    ///
+    ///     {
+    ///       "jobTypeIds": [1, 2, 3],
+    ///       "officeTypeIds": [1, 2],
+    ///       "locationIds": [1, 3, 5],
+    ///       "jobRoleId": 7
+    ///     }
+    /// </remarks>
+    /// <param name="request">The user's updated job preferences (jobTypeIds, officeTypeIds, locationIds, jobRoleId)</param>
+    /// <returns>Returns 204 No Content if update was successful</returns>
+    /// <response code="204">Preferences updated successfully - no response body returned</response>
+    /// <response code="400">Invalid request format or update operation failed</response>
+    /// <response code="401">Unauthorized - invalid or missing JWT token</response>
+    [HttpPut("me/preferences")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> UpdateMyPreferences([FromBody] UpdateUserPreferencesRequest request)
+    {
+        string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
+
+        var result = await _userService.UpdateUserPreferencesAsync(currentUserId, request);
+        return result.IsSuccess ? NoContent() : result.ToProblem();
     }
 
     /// <summary>

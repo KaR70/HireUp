@@ -21,8 +21,9 @@ public class UserService : IUserService
     public async Task<Result<ProfileHeaderResponse>> GetProfileHeaderAsync(string currentUserId, CancellationToken cancellationToken = default)
     {
         var user = await _userManager.Users
+            .Include(u => u.JobRole)
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
         
         if (user is null)
             return Result.Failure<ProfileHeaderResponse>(UserErrors.UserNotFound);
@@ -33,7 +34,7 @@ public class UserService : IUserService
             response.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(user.ProfilePicture);
         
         // TODO: Implement the real user verification logic. For now, all users are considered verified.
-        // TODO: Implement the JobRole. for now its null always
+        response.JobRole = user.JobRole?.Name;
         response.IsVerified = true;
         
         return Result.Success(response);
@@ -41,7 +42,6 @@ public class UserService : IUserService
     
     public async Task<Result<MyProfileResponse>> GetMyProfileAsync(string currentUserId, CancellationToken cancellationToken = default)
     {
-        // TODO : Modify this to include the JobTitle
         var userProfile = await _userManager.Users
             .Where(u => u.Id == currentUserId)
             .ProjectToType<MyProfileResponse>()
@@ -82,8 +82,7 @@ public class UserService : IUserService
     public async Task<Result<MyProfileResponse>> UpdateMyProfileAsync(string currentUserId, UpdateProfileRequest request, CancellationToken cancellationToken = default)
     {
         var currentUser = await _userManager.Users
-            // TODO: Implement this after fixing the Git problem
-            //.Include(u => u.JobTitle)
+            .Include(u => u.JobRole)
             .Include(u => u.Location)
             .FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
 
@@ -114,8 +113,7 @@ public class UserService : IUserService
         currentUser.PhoneNumber = request.PhoneNumber;
         currentUser.Header = request.Header;
         currentUser.Bio = request.Bio;
-        // TODO: implement this after solving the git problem
-        //currentUser.jobTitle = request.JobTitleId;
+        currentUser.JobRoleId = request.JobRoleId;
 
         if (string.IsNullOrEmpty(request.Gender))
         {

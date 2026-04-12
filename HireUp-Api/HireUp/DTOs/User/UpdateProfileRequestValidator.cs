@@ -15,7 +15,7 @@ public class UpdateProfileRequestValidator : AbstractValidator<UpdateProfileRequ
             .Length(2, 50);
 
         // TODO: Uncomment this
-        // RuleFor(x => x.JobTitleId)
+        // RuleFor(x => x.JobRoleId)
         //     .GreaterThan(0)
         //     .NotEmpty();
         

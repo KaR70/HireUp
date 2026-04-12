@@ -4,7 +4,7 @@ public class UpdateProfileRequest
 {
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
-    public int? JobTitleId { get; set; }
+    public int? JobRoleId { get; set; }
     public DateOnly? Birthday { get; set; }
     public string? Gender { get; set; }
     public string? PhoneNumber { get; set; }

@@ -12,21 +12,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="07c7f11a-bfb6-4f5d-86f3-816a8b43877d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/HireUp/Entities/JobRole.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Entities/JobType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Entities/OfficeType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Entities/UserJobCategoryPreference.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Entities/UserJobRolePreference.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Entities/UserJobTypePreference.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Entities/UserLocationPreference.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HireUp/Entities/UserOfficeTypePreference.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/DTOs/JobRole/JobRoleResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260411081410_Modified-Relation-Of-User-And-JobRole-To-OneToMany.Designer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/20260411081410_Modified-Relation-Of-User-And-JobRole-To-OneToMany.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/MyProfileResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/MyProfileResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/ProfileHeaderResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/ProfileHeaderResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/UpdateProfileRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/UpdateProfileRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/DTOs/User/UpdateProfileRequestValidator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DTOs/User/UpdateProfileRequestValidator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HireUp/Database/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/ApplicationDbContext.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/CompanyConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/CompanyConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/Migrations/ApplicationDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Migrations/ApplicationDbContextModelSnapshot.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HireUp/Entities/ApplicationUser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Entities/ApplicationUser.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HireUp/Entities/Company.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Entities/Company.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Entities/JobListing.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Entities/JobListing.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HireUp/Entities/Location.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Entities/Location.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Entities/JobRole.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Entities/JobRole.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Entities/UserJobRolePreference.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/HireUp/Mapping/MappingConfigurations.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Mapping/MappingConfigurations.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Services/JobListingService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/JobListingService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Services/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/UserService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -346,7 +349,23 @@
       <option name="project" value="LOCAL" />
       <updated>1774507995468</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Added Part of UserPreferences Task">
+      <option name="closed" value="true" />
+      <created>1775874534486</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1775874534486</updated>
+    </task>
+    <task id="LOCAL-00007" summary="some changes in the dataSeeder">
+      <option name="closed" value="true" />
+      <created>1775874622104</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1775874622104</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -360,6 +379,11 @@
         <entry key="Branch">
           <value>
             <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="main" />
+                </option>
+              </RecentGroup>
               <RecentGroup>
                 <option name="FILTER_VALUES">
                   <option value="test" />
@@ -403,7 +427,9 @@
     <MESSAGE value="fix" />
     <MESSAGE value="fix1" />
     <MESSAGE value="MyProfile&amp;PublicProfileScreens" />
-    <option name="LAST_COMMIT_MESSAGE" value="MyProfile&amp;PublicProfileScreens" />
+    <MESSAGE value="Added Part of UserPreferences Task" />
+    <MESSAGE value="some changes in the dataSeeder" />
+    <option name="LAST_COMMIT_MESSAGE" value="some changes in the dataSeeder" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

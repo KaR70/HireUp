@@ -15,7 +15,8 @@ public class MappingConfigurations : IRegister
             .Map(dest => dest.ProfilePictureUrl, src => src.ProfilePicture)
             .Map(dest => dest.FullName, src => $"{src.FirstName} {src.LastName}")
             .Map(dest => dest.Gender, src => src.Gender.HasValue ? src.Gender.Value.ToString() : null)
-            .Map(dest => dest.Location, src => src.Location);
+            .Map(dest => dest.Location, src => src.Location)
+            .Map(dest => dest.JobRole, src => src.JobRole);
 
         config.NewConfig<ApplicationUser, PublicProfileResponse>()
             .Map(dest => dest.ProfilePicture, src => src.ProfilePicture)

@@ -15,9 +15,10 @@ public class ApplicationUser : IdentityUser
     public string? Header { get; set; }
 
     public int? LocationId { get; set; }
-
+    public int? JobRoleId { get; set; }
 
     public Location Location { get; set; }
+    public JobRole? JobRole { get; set; }  
     
     public ICollection<Skill> Skills { get; set; } = new List<Skill>();
     public ICollection<JobListing> JobListings { get; set; } = new List<JobListing>();
@@ -36,7 +37,6 @@ public class ApplicationUser : IdentityUser
     public virtual ICollection<UserLocationPreference> UserLocationPreferences { get; set; } = new HashSet<UserLocationPreference>();
     public virtual ICollection<UserOfficeTypePreference> UserOfficeTypePreferences { get; set; } = new HashSet<UserOfficeTypePreference>();
     public virtual ICollection<UserJobCategoryPreference> UserJobCategoryPreferences { get; set; } = new HashSet<UserJobCategoryPreference>();
-    public virtual ICollection<UserJobRolePreference> UserJobRolePreferences { get; set; } = new HashSet<UserJobRolePreference>();
 }
 
 public enum Gender

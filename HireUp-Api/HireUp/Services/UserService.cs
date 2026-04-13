@@ -33,13 +33,12 @@ public class UserService : IUserService
         _context = context;
     }
 
-    public async Task<Result<ProfileHeaderResponse>> GetProfileHeaderAsync(string currentUserId,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<ProfileHeaderResponse>> GetProfileHeaderAsync(string currentUserId, CancellationToken cancellationToken = default)
     {
         var user = await _userManager.Users
             .Include(u => u.JobRole)
             .AsNoTracking()
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
 
         if (user is null)
             return Result.Failure<ProfileHeaderResponse>(UserErrors.UserNotFound);
@@ -96,7 +95,7 @@ public class UserService : IUserService
         return Result.Success(user);
     }
 
-    public async Task<Result<MyProfileResponse>> UpdateMyProfileAsync(string currentUserId, UpdateProfileRequest request, CancellationToken cancellationToken = default)
+    public async Task<Result> UpdateMyProfileAsync(string currentUserId, UpdateProfileRequest request, CancellationToken cancellationToken = default)
     {
         var currentUser = await _userManager.Users
             .Include(u => u.JobRole)
@@ -149,12 +148,14 @@ public class UserService : IUserService
         if (!updatedResult.Succeeded)
             return Result.Failure<MyProfileResponse>(UserErrors.UserUpdateFailed);
 
-        var response = currentUser.Adapt<MyProfileResponse>();
+        //var response = currentUser.Adapt<MyProfileResponse>();
 
-        if (!string.IsNullOrEmpty(response.ProfilePictureUrl))
-            response.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(response.ProfilePictureUrl);
+        // if (!string.IsNullOrEmpty(response.ProfilePictureUrl))
+        //     response.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(response.ProfilePictureUrl);
 
-        return Result.Success(response);
+        
+        
+        return Result.Success();
     }
 
     public async Task<UserPreferencesResponse> GetUserPreferencesAsync(string userId)

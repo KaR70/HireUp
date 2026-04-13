@@ -240,7 +240,7 @@ public class UserController : ControllerBase
 
         var result = await _userService.UpdateMyProfileAsync(currentUserId, request, cancellationToken);
 
-        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
+        return result.IsSuccess ? NoContent() : result.ToProblem();
     }
 
 

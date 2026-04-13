@@ -22,4 +22,5 @@ public class ApplicationUser : IdentityUser
     public virtual ICollection<UserDisabilityType> UserDisabilityTypes { get; set; } = new List<UserDisabilityType>();
     public virtual ICollection<UserAccessibilityNeed> UserAccessibilityNeeds { get; set; } = new List<UserAccessibilityNeed>();
     public List<RefreshToken> RefreshTokens { get; set; } = [];
+    public ICollection<SavedJob> SavedJobs { get; set; } = new List<SavedJob>();
 }

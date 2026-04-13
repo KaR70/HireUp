@@ -1,4 +1,5 @@
-﻿using HireUp.Entities;
+﻿using HireUp.Core.Entities;
+using HireUp.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -31,9 +32,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<UserOfficeTypePreference> UserOfficeTypePreferences { get; set; }
     public DbSet<Review> Review { get; set; }
     public DbSet<Follows> Follows { get; set; }
-    
+    public DbSet<Notification> Notifications { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 

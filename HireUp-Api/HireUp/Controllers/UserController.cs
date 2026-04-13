@@ -14,18 +14,40 @@ namespace HireUp.Controllers;
 /// </summary>
 [Route("[controller]")]
 [ApiController]
-[Produces("application/json")]
 public class UserController : ControllerBase
 {
     private readonly HireUp.Abstraction.IUserService _userService;
     private readonly UrlBuilderService _urlBuilderService;
+    private readonly INotificationService _notificationService; 
 
-    public UserController(HireUp.Abstraction.IUserService userService, UrlBuilderService urlBuilderService)
+    public UserController(
+        HireUp.Abstraction.IUserService userService,
+        UrlBuilderService urlBuilderService,
+        INotificationService notificationService) 
     {
         _userService = userService;
         _urlBuilderService = urlBuilderService;
+        _notificationService = notificationService;
     }
-    
+
+    [HttpGet("me/notifications")]
+    [Authorize]
+    public async Task<IActionResult> GetMyNotifications()
+    {
+        string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        var result = await _notificationService.GetGroupedNotificationsAsync(userId);
+        return Ok(result);
+    }
+
+    [HttpPost("notifications/{id}/mark-as-read")]
+    [Authorize]
+    public async Task<IActionResult> MarkAsRead(int id)
+    {
+        var result = await _notificationService.MarkAsReadAsync(id);
+        return result ? Ok() : NotFound();
+    }
     /// <summary>
     /// Retrieves the authenticated user's profile header information.
     /// </summary>
@@ -349,4 +371,5 @@ public class UserController : ControllerBase
             ? Ok(result.Value)
             : result.ToProblem();
     }
+   
 }

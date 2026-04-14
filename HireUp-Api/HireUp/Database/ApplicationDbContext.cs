@@ -33,7 +33,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Review> Review { get; set; }
     public DbSet<Follows> Follows { get; set; }
     public DbSet<Notification> Notifications { get; set; }
-
+    public DbSet<SavedJob> SavedJobs { get; set; }
+    
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }

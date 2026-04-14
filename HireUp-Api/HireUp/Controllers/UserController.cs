@@ -1,32 +1,30 @@
-﻿using HireUp.Abstraction;
+using HireUp.Database.Interfaces;
+using HireUp.Abstraction;
 using HireUp.DTOs.User;
 using HireUp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace HireUp.Controllers;
 
-/// <summary>
-/// Provides endpoints for user profile management including viewing, updating, and managing profile pictures.
-/// </summary>
 [Route("[controller]")]
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly HireUp.Abstraction.IUserService _userService;
+    private readonly ISavedJobRepository _savedJobRepository;
+    private readonly IUserService _userService;
     private readonly UrlBuilderService _urlBuilderService;
     private readonly INotificationService _notificationService; 
 
-    public UserController(
-        HireUp.Abstraction.IUserService userService,
-        UrlBuilderService urlBuilderService,
-        INotificationService notificationService) 
+    public UserController(IUserService userService, UrlBuilderService urlBuilderService, INotificationService notificationService, ISavedJobRepository savedJobRepository)
     {
         _userService = userService;
         _urlBuilderService = urlBuilderService;
+        _savedJobRepository = savedJobRepository;
         _notificationService = notificationService;
     }
 
@@ -119,9 +117,6 @@ public class UserController : ControllerBase
     /// <response code="404">User profile not found</response>
     [HttpGet("")]
     [Authorize]
-    [ProducesResponseType(typeof(MyProfileResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetMyProfile(CancellationToken cancellationToken = default)
     {
         string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -132,7 +127,6 @@ public class UserController : ControllerBase
 
         var profile = result.Value;
         profile.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(profile.ProfilePictureUrl);
-        return Ok(profile);
         return result.IsSuccess
             ? Ok(result.Value)
             : result.ToProblem();
@@ -175,8 +169,6 @@ public class UserController : ControllerBase
     /// <response code="404">User not found with the specified userId</response>
     [HttpGet("{userId}")]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(PublicProfileResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetUserPublicProfile(string userId, CancellationToken cancellationToken = default)
     {
         var result = await _userService.GetUserPublicProfileAsync(userId, cancellationToken);
@@ -185,9 +177,7 @@ public class UserController : ControllerBase
             return result.ToProblem();
 
         var profile = result.Value;
-        
         profile.ProfilePicture = _urlBuilderService.ToAbsoluteUrl(profile.ProfilePicture);
-        
         return Ok(profile);
     }
     
@@ -258,10 +248,12 @@ public class UserController : ControllerBase
     public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateProfileRequest request, CancellationToken cancellationToken = default)
     {
         string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
+        if (string.IsNullOrEmpty(currentUserId))
+            return Unauthorized();
+        
         var result = await _userService.UpdateMyProfileAsync(currentUserId, request, cancellationToken);
-
+        
         return result.IsSuccess ? NoContent() : result.ToProblem();
     }
 
@@ -370,6 +362,44 @@ public class UserController : ControllerBase
         return result.IsSuccess
             ? Ok(result.Value)
             : result.ToProblem();
+    }
+    
+    [HttpPost("me/profile-picture")]
+    [Authorize]
+    public async Task<IActionResult> UpdateProfilePicture([FromForm] ProfilePictureUpload profilePicture, CancellationToken cancellationToken = default)
+    {
+        string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
+        var result = await _userService.UpdateProfilePictureAsync(currentUserId, profilePicture.Image, cancellationToken);
+        if (result.IsFaliure) return result.ToProblem();
+        var profilePictureUrl = _urlBuilderService.ToAbsoluteUrl(result.Value);
+        return Ok(new { profilePictureUrl });
+    }
+
+    /// <summary>
+    /// استرجاع الوظائف المحفوظة للمستخدم الحالي تلقائياً من التوكن
+    /// </summary>
+    [HttpGet("me/saved-jobs")]
+    [Authorize] // لازم يكون عامل Login عشان نقدر نعرف الـ ID بتاعه
+    public async Task<IActionResult> GetMySavedJobs()
+    {
+        // سحب الـ User ID من الـ Claims الموجودة في الـ Token
+        string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(currentUserId))
+            return Unauthorized("المستخدم غير مصرح له بالوصول.");
+
+        var savedJobs = await _savedJobRepository.GetAllAsync(currentUserId);
+
+        var result = savedJobs.Select(sj => new {
+            sj.Id,
+            sj.SavedAt,
+            JobId = sj.JobListingId,
+            JobTitle = sj.JobListing?.Title,
+            Company = sj.JobListing?.Company?.Name
+        });
+
+        return Ok(result);
     }
    
 }

@@ -1,4 +1,4 @@
-using HireUp;
+﻿using HireUp;
 using HireUp.Abstraction; 
 using HireUp.Services;    
 using HireUp.Database;
@@ -19,6 +19,8 @@ builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IJobListingRepository, JobListingRepository>();
 builder.Services.AddScoped<IMockInterviewRepository, MockInterviewRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
+builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
+
 
 builder.Services.AddScoped<ILookupService, LookupService>();
 builder.Services.AddScoped<IUserService, UserService>();

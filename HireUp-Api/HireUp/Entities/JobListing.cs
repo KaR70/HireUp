@@ -41,6 +41,7 @@ namespace HireUp.Entities
         public JobCategory JobCategory { get; set; }
         public ICollection<Skill> RequiredSkills { get; set; } = new List<Skill>();
         public ICollection<JobApplication> Applications { get; set; } = new List<JobApplication>();
+        public ICollection<SavedJob> SavedJobs { get; set; } = new List<SavedJob>();
     }
 
    

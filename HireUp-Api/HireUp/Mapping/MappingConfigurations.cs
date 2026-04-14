@@ -1,4 +1,5 @@
-﻿using HireUp.DTOs.JobListing;
+﻿using HireUp.DTOs;
+using HireUp.DTOs.JobListing;
 
 namespace HireUp.Mapping;
 
@@ -6,15 +7,22 @@ public class MappingConfigurations : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
+        config.NewConfig<ApplicationUser, ProfileHeaderResponse>()
+            .Map(dest => dest.FullName, src => $"{src.FirstName} {src.LastName}");
+        
         config.NewConfig<ApplicationUser, MyProfileResponse>()
             .Map(dest => dest.UserId, src => src.Id)
-            .Map(dest => dest.DisabilityTypes, src => src.UserDisabilityTypes.Select(udt => udt.DisabilityType))
-            .Map(dest => dest.AccessibilityNeeds, src => src.UserAccessibilityNeeds.Select(uan => uan.AccessibilityNeed))
-            .Map(dest => dest.ProfilePictureUrl, src => src.ProfilePicture);
+            .Map(dest => dest.ProfilePictureUrl, src => src.ProfilePicture)
+            .Map(dest => dest.FullName, src => $"{src.FirstName} {src.LastName}")
+            .Map(dest => dest.Gender, src => src.Gender.HasValue ? src.Gender.Value.ToString() : null)
+            .Map(dest => dest.Location, src => src.Location)
+            .Map(dest => dest.JobRole, src => src.JobRole);
 
         config.NewConfig<ApplicationUser, PublicProfileResponse>()
             .Map(dest => dest.ProfilePicture, src => src.ProfilePicture)
-            .Map(dest => dest.UserId, src => src.Id);
+            .Map(dest => dest.UserId, src => src.Id)
+            .Map(dest => dest.FullName, src => $"{src.FirstName} {src.LastName}")
+            .Map(dest => dest.AboutMe, src  => src.Bio);
         
         config.NewConfig<RegisterRequest, ApplicationUser>()
             .Map(dest => dest.UserName, src => src.Email);
@@ -29,7 +37,7 @@ public class MappingConfigurations : IRegister
 
             .Map(dest => dest.Tags, src => new List<string>
             {
-                src.Type.ToString(),
+                src.JobType.Name,
                 src.ExperienceLevel != null ? src.ExperienceLevel.Name : "Any Level",
                 src.JobCategory != null ? src.JobCategory.Name : "General"
             })
@@ -41,5 +49,6 @@ public class MappingConfigurations : IRegister
 
         config.NewConfig<DisabilityType, DisabilityTypeResponse>();
         config.NewConfig<AccessibilityNeed, AccessibilityNeedResponse>();
+        config.NewConfig<Skill, SkillResponse>();
     }
 }

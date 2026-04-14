@@ -1,4 +1,6 @@
 ﻿using HireUp;
+using HireUp.Abstraction; 
+using HireUp.Services;    
 using HireUp.Database;
 using HireUp.Database.Interfaces;
 using HireUp.Database.Repositories;
@@ -12,7 +14,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDependecies(builder.Configuration);
 
-// Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IJobListingRepository, JobListingRepository>();
@@ -21,9 +22,13 @@ builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
 
 
-// Unit of Work
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<ILookupService, LookupService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<UrlBuilderService>(); 
 
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -57,44 +62,31 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     await DataSeeder.SeedAllAsync(services);
 }
-app.UseHttpsRedirection();
 
+
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI(c => {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "HireUp API V1");
+        c.RoutePrefix = "swagger"; 
+    });
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+}
+
+app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting(); 
+
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapControllers();
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-    // التأكد من وجود قاعدة البيانات
-    context.Database.EnsureCreated();
-
-    // 1. إضافة مستخدم تجريبي لو الجدول فاضي
-    var user = context.Users.FirstOrDefault();
-    if (user == null)
-    {
-        user = new ApplicationUser { UserName = "rehab@test.com", Email = "rehab@test.com" };
-        context.Users.Add(user);
-        context.SaveChanges();
-    }
-
-    // 2. إضافة وظيفة تجريبية لو الجدول فاضي
-    var job = context.JobListings.FirstOrDefault();
-    if (job == null)
-    {
-        job = new JobListing { Title = "Software Engineer", Description = "Test Job" };
-        context.JobListings.Add(job);
-        context.SaveChanges();
-    }
-
-    // 3. اطبع الـ IDs الحقيقية اللي اتعملت
-    Console.WriteLine("=====================================");
-    Console.WriteLine("SUCCESS! USE THESE IN SWAGGER:");
-    Console.WriteLine($"USER ID: {user.Id}");
-    Console.WriteLine($"JOB ID: {job.Id}");
-    Console.WriteLine("=====================================");
-}
 
 app.Run();

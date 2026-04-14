@@ -1,4 +1,5 @@
-﻿using HireUp.Database.Interfaces;
+﻿using System.Linq.Expressions;
+using HireUp.Database.Interfaces;
 
 namespace HireUp.Database.Repositories
 {
@@ -32,5 +33,13 @@ namespace HireUp.Database.Repositories
         }
 
         public virtual async Task<bool> ExistsAsync(int id) => await _dbSet.FindAsync(id) != null;
+        
+        public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> criteria, CancellationToken cancellationToken = default) => 
+            await _dbSet.FirstOrDefaultAsync(criteria, cancellationToken);
+        
+        public async Task<int> CountAsync(Expression<Func<T, bool>> criteria, CancellationToken cancellationToken = default)
+            => await _dbSet.CountAsync(criteria, cancellationToken);
+    
+        public async Task<int> CountAsync(CancellationToken cancellationToken = default) => await _dbSet.CountAsync(cancellationToken);
     }
 }

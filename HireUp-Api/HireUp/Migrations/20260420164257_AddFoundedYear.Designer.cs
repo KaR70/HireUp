@@ -4,6 +4,7 @@ using HireUp.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HireUp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260420164257_AddFoundedYear")]
+    partial class AddFoundedYear
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -347,48 +350,6 @@ namespace HireUp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Industries");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Technology & Software"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Design & Creative"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Sales & Marketing"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Writing & Translation"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Finance & Accounting"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Legal & Consulting"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Engineering & Architecture"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Customer Support"
-                        });
                 });
 
             modelBuilder.Entity("HireUp.Entities.JobApplication", b =>
@@ -674,98 +635,6 @@ namespace HireUp.Migrations
                         .IsUnique();
 
                     b.ToTable("Locations");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            City = "Cairo",
-                            Country = "Egypt"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            City = "Alexandria",
-                            Country = "Egypt"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            City = "Riyadh",
-                            Country = "Saudi Arabia"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            City = "Jeddah",
-                            Country = "Saudi Arabia"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            City = "Dubai",
-                            Country = "United Arab Emirates"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            City = "Abu Dhabi",
-                            Country = "United Arab Emirates"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            City = "Amman",
-                            Country = "Jordan"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            City = "Doha",
-                            Country = "Qatar"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            City = "Kuwait City",
-                            Country = "Kuwait"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            City = "Beirut",
-                            Country = "Lebanon"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            City = "Casablanca",
-                            Country = "Morocco"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            City = "Tunis",
-                            Country = "Tunisia"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            City = "Manama",
-                            Country = "Bahrain"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            City = "New York",
-                            Country = "United States"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            City = "London",
-                            Country = "United Kingdom"
-                        });
                 });
 
             modelBuilder.Entity("HireUp.Entities.MockInterview", b =>

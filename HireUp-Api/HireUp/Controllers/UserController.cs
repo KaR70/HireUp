@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Security.Claims;
+using HireUp.Extensions;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -64,7 +65,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProfileHeader(CancellationToken cancellationToken = default)
     {
-        string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        string? userId = User.GetUserId();
         
         if (string.IsNullOrEmpty(userId))
             return Unauthorized();
@@ -119,11 +120,11 @@ public class UserController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetMyProfile(CancellationToken cancellationToken = default)
     {
-        string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        string? currentUserId = User.GetUserId();
         if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
         var result = await _userService.GetMyProfileAsync(currentUserId, cancellationToken);
-        if (result.IsFaliure) return result.ToProblem();
+        if (result.IsFailure) return result.ToProblem();
 
         var profile = result.Value;
         profile.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(profile.ProfilePictureUrl);
@@ -173,7 +174,7 @@ public class UserController : ControllerBase
     {
         var result = await _userService.GetUserPublicProfileAsync(userId, cancellationToken);
         
-        if (result.IsFaliure)
+        if (result.IsFailure)
             return result.ToProblem();
 
         var profile = result.Value;
@@ -247,7 +248,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateProfileRequest request, CancellationToken cancellationToken = default)
     {
-        string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        string? currentUserId = User.GetUserId();
 
         if (string.IsNullOrEmpty(currentUserId))
             return Unauthorized();
@@ -352,7 +353,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProfilePicture(CancellationToken cancellationToken = default)
     {
-        string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        string? userId = User.GetUserId();
 
         if (string.IsNullOrEmpty(userId))
             return Unauthorized();
@@ -368,10 +369,10 @@ public class UserController : ControllerBase
     [Authorize]
     public async Task<IActionResult> UpdateProfilePicture([FromForm] ProfilePictureUpload profilePicture, CancellationToken cancellationToken = default)
     {
-        string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        string? currentUserId = User.GetUserId();
         if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
         var result = await _userService.UpdateProfilePictureAsync(currentUserId, profilePicture.Image, cancellationToken);
-        if (result.IsFaliure) return result.ToProblem();
+        if (result.IsFailure) return result.ToProblem();
         var profilePictureUrl = _urlBuilderService.ToAbsoluteUrl(result.Value);
         return Ok(new { profilePictureUrl });
     }

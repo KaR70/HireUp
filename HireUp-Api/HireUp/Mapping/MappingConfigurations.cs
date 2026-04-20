@@ -1,4 +1,5 @@
 ﻿using HireUp.DTOs;
+using HireUp.DTOs.Company;
 using HireUp.DTOs.JobListing;
 
 namespace HireUp.Mapping;
@@ -47,6 +48,15 @@ public class MappingConfigurations : IRegister
         config.NewConfig<JobListing, JobListingDetailResponse>()
             .Map(dest => dest.AboutCompany, src => src.Company != null ? src.Company.Description : "Company information not available.");
 
+        config.NewConfig<Company, RegisterProfileRequest>()
+            .Map(dest => dest.FoundedYear, src => src.FoundedYear);
+        
+        config.NewConfig<RegisterProfileRequest, Company>()
+            .Map(dest => dest.FoundedYear, src => src.FoundedYear);
+        
+        config.NewConfig<Company, ProfileResponse>()
+            .Map(dest => dest.Headquarters, src => src.Location);
+        
         config.NewConfig<DisabilityType, DisabilityTypeResponse>();
         config.NewConfig<AccessibilityNeed, AccessibilityNeedResponse>();
         config.NewConfig<Skill, SkillResponse>();

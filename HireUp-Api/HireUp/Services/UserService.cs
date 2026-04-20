@@ -232,8 +232,7 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<Result<string>> UpdateProfilePictureAsync(string currentUserId, IFormFile profilePicture,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<string>> UpdateProfilePictureAsync(string currentUserId, IFormFile profilePicture, CancellationToken cancellationToken = default)
     {
         var currentUser =
             await _userManager.Users.FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
@@ -245,7 +244,7 @@ public class UserService : IUserService
 
         var saveResult = await _fileService.SaveFileAsync(profilePicture, "images", cancellationToken);
 
-        if (saveResult.IsFaliure)
+        if (saveResult.IsFailure)
             return Result.Failure<string>(FileErrors.ProfilePictureUploadFailed);
 
         var newPictureRelativePath = saveResult.Value;

@@ -103,6 +103,7 @@ public static class DependencyInjection
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<IEmailSender, EmailService>();
         services.AddScoped<IJobListingService, JobListingService>();
+        services.AddScoped<ICompanyService, CompanyService>();
         services.AddScoped<UrlBuilderService>();
 
         services.Configure<ApplicationSettings>(configuration.GetSection(ApplicationSettings.SectionName));

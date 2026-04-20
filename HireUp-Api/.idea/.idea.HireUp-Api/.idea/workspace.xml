@@ -12,9 +12,48 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="07c7f11a-bfb6-4f5d-86f3-816a8b43877d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/HireUp/Migrations/20260414120051_AddedSavedJobs.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/DTOs/Company/ProfileResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/DTOs/Company/RegisterProfileRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/DTOs/Company/RegisterProfileRequestValidator.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/JobRoleConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/JobTypeConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/OfficeTypeConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/SkillConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Interfaces/ICompanyRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Interfaces/IIndustryRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Repositories/CompanyRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Database/Repositories/IndustryRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Entities/Industry.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Errors/CompanyErrors.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Errors/IndustryErrors.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Errors/LocationErrors.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Extensions/UserExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Migrations/20260416145706_AddedIndustrty-ModifiedCompany.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Services/CompanyService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HireUp/Services/ICompanyService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HireUp-Api/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Abstraction/Consts/RegexPatterns.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Abstraction/Consts/RegexPatterns.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Abstraction/Result.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Abstraction/Result.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Controllers/AuthController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Controllers/AuthController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Controllers/LookupsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Controllers/LookupsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Controllers/UserController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Data/DataSeeder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Data/DataSeeder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/ApplicationDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/LocationConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/LocationConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/Interfaces/IRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Interfaces/IRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/Interfaces/IUnitOfWork.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Interfaces/IUnitOfWork.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/Repositories/BaseRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Repositories/BaseRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Database/Repositories/UnitOfWork.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Database/Repositories/UnitOfWork.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/DependencyInjection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/DependencyInjection.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Entities/ApplicationUser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Entities/ApplicationUser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Entities/Company.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Entities/Company.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/GlobalUsings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/GlobalUsings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Mapping/MappingConfigurations.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Mapping/MappingConfigurations.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HireUp/Migrations/ApplicationDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Migrations/ApplicationDbContextModelSnapshot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Services/ILookupService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/ILookupService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Services/LookupService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/LookupService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HireUp/Services/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HireUp/Services/UserService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +73,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="test" />
+        <entry key="$PROJECT_DIR$/.." value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -53,6 +92,8 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/HireUp/Controllers/JobListingsController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/DTOs/Company/ProfileResponse.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/DTOs/Industry/IndustryResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/DTOs/JobListing/JobListingDetailResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/DTOs/JobListing/JobListingSummaryResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/DTOs/Location/LocationSummaryResponse.cs" root0="FORCE_HIGHLIGHTING" />
@@ -61,23 +102,36 @@
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/CompanyConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/ExperienceLevelConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/FollowsConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/IndustryConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/JobCategoryConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/JobListingConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/JobRoleConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/JobTypeConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/LocationConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/OfficeTypeConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/ReviewConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/EntitiesConfiguration/SkillConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Interfaces/ICompanyRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/Interfaces/IFollowsRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Interfaces/IIndustryRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/Interfaces/ILocationRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/Interfaces/IReviewRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Repositories/CompanyRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/Repositories/FollowsRepository.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Database/Repositories/IndustryRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/Repositories/LocationRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Database/Repositories/ReviewRepository.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Entities/Company.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Entities/ExperienceLevel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Entities/Follows.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Entities/Industry.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Entities/JobCategory.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Entities/Location.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Entities/Review.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Errors/JobListingErrors.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Extensions/UserExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Services/CompanyService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HireUp/Services/ICompanyService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Services/IJobListingService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/HireUp/Services/JobListingService.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -97,13 +151,16 @@
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="36eUVZL2zMZSEpmvR54CqKuCmd7" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.HireUp: https.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.HireUp: https.executor&quot;: &quot;Debug&quot;,
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
@@ -112,14 +169,14 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;#10 on Rehab&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Company-Register&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.Confirmation&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
@@ -296,6 +353,14 @@
       <workItem from="1775509067303" duration="4720000" />
       <workItem from="1775786839649" duration="5268000" />
       <workItem from="1775871018576" duration="1081000" />
+      <workItem from="1776266061805" duration="6296000" />
+      <workItem from="1776333609268" duration="277000" />
+      <workItem from="1776334413965" duration="1627000" />
+      <workItem from="1776349859531" duration="11285000" />
+      <workItem from="1776438577545" duration="10006000" />
+      <workItem from="1776618652946" duration="3456000" />
+      <workItem from="1776701440531" duration="6360000" />
+      <workItem from="1776714613776" duration="320000" />
     </task>
     <task id="LOCAL-00001" summary="Register,User Profile, File Service">
       <option name="closed" value="true" />

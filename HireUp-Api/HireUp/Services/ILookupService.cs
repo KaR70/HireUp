@@ -1,10 +1,9 @@
-﻿using HireUp.DTOs.User;
-
-namespace HireUp.Abstraction;
+﻿namespace HireUp.Abstraction;
 
 public interface ILookupService
 {
-    Task<UserPreferencesResponse> GetJobPreferencesAsync();
-
     Task<JobPreferencesLookupsResponse> GetJobPreferencesLookupsAsync();
+    Task<Result<IEnumerable<LocationSummaryResponse>>> GetLocationsAsync(CancellationToken cancellationToken = default);
+    Task<Result<IEnumerable<IndustryResponse>>> GetIndustriesAsync(CancellationToken cancellationToken = default);
+
 }

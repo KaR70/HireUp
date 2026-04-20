@@ -1,5 +1,6 @@
 ﻿using HireUp.Authentication;
 using HireUp.DTOs.Authentication;
+using HireUp.DTOs.Company;
 using HireUp.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +18,12 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly JwtOptions _jwtOptions;
+    private readonly ICompanyService _companyService;
 
-    public AuthController(IAuthService authService, IOptions<JwtOptions> jwtOptions)
+    public AuthController(IAuthService authService, IOptions<JwtOptions> jwtOptions, ICompanyService companyService)
     {
         _authService = authService;
+        _companyService = companyService;
         _jwtOptions = jwtOptions.Value;
     }
 
@@ -171,6 +174,51 @@ public class AuthController : ControllerBase
         var Result = await _authService.RegisterAsync(request, cancellationToken);
 
         return Result.IsSuccess ? Ok() : Result.ToProblem();
+    }
+
+    /// <summary>
+    /// Registers a new company account with comprehensive profile information.
+    /// </summary>
+    /// <remarks>
+    /// Creates a new company profile with user credentials and company details.
+    /// The user account is automatically created with the provided email and password.
+    /// After successful registration, a confirmation email is sent to the company email.
+    ///
+    /// Sample request:
+    ///
+    ///     {
+    ///       "firstName": "Jane",
+    ///       "lastName": "Smith",
+    ///       "email": "jane.smith@company.com",
+    ///       "password": "SecurePassword123!",
+    ///       "name": "TechCorp Inc",
+    ///       "description": "A leading software development company specializing in enterprise solutions",
+    ///       "industryId": 1,
+    ///       "locationId": 2,
+    ///       "website": "https://techcorp.com",
+    ///       "linkedin": "https://linkedin.com/company/techcorp",
+    ///       "foundedYear": 2010
+    ///     }
+    /// </remarks>
+    /// <param name="request">Company registration details including user credentials and company profile</param>
+    /// <param name="cancellationToken">Cancellation token for the async operation</param>
+    /// <returns>Returns the created company profile information</returns>
+    /// <response code="200">Company registration successful - confirmation email sent</response>
+    /// <response code="400">Invalid request format or validation failed</response>
+    /// <response code="409">Email already registered by another user</response>
+    /// <response code="422">Validation error (weak password, invalid data, etc.)</response>
+    [HttpPost("register/company")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> RegisterCompany([FromBody] RegisterProfileRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _companyService.RegisterAsync(request, cancellationToken);
+        
+        return result.IsSuccess 
+            ? Ok(result.Value) 
+            : result.ToProblem();
     }
     
     /// <summary>

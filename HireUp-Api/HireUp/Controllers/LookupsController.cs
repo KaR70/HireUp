@@ -1,4 +1,6 @@
 using HireUp.Abstraction;
+using HireUp.DTOs.Location;
+using HireUp.DTOs.Industry;
 using HireUp.DTOs.User;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,5 +62,93 @@ public class LookupsController : ControllerBase
     {
         var lookups = await _lookupService.GetJobPreferencesLookupsAsync();
         return Ok(lookups);
+    }
+    
+    /// <summary>
+    /// Retrieves all available locations for job search and company registration.
+    /// </summary>
+    /// <remarks>
+    /// Returns a comprehensive list of all locations in the system including city and country information.
+    /// This endpoint is publicly accessible and does not require authentication.
+    ///
+    /// Sample success response (200):
+    ///
+    ///     [
+    ///       {
+    ///         "id": 1,
+    ///         "city": "San Francisco",
+    ///         "country": "United States"
+    ///       },
+    ///       {
+    ///         "id": 2,
+    ///         "city": "New York",
+    ///         "country": "United States"
+    ///       },
+    ///       {
+    ///         "id": 3,
+    ///         "city": "London",
+    ///         "country": "United Kingdom"
+    ///       }
+    ///     ]
+    /// </remarks>
+    /// <param name="cancellationToken">Cancellation token for the async operation</param>
+    /// <returns>Returns all available locations</returns>
+    /// <response code="200">Successfully retrieved locations list</response>
+    /// <response code="404">No locations found</response>
+    [HttpGet("locations")]
+    [ProducesResponseType(typeof(IEnumerable<LocationSummaryResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetLocations(CancellationToken cancellationToken)
+    {
+        var result = await _lookupService.GetLocationsAsync(cancellationToken);
+        
+        return result.IsSuccess 
+            ? Ok(result.Value)
+            : result.ToProblem();
+    }
+
+    /// <summary>
+    /// Retrieves all available industries for company profile and job filtering.
+    /// </summary>
+    /// <remarks>
+    /// Returns a comprehensive list of all industries in the system.
+    /// This endpoint is publicly accessible and does not require authentication.
+    /// Used primarily for company registration and job preference filtering.
+    ///
+    /// Sample success response (200):
+    ///
+    ///     [
+    ///       {
+    ///         "id": 1,
+    ///         "name": "Technology"
+    ///       },
+    ///       {
+    ///         "id": 2,
+    ///         "name": "Finance"
+    ///       },
+    ///       {
+    ///         "id": 3,
+    ///         "name": "Healthcare"
+    ///       },
+    ///       {
+    ///         "id": 4,
+    ///         "name": "Retail"
+    ///       }
+    ///     ]
+    /// </remarks>
+    /// <param name="cancellationToken">Cancellation token for the async operation</param>
+    /// <returns>Returns all available industries</returns>
+    /// <response code="200">Successfully retrieved industries list</response>
+    /// <response code="404">No industries found</response>
+    [HttpGet("industries")]
+    [ProducesResponseType(typeof(IEnumerable<IndustryResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetIndustries(CancellationToken cancellationToken)
+    {
+        var result = await _lookupService.GetIndustriesAsync(cancellationToken);
+        
+        return result.IsSuccess 
+            ? Ok(result.Value)
+            : result.ToProblem();
     }
 }

@@ -57,11 +57,11 @@ if (Environment.GetEnvironmentVariable("RUN_MIGRATIONS_ON_STARTUP") == "true")
 }
 #endregion
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    await DataSeeder.SeedAllAsync(services);
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var services = scope.ServiceProvider;
+//     await DataSeeder.SeedAllAsync(services);
+// }
 
 
 

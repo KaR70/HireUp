@@ -1,4 +1,6 @@
-﻿namespace HireUp.Database.Interfaces
+﻿using Microsoft.EntityFrameworkCore.Storage;
+
+namespace HireUp.Database.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
@@ -8,8 +10,13 @@
         IMockInterviewRepository MockInterviews { get; }
         IApplicationRepository Applications { get; }
         ILocationRepository Locations { get; }
+        ICompanyRepository Companies { get; }
         public IReviewRepository Reviews { get; }
         public IFollowsRepository Follows { get;}
+        public IRepository<Industry> Industry { get; }
+        
         Task<int> SaveChangesAsync();
+        Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);
+        IExecutionStrategy CreateExecutionStrategy();
     }
 }

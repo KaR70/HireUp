@@ -1,8 +1,5 @@
 ﻿using HireUp.Core.Entities;
-using HireUp.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace HireUp.Database;
@@ -34,6 +31,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Follows> Follows { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<SavedJob> SavedJobs { get; set; }
+    public DbSet<Industry> Industries { get; set; }
     
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

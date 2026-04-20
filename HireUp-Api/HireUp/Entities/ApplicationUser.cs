@@ -15,10 +15,12 @@ public class ApplicationUser : IdentityUser
     public string? Header { get; set; }
 
     public int? LocationId { get; set; }
-    public int? JobRoleId { get; set; }
-
     public Location Location { get; set; }
-    public JobRole? JobRole { get; set; }  
+
+    public int? JobRoleId { get; set; }
+    public JobRole? JobRole { get; set; }
+
+    public Company? Company { get; set; }
     
     public ICollection<Skill> Skills { get; set; } = new List<Skill>();
     public ICollection<JobListing> JobListings { get; set; } = new List<JobListing>();

@@ -56,6 +56,13 @@ public class MappingConfigurations : IRegister
         
         config.NewConfig<Company, ProfileResponse>()
             .Map(dest => dest.Headquarters, src => src.Location);
+
+        config.NewConfig<JobApplication, RecentApplicantDto>()
+            .Map(dest => dest.ApplicationId, src => src.Id)
+            .Map(dest => dest.ApplicantId, src => src.JobSeekerId)
+            .Map(dest => dest.ApplicantName, src => $"{src.JobSeeker.FirstName} {src.JobSeeker.LastName}")
+            .Map(dest => dest.JobRole, src => src.JobListing.Title)
+            .Map(dest => dest.ApplicantProfilePictureUrl, src => src.JobSeeker.ProfilePicture);
         
         config.NewConfig<DisabilityType, DisabilityTypeResponse>();
         config.NewConfig<AccessibilityNeed, AccessibilityNeedResponse>();

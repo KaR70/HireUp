@@ -27,5 +27,15 @@ namespace HireUp.Database.Repositories
 
         public async Task<bool> HasAppliedAsync(string jobSeekerId, int jobListingId)
             => await _dbSet.AnyAsync(a => a.JobSeekerId == jobSeekerId && a.JobListingId == jobListingId);
+
+        public async Task<IEnumerable<JobApplication>> GetRecentApplicantsAsync(string companyUserId, int count = 5,
+            CancellationToken cancellationToken = default)
+            => await _dbSet.Where(x => x.JobListing.Company.UserId == companyUserId)
+                .Include(x => x.JobSeeker)
+                .Include(x => x.JobListing)
+                .OrderByDescending(x => x.AppliedAt)
+                .Take(count)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
     }
 }

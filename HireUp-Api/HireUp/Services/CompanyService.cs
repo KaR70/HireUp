@@ -7,19 +7,58 @@ public class CompanyService : ICompanyService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IAuthService _authService;
-    private readonly UserManager<ApplicationUser> _userManager;    
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly UrlBuilderService _urlBuilderService;
     
-    public CompanyService(IUnitOfWork unitOfWork, IAuthService authService, UserManager<ApplicationUser> userManager)
+    public CompanyService(IUnitOfWork unitOfWork, IAuthService authService, UserManager<ApplicationUser> userManager, UrlBuilderService urlBuilderService)
     {
         _unitOfWork = unitOfWork;
         _authService = authService;
         _userManager = userManager;
+        _urlBuilderService = urlBuilderService;
     }
 
-    // public async Task<Result<ProfileResponse>> GetProfileAsync(string UserId, CancellationToken cancellationToken = default)
-    // {
-    //     
-    // }
+    public async Task<Result<CompanyHomeResponse>> GetHomeAsync(string UserId,
+        CancellationToken cancellationToken = default)
+    {
+        var isExist = await _userManager.Users.AnyAsync(x => x.Id == UserId, cancellationToken);
+
+        if (!isExist)
+            return Result.Failure<CompanyHomeResponse>(UserErrors.UserNotFound);
+
+        var company = await _unitOfWork.Companies.GetByUserIdAsync(UserId, cancellationToken);
+
+        if (company == null)
+            return Result.Failure<CompanyHomeResponse>(CompanyErrors.NotFound);
+
+        var activeJobsCount = await _unitOfWork.Companies.CountActiveJobsAsync(UserId, cancellationToken);
+
+        var totalApplicantsCount = await _unitOfWork.Companies.CountTotalApplicantsAsync(UserId, cancellationToken);
+
+        var recentApplicants = await _unitOfWork.Applications.GetRecentApplicantsAsync(UserId, 4, cancellationToken);
+
+        var rawDtos = recentApplicants.Adapt<List<RecentApplicantDto>>();
+        
+        var recentApplicantDtos = rawDtos.Select(x => 
+            x with
+            {
+                ApplicantProfilePictureUrl = string.IsNullOrWhiteSpace(x.ApplicantProfilePictureUrl)
+                    ? null 
+                    : _urlBuilderService.ToAbsoluteUrl(x.ApplicantProfilePictureUrl)
+            }
+        ).ToList();
+
+        var response = new CompanyHomeResponse(
+
+            company.Name,
+            string.IsNullOrWhiteSpace(company.Logo) ? null : _urlBuilderService.ToAbsoluteUrl(company.Logo),
+            activeJobsCount,
+            totalApplicantsCount,
+            recentApplicantDtos
+        );
+
+        return Result.Success(response);
+    }
 
     public async Task<Result<AuthResponse>> RegisterAsync(RegisterProfileRequest request, CancellationToken cancellation = default)
     {

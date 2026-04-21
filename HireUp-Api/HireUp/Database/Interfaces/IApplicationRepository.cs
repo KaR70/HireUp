@@ -6,5 +6,8 @@
         Task<IEnumerable<JobApplication>> GetApplicationsByJobListingAsync(int jobListingId);
         Task<JobApplication> GetApplicationDetailsAsync(int applicationId);
         Task<bool> HasAppliedAsync(string jobSeekerId, int jobListingId);
+
+        Task<IEnumerable<JobApplication>> GetRecentApplicantsAsync(string companyUserId, int count = 5,
+            CancellationToken cancellationToken = default);
     }
 }

@@ -7,10 +7,12 @@ namespace HireUp.Services;
 public class JobListingService : IJobListingService
 {
     private readonly IJobListingRepository _jobListingRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public JobListingService(IJobListingRepository jobListingRepository)
+    public JobListingService(IJobListingRepository jobListingRepository, IUnitOfWork unitOfWork)
     {
         _jobListingRepository = jobListingRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<IEnumerable<JobListingSummaryResponse>>> GetFeaturedAsync()
@@ -45,6 +47,20 @@ public class JobListingService : IJobListingService
             return Result.Failure<JobListingDetailResponse>(JobListingErrors.NotFound);
 
         var response = jobListing.Adapt<JobListingDetailResponse>();
+        
+        return Result.Success(response);
+    }
+
+    public async Task<Result<IEnumerable<CompanyJobSummaryResponse>>> GetCompanyJobSummariesAsync(string userId, CancellationToken cancellationToken = default)
+    {
+        var company = await _unitOfWork.Companies.GetByUserIdAsync(userId, cancellationToken);
+
+        if (company is null)
+            return Result.Failure<IEnumerable<CompanyJobSummaryResponse>>(CompanyErrors.NotFound);
+
+        var jobListings = await _unitOfWork.JobListings.GetByCompanyIdAsync(company.Id, cancellationToken);
+        
+        var response = jobListings.Adapt<IEnumerable<CompanyJobSummaryResponse>>();
         
         return Result.Success(response);
     }

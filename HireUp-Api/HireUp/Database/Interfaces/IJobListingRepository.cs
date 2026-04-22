@@ -9,5 +9,8 @@
         Task<IEnumerable<JobListing>> GetListingsByEmployerAsync(string employerId);
         Task<IEnumerable<JobListing>> GetFeaturedAsync();
         Task<IEnumerable<JobListing>> GetPopularAsync();
+
+        Task<IEnumerable<JobListing>> GetByCompanyIdAsync(int companyId,
+            CancellationToken cancellationToken = default);
     }
 }

@@ -74,5 +74,15 @@ namespace HireUp.Database.Repositories
                 .Include(j => j.JobCategory)
                 .FirstOrDefaultAsync(j => j.Id == id);
         }
+
+        public async Task<IEnumerable<JobListing>> GetByCompanyIdAsync(int companyId,
+            CancellationToken cancellationToken = default)
+            => await _dbSet
+                .AsNoTracking()
+                .Where(x => x.CompanyId == companyId)
+                .Include(x => x.Applications)
+                .ToListAsync(cancellationToken);
+
+
     }
 }

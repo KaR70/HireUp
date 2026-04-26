@@ -14,6 +14,7 @@ namespace HireUp.Database.Interfaces
         public IReviewRepository Reviews { get; }
         public IFollowsRepository Follows { get;}
         public IRepository<Industry> Industry { get; }
+        IExperienceLevelRepository ExperienceLevel { get; }
         
         Task<int> SaveChangesAsync();
         Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);

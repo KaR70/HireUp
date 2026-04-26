@@ -257,6 +257,103 @@ public class JobListingsController : ControllerBase
         await _savedJobRepository.RemoveAsync(id, userId);
         return Ok(new { message = "تمت إزالة الوظيفة من المحفوظات" });
     }
-    
-    
+
+    /// <summary>
+    /// Updates an existing job listing posted by the authenticated company.
+    /// </summary>
+    /// <remarks>
+    /// Allows company users to modify job listing details such as title, description, salary, requirements, and more.
+    /// Only the company that posted the job can update it.
+    /// Returns 204 No Content on success with no response body.
+    ///
+    /// Sample request:
+    ///
+    ///     {
+    ///       "title": "Senior Full Stack Developer",
+    ///       "description": "We are looking for an experienced full stack developer to join our team...",
+    ///       "requirements": "7+ years of experience with .NET and React, strong database design skills",
+    ///       "salary": 180000,
+    ///       "isInclusiveHiring": true,
+    ///       "disabilitySupport": "Flexible work hours and remote-first option available",
+    ///       "expiryDate": "2024-03-31",
+    ///       "isActive": true,
+    ///       "experienceLevelId": 4,
+    ///       "jobRoleId": 4,
+    ///       "locationId": 1
+    ///     }
+    /// </remarks>
+    /// <param name="id">The unique identifier of the job listing to update</param>
+    /// <param name="request">The updated job listing details</param>
+    /// <param name="cancellationToken">Cancellation token for the async operation</param>
+    /// <returns>Returns 204 No Content if update was successful</returns>
+    /// <response code="204">Job listing updated successfully - no response body returned</response>
+    /// <response code="401">Unauthorized - invalid or missing JWT token</response>
+    /// <response code="403">Forbidden - user is not authorized to update this job listing</response>
+    /// <response code="404">Job listing not found</response>
+    [HttpPut("{id}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRequest request,
+        CancellationToken cancellationToken)
+    {
+        var userId = User.GetUserId();
+        
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var result = await _jobListingService.UpdateAsync(userId, id, request, cancellationToken);
+        
+        return result.IsSuccess
+            ? NoContent()
+            : result.ToProblem();
+    }
+
+    /// <summary>
+    /// Deletes a job listing posted by the authenticated company.
+    /// </summary>
+    /// <remarks>
+    /// Allows company users to delete job listings they have posted.
+    /// Only the company that posted the job can delete it.
+    /// Deleted job listings will no longer be visible to job seekers.
+    /// Returns 204 No Content on success with no response body.
+    ///
+    /// Sample error response (403 - Forbidden):
+    ///
+    ///     {
+    ///       "type": "https://tools.ietf.org/html/rfc7231#section-6.3.2",
+    ///       "title": "Forbidden",
+    ///       "status": 403,
+    ///       "detail": "You are not authorized to delete this job listing",
+    ///       "error": ["JobListing.Unauthorized", "You are not authorized to delete this job listing"]
+    ///     }
+    /// </remarks>
+    /// <param name="id">The unique identifier of the job listing to delete</param>
+    /// <param name="cancellationToken">Cancellation token for the async operation</param>
+    /// <returns>Returns 204 No Content if deletion was successful</returns>
+    /// <response code="204">Job listing deleted successfully - no response body returned</response>
+    /// <response code="401">Unauthorized - invalid or missing JWT token</response>
+    /// <response code="403">Forbidden - user is not authorized to delete this job listing</response>
+    /// <response code="404">Job listing not found</response>
+    [HttpDelete("{id}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete([FromRoute] int id, CancellationToken cancellationToken)
+    {
+        var userId = User.GetUserId();
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+        
+        var result = await _jobListingService.DeleteAsync(userId, id, cancellationToken);
+
+        return result.IsSuccess
+            ? NoContent()
+            : result.ToProblem();
+    }
 }

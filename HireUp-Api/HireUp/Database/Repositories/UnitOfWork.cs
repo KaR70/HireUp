@@ -21,6 +21,7 @@ namespace HireUp.Database.Repositories
             Follows = new FollowsRepository(_context);
             Companies = new CompanyRepository(_context);
             Industry = new IndustryRepository(context);
+            ExperienceLevel = new ExperienceLevelRepository(context);
         }
 
         public IUserRepository Users { get; }
@@ -33,6 +34,7 @@ namespace HireUp.Database.Repositories
         public IReviewRepository Reviews { get; set; }
         public IFollowsRepository Follows { get; set; }
         public IRepository<Industry> Industry { get; }
+        public IExperienceLevelRepository ExperienceLevel { get; }
 
         public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
         public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default) =>

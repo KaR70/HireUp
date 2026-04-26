@@ -12,5 +12,7 @@
 
         Task<IEnumerable<JobListing>> GetByCompanyIdAsync(int companyId,
             CancellationToken cancellationToken = default);
+
+        Task<JobListing?> GetByIdWithDetailsAsync(int id, CancellationToken cancellationToken = default);
     }
 }

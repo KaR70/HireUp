@@ -151,4 +151,51 @@ public class LookupsController : ControllerBase
             ? Ok(result.Value)
             : result.ToProblem();
     }
+    
+    /// <summary>
+    /// Retrieves all available experience levels for job filtering and company recruitment.
+    /// </summary>
+    /// <remarks>
+    /// Returns a comprehensive list of all experience levels in the system.
+    /// This endpoint is publicly accessible and does not require authentication.
+    /// Used for job posting, job search filters, and candidate profile information.
+    ///
+    /// Sample success response (200):
+    ///
+    ///     [
+    ///       {
+    ///         "id": 1,
+    ///         "name": "Entry-Level"
+    ///       },
+    ///       {
+    ///         "id": 2,
+    ///         "name": "Junior"
+    ///       },
+    ///       {
+    ///         "id": 3,
+    ///         "name": "Mid-Level"
+    ///       },
+    ///       {
+    ///         "id": 4,
+    ///         "name": "Senior"
+    ///       },
+    ///       {
+    ///         "id": 5,
+    ///         "name": "Lead"
+    ///       }
+    ///     ]
+    /// </remarks>
+    /// <param name="cancellationToken">Cancellation token for the async operation</param>
+    /// <returns>Returns all available experience levels</returns>
+    /// <response code="200">Successfully retrieved experience levels list</response>
+    [HttpGet("experience-levels")]
+    [ProducesResponseType(typeof(IEnumerable<object>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetExperienceLevels(CancellationToken cancellationToken)
+    {
+        var result = await _lookupService.GetExperienceLevelsAsync(cancellationToken);
+        
+        return result.IsSuccess 
+            ? Ok(result.Value)
+            : result.ToProblem();
+    }
 }

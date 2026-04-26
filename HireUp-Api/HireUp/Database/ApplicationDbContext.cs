@@ -74,7 +74,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 entity.HasKey(j => j.Id);
                 entity.Property(j => j.Title).IsRequired().HasMaxLength(200);
                 entity.Property(j => j.Description).IsRequired();
-                entity.Property(j => j.Location).IsRequired().HasMaxLength(100);
                 entity.Property(j => j.CreatedAt).HasDefaultValueSql("GETDATE()");
 
                 entity.HasOne(j => j.Employer)

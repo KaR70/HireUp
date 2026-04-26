@@ -4,6 +4,7 @@ using HireUp.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HireUp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260424120935_addIsDeletedToJobListings")]
+    partial class addIsDeletedToJobListings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -499,8 +502,8 @@ namespace HireUp.Migrations
                     b.Property<int>("ExperienceLevelId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("ExpiryDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -516,14 +519,16 @@ namespace HireUp.Migrations
                     b.Property<bool>("IsInclusiveHiring")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("JobCategoryId")
+                    b.Property<int>("JobCategoryId")
                         .HasColumnType("int");
 
                     b.Property<int>("JobTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Requirements")
                         .IsRequired()
@@ -554,8 +559,6 @@ namespace HireUp.Migrations
                     b.HasIndex("JobCategoryId");
 
                     b.HasIndex("JobTypeId");
-
-                    b.HasIndex("LocationId");
 
                     b.ToTable("JobListings");
                 });
@@ -1374,18 +1377,14 @@ namespace HireUp.Migrations
 
                     b.HasOne("HireUp.Entities.JobCategory", "JobCategory")
                         .WithMany("JobListings")
-                        .HasForeignKey("JobCategoryId");
+                        .HasForeignKey("JobCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("HireUp.Entities.JobType", "JobType")
                         .WithMany()
                         .HasForeignKey("JobTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HireUp.Entities.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Company");
@@ -1397,8 +1396,6 @@ namespace HireUp.Migrations
                     b.Navigation("JobCategory");
 
                     b.Navigation("JobType");
-
-                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("HireUp.Entities.MockInterview", b =>

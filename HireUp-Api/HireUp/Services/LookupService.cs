@@ -86,4 +86,16 @@ public class LookupService : ILookupService
         
         return Result.Success(response);
     }
+    
+    public async Task<Result<IEnumerable<LookupDto>>> GetExperienceLevelsAsync(CancellationToken cancellationToken = default)
+    {
+        var experiencLevels = await _unitOfWork.ExperienceLevel.GetAllAsNoTrackingAsync(cancellationToken);
+
+        if (!experiencLevels.Any())
+            return Result.Failure<IEnumerable<LookupDto>>(IndustryErrors.NotFound);
+
+        var response = experiencLevels.Adapt<IEnumerable<LookupDto>>();
+        
+        return Result.Success(response);
+    }
 }

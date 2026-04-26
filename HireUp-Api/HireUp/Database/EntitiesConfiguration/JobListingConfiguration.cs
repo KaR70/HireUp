@@ -14,5 +14,10 @@ public class JobListingConfiguration : IEntityTypeConfiguration<JobListing>
 
         builder.Property(j => j.ViewCount)
             .HasDefaultValue(0);
+
+        builder.HasOne(x => x.Location)
+            .WithMany()
+            .HasForeignKey(x => x.LocationId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -41,7 +41,7 @@ public class JobListingService : IJobListingService
 
     public async Task<Result<JobListingDetailResponse>> GetByIdAsync(int id)
     {
-        var jobListing = await _jobListingRepository.GetByIdAsync(id);
+        var jobListing = await _jobListingRepository.GetByIdWithDetailsAsync(id);
         
         if (jobListing is null)
             return Result.Failure<JobListingDetailResponse>(JobListingErrors.NotFound);
@@ -63,5 +63,63 @@ public class JobListingService : IJobListingService
         var response = jobListings.Adapt<IEnumerable<CompanyJobSummaryResponse>>();
         
         return Result.Success(response);
+    }
+
+    public async Task<Result> UpdateAsync(string userId, int jobId, UpdateRequest request, CancellationToken cancellationToken = default)
+    {
+        var company = await _unitOfWork.Companies.GetByUserIdAsync(userId, cancellationToken);
+
+        if (company is null)
+            return Result.Failure(CompanyErrors.NotFound);
+
+        var job = await _unitOfWork.JobListings.GetByIdAsync(jobId);
+        
+        if(job is null)
+            return Result.Failure(JobListingErrors.NotFound);
+        
+        if (job.CompanyId != company.Id)
+            return Result.Failure(JobListingErrors.Forbidden);
+
+        job.Title = request.Title;
+        job.Description = request.Description;
+        job.Requirements = request.Requirements;
+        job.Salary = request.Salary;
+        job.IsInclusiveHiring = request.IsInclusiveHiring;
+        job.DisabilitySupport = request.DisabilitySupport;
+        job.IsActive = request.IsActive;
+        job.ExpiryDate = request.ExpiryDate;
+        job.ExperienceLevelId = request.ExperienceLevelId;
+        job.JobTypeId = request.JobRoleId;
+        job.LocationId = request.LocationId;
+        
+        await _unitOfWork.SaveChangesAsync();
+
+        return Result.Success();
+    }
+
+    public async Task<Result> DeleteAsync(string userId, int jobId, CancellationToken cancellationToken = default)
+    {
+        var company = await _unitOfWork.Companies.GetByUserIdAsync(userId, cancellationToken);
+
+        if (company is null)
+            return Result.Failure(CompanyErrors.NotFound);
+
+        var job = await _unitOfWork.JobListings.GetByIdAsync(jobId);
+
+        if (job is null)
+            return Result.Failure(JobListingErrors.NotFound);
+
+        if (job.CompanyId != company.Id)
+            return Result.Failure(JobListingErrors.Forbidden);
+
+        if (!job.IsDeleted)
+        {
+            job.IsDeleted = true;
+            job.IsActive = false;
+        }
+        
+        await _unitOfWork.SaveChangesAsync();
+        
+        return Result.Success();
     }
 }

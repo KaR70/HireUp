@@ -134,39 +134,39 @@ public static class DataSeeder
         var fullTimeType = await context.JobTypes.FirstAsync(t => t.Name == "Full-time");
         var internType = await context.JobTypes.FirstAsync(t => t.Name == "Internship");
 
-        var jobListings = new List<JobListing>
-        {
-            new() {
-                Title = "Senior Software Engineer",
-                Description = "Join Facebook team...",
-                Requirements = "5+ years C# experience",
-                CompanyId = fbCompany.Id,
-                ExperienceLevelId = seniorLevel.Id,
-                JobCategoryId = itCategory.Id,
-                JobTypeId = fullTimeType.Id, 
-                EmployerId = employer.Id,
-                Location = "California, USA",
-                Salary = 180000,
-                IsFeatured = true,
-                ExpiryDate = DateTime.UtcNow.AddDays(30)
-            },
-            new() {
-                Title = "Marketing Intern",
-                Description = "Learn marketing at Inclusive Tech...",
-                Requirements = "Proactive attitude",
-                CompanyId = incTechCompany.Id,
-                ExperienceLevelId = entryLevel.Id,
-                JobCategoryId = marketingCategory.Id,
-                JobTypeId = internType.Id, 
-                EmployerId = employer.Id,
-                Location = "Remote",
-                Salary = 45000,
-                IsFeatured = false,
-                ExpiryDate = DateTime.UtcNow.AddDays(15)
-            }
-        };
-
-        await context.JobListings.AddRangeAsync(jobListings);
+        // var jobListings = new List<JobListing>
+        // {
+        //     new() {
+        //         Title = "Senior Software Engineer",
+        //         Description = "Join Facebook team...",
+        //         Requirements = "5+ years C# experience",
+        //         CompanyId = fbCompany.Id,
+        //         ExperienceLevelId = seniorLevel.Id,
+        //         JobCategoryId = itCategory.Id,
+        //         JobTypeId = fullTimeType.Id, 
+        //         EmployerId = employer.Id,
+        //         Location = "California, USA",
+        //         Salary = 180000,
+        //         IsFeatured = true,
+        //         ExpiryDate = DateTime.UtcNow.AddDays(30)
+        //     },
+        //     new() {
+        //         Title = "Marketing Intern",
+        //         Description = "Learn marketing at Inclusive Tech...",
+        //         Requirements = "Proactive attitude",
+        //         CompanyId = incTechCompany.Id,
+        //         ExperienceLevelId = entryLevel.Id,
+        //         JobCategoryId = marketingCategory.Id,
+        //         JobTypeId = internType.Id, 
+        //         EmployerId = employer.Id,
+        //         Location = "Remote",
+        //         Salary = 45000,
+        //         IsFeatured = false,
+        //         ExpiryDate = DateTime.UtcNow.AddDays(15)
+        //     }
+        // };
+        //
+        // await context.JobListings.AddRangeAsync(jobListings);
         await context.SaveChangesAsync();
     }
 }

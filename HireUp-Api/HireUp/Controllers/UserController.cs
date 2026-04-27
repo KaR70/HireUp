@@ -1,14 +1,16 @@
-using HireUp.Database.Interfaces;
 using HireUp.Abstraction;
+using HireUp.Database.Interfaces;
+using HireUp.Dtos.User;
 using HireUp.DTOs.User;
+using HireUp.Extensions;
+using HireUp.Interfaces;
 using HireUp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using System.Security.Claims;
-using HireUp.Extensions;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
+using System.Security.Claims;
 
 namespace HireUp.Controllers;
 
@@ -19,14 +21,16 @@ public class UserController : ControllerBase
     private readonly ISavedJobRepository _savedJobRepository;
     private readonly IUserService _userService;
     private readonly UrlBuilderService _urlBuilderService;
-    private readonly INotificationService _notificationService; 
+    private readonly INotificationService _notificationService;
+    private readonly IJobApplicationService _jobApplicationService;
 
-    public UserController(IUserService userService, UrlBuilderService urlBuilderService, INotificationService notificationService, ISavedJobRepository savedJobRepository)
+    public UserController(IUserService userService, UrlBuilderService urlBuilderService, INotificationService notificationService, ISavedJobRepository savedJobRepository, IJobApplicationService jobApplicationService)
     {
         _userService = userService;
         _urlBuilderService = urlBuilderService;
         _savedJobRepository = savedJobRepository;
         _notificationService = notificationService;
+        _jobApplicationService = jobApplicationService;
     }
 
     [HttpGet("me/notifications")]
@@ -402,5 +406,28 @@ public class UserController : ControllerBase
 
         return Ok(result);
     }
-   
+    /// <summary>
+    /// استرجاع قائمة طلبات التقديم الخاصة بالمستخدم الحالي
+    /// </summary>
+    [HttpGet("me/applications")]
+    [Authorize]
+    [ProducesResponseType(typeof(IEnumerable<JobApplicationSummaryResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetMyApplications()
+    {
+        string? currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(currentUserId))
+            return Unauthorized();
+
+        var applications = await _jobApplicationService.GetMyApplicationsAsync(currentUserId);
+
+        foreach (var app in applications)
+        {
+            app.CompanyLogoUrl = _urlBuilderService.ToAbsoluteUrl(app.CompanyLogoUrl);
+        }
+
+        return Ok(applications);
+    }
+
 }

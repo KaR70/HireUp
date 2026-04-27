@@ -20,4 +20,5 @@ public class Company
     public Location? Location { get; set; }
     
     public virtual ICollection<JobListing> JobListings{ get; set; }
+    public string LogoUrl { get; set; } = string.Empty;
 }

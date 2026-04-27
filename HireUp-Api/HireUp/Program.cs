@@ -1,9 +1,11 @@
 ﻿using HireUp;
 using HireUp.Abstraction; 
-using HireUp.Services;    
 using HireUp.Database;
 using HireUp.Database.Interfaces;
 using HireUp.Database.Repositories;
+using HireUp.Interfaces;
+using HireUp.Repositories;
+using HireUp.Services;    
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +31,8 @@ builder.Services.AddScoped<UrlBuilderService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
+builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

@@ -31,5 +31,27 @@ namespace HireUp.Database.Repositories
             _context.Notifications.Update(notification);
             await _context.SaveChangesAsync();
         }
+        public async Task<IEnumerable<Notification>> GetCompanyNotificationsAsync(int companyId)
+        {
+            return await _context.Notifications
+                .Where(n => n.CompanyId == companyId)
+                .OrderByDescending(n => n.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task MarkAllAsReadAsync(int companyId)
+        {
+            var unreadNotifications = await _context.Notifications
+                .Where(n => n.CompanyId == companyId && !n.IsRead)
+                .ToListAsync();
+
+            foreach (var notification in unreadNotifications)
+            {
+                notification.IsRead = true;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

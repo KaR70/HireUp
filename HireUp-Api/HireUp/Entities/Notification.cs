@@ -19,5 +19,7 @@ namespace HireUp.Core.Entities
         public NotificationCategory Category { get; set; }
         public int? CompanyId { get; set; }
         public string LinkUrl { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public Company? Company { get; set; }
     }
 }

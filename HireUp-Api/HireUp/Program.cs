@@ -26,11 +26,11 @@ builder.Services.AddScoped<ISavedJobRepository, SavedJobRepository>();
 
 builder.Services.AddScoped<ILookupService, LookupService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<UrlBuilderService>(); 
+builder.Services.AddScoped<UrlBuilderService>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
-builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<HireUp.Database.Interfaces.INotificationService, NotificationService>();
 builder.Services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
 builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
 var app = builder.Build();

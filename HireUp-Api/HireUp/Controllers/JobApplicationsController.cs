@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 
 namespace HireUp.Controllers
@@ -59,6 +60,7 @@ namespace HireUp.Controllers
         /// <param name="userId">The id of the applying user (provided in form data for testing via Swagger)</param>
         /// <returns>Returns a success message and the saved filename on success</returns>
         [HttpPost("apply-job")]
+        [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]        
         [Consumes("multipart/form-data")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -133,6 +135,7 @@ namespace HireUp.Controllers
         /// <param name="userId">The id of the job seeker to fetch applications for</param>
         /// <returns>Returns a list of simplified application records (id, job title, status, appliedAt, resumeUrl)</returns>
         [HttpGet("track-my-apps/{userId}")]
+        [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]
         [ProducesResponseType(typeof(IEnumerable<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetMyApplications(string userId)
         {

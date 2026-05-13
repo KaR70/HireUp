@@ -79,7 +79,7 @@ public class CompanyService : ICompanyService
                     Password = request.Password,
                 };
 
-                var registerResult = await _authService.RegisterAsync(registerRequest, cancellation);
+                var registerResult = await _authService.RegisterAsync(registerRequest, DefaultRoles.Company, cancellation);
 
                 if (registerResult.IsFailure)
                     return Result.Failure<AuthResponse>(registerResult.Error);

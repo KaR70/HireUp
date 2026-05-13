@@ -12,6 +12,7 @@ namespace HireUp.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Produces("application/json")]
+[Authorize(Roles = DefaultRoles.Company)]
 public class CompanyController : ControllerBase
 {
     private readonly ICompanyService _companyService;
@@ -74,7 +75,6 @@ public class CompanyController : ControllerBase
     /// <response code="401">Unauthorized - invalid or missing JWT token</response>
     /// <response code="404">Company not found for the authenticated user</response>
     [HttpGet("home")]
-    [Authorize]
     [ProducesResponseType(typeof(CompanyHomeResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

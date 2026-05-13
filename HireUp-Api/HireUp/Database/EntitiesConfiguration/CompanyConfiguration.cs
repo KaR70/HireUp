@@ -19,5 +19,14 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
             .WithOne(j => j.Company)
             .HasForeignKey(j => j.CompanyId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasData(
+            new Company
+            {
+                Id = DefaultUsers.CompanyId,
+                Name = DefaultUsers.CompanyName,
+                UserId = DefaultUsers.CompanyOwnerId
+            }
+        );
     }
 }

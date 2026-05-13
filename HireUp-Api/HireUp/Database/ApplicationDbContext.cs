@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace HireUp.Database;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
 {
     public DbSet<Skill> Skills { get; set; }
     public DbSet<JobListing> JobListings { get; set; }

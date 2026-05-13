@@ -52,7 +52,9 @@ public class AuthService : IAuthService
 
         if (result.Succeeded)
         {
-            var (token, expiresIn) = _jwtProvider.GenerateToken(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            
+            var (token, expiresIn) = _jwtProvider.GenerateToken(user, roles);
             var refreshToken = GenerateRefreshToken();
             var refreshTokenExpiration = DateTime.UtcNow.AddDays(_refreshTokenExpiryDays);
 
@@ -93,7 +95,9 @@ public class AuthService : IAuthService
 
         userRefreshToken.RevokedOn = DateTime.UtcNow;
 
-        var (newToken, expiresIn) = _jwtProvider.GenerateToken(user);
+        var roles = await _userManager.GetRolesAsync(user);
+        
+        var (newToken, expiresIn) = _jwtProvider.GenerateToken(user, roles);
         var newRefreshToken = GenerateRefreshToken();
         var refreshTokenExpiration = DateTime.UtcNow.AddDays(_refreshTokenExpiryDays);
 
@@ -134,7 +138,7 @@ public class AuthService : IAuthService
         return Result.Success();
     }
 
-    public async Task<Result> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default)
+    public async Task<Result> RegisterAsync(RegisterRequest request, string Role, CancellationToken cancellationToken = default)
     {
         var emailIsExists = await _userManager.Users.AnyAsync(x => x.Email == request.Email, cancellationToken);
 
@@ -150,6 +154,8 @@ public class AuthService : IAuthService
 
         if (result.Succeeded)
         {
+            await _userManager.AddToRoleAsync(user, Role);
+            
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
@@ -162,6 +168,16 @@ public class AuthService : IAuthService
 
         var error = result.Errors.First();
         return Result.Failure(new Error(error.Code, error.Description, StatusCodes.Status400BadRequest));
+    }
+
+    public async Task<Result> FreelancerRegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default)
+    {
+        var result = await RegisterAsync(request, DefaultRoles.Freelancer, cancellationToken);
+
+        if (result.IsFailure)
+            return Result.Failure(result.Error);
+
+        return Result.Success();
     }
 
 

@@ -171,7 +171,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken cancellationToken = default)
     {
-        var Result = await _authService.RegisterAsync(request, cancellationToken);
+        var Result = await _authService.FreelancerRegisterAsync(request, cancellationToken);
 
         return Result.IsSuccess ? Ok() : Result.ToProblem();
     }

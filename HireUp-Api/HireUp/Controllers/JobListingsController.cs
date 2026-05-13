@@ -60,6 +60,7 @@ public class JobListingsController : ControllerBase
     /// <returns>Returns a list of featured job listings</returns>
     /// <response code="200">Successfully retrieved featured jobs list</response>
     [HttpGet("featured")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(IEnumerable<JobListingSummaryResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetFeaturedJobs()
     {
@@ -104,6 +105,7 @@ public class JobListingsController : ControllerBase
     /// <returns>Returns a list of the most popular job listings (top 10)</returns>
     /// <response code="200">Successfully retrieved popular jobs list</response>
     [HttpGet("popular")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(IEnumerable<JobListingSummaryResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPopularJobs()
     {
@@ -148,6 +150,7 @@ public class JobListingsController : ControllerBase
     /// <response code="200">Successfully retrieved job listing details</response>
     /// <response code="404">Job listing not found with the specified ID</response>
     [HttpGet("{id}")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(JobListingDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetJobById(int id)
@@ -214,7 +217,7 @@ public class JobListingsController : ControllerBase
     /// <response code="401">Unauthorized - invalid or missing JWT token</response>
     /// <response code="404">Company not found for the authenticated user</response>
     [HttpGet("posted-jobs")]
-    [Authorize]
+    [Authorize(Roles = DefaultRoles.Company)]
     [ProducesResponseType(typeof(IEnumerable<CompanyJobSummaryResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -233,6 +236,7 @@ public class JobListingsController : ControllerBase
     }
 
     [HttpPost("{id}/save")]
+    [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]
     public async Task<IActionResult> SaveJob(int id, [FromQuery] string userId)
     {
         // التأكد من أن الوظيفة غير محفوظة مسبقاً لهذا المستخدم
@@ -252,6 +256,7 @@ public class JobListingsController : ControllerBase
 
     
     [HttpDelete("{id}/unsave")]
+    [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]
     public async Task<IActionResult> UnsaveJob(int id, [FromQuery] string userId)
     {
         await _savedJobRepository.RemoveAsync(id, userId);
@@ -291,7 +296,7 @@ public class JobListingsController : ControllerBase
     /// <response code="403">Forbidden - user is not authorized to update this job listing</response>
     /// <response code="404">Job listing not found</response>
     [HttpPut("{id}")]
-    [Authorize]
+    [Authorize(Roles = DefaultRoles.Company)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -338,7 +343,7 @@ public class JobListingsController : ControllerBase
     /// <response code="403">Forbidden - user is not authorized to delete this job listing</response>
     /// <response code="404">Job listing not found</response>
     [HttpDelete("{id}")]
-    [Authorize]
+    [Authorize(Roles = DefaultRoles.Company)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

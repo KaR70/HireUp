@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
-using System.Security.Claims;
 
 namespace HireUp.Controllers;
 
@@ -34,7 +33,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("me/notifications")]
-    [Authorize]
+    [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]
     public async Task<IActionResult> GetMyNotifications()
     {
         string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -45,7 +44,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("notifications/{id}/mark-as-read")]
-    [Authorize]
+    [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]
     public async Task<IActionResult> MarkAsRead(int id)
     {
         var result = await _notificationService.MarkAsReadAsync(id);
@@ -63,7 +62,7 @@ public class UserController : ControllerBase
     /// <response code="401">Unauthorized - invalid, expired, or missing JWT token</response>
     /// <response code="404">User profile not found</response>
     [HttpGet("me/profile-header")]
-    [Authorize]
+    [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]
     [ProducesResponseType(typeof(ProfileHeaderResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -121,7 +120,7 @@ public class UserController : ControllerBase
     /// <response code="401">Unauthorized - invalid, expired, or missing JWT token</response>
     /// <response code="404">User profile not found</response>
     [HttpGet("")]
-    [Authorize]
+    [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]
     public async Task<IActionResult> GetMyProfile(CancellationToken cancellationToken = default)
     {
         string? currentUserId = User.GetUserId();
@@ -244,7 +243,7 @@ public class UserController : ControllerBase
     /// <response code="404">User not found</response>
     /// <response code="422">Validation error in profile data (invalid field values, etc.)</response>
     [HttpPut("me")]
-    [Authorize]
+    [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]
     [ProducesResponseType(typeof(MyProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -291,7 +290,7 @@ public class UserController : ControllerBase
     /// <response code="200">Successfully retrieved user preferences</response>
     /// <response code="401">Unauthorized - invalid or missing JWT token</response>
     [HttpGet("me/preferences")]
-    [Authorize]
+    [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]
     [ProducesResponseType(typeof(UserPreferencesResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetMyPreferences()
@@ -325,7 +324,7 @@ public class UserController : ControllerBase
     /// <response code="400">Invalid request format or update operation failed</response>
     /// <response code="401">Unauthorized - invalid or missing JWT token</response>
     [HttpPut("me/preferences")]
-    [Authorize]
+    [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -351,7 +350,7 @@ public class UserController : ControllerBase
     /// <response code="404">User not found</response>
     /// <response code="500">Internal server error</response>
     [HttpGet("me/profile-picture")]
-    [Authorize]
+    [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]
     [ProducesResponseType(typeof(ProfilePictureResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -370,7 +369,7 @@ public class UserController : ControllerBase
     }
     
     [HttpPost("me/profile-picture")]
-    [Authorize]
+    [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]
     public async Task<IActionResult> UpdateProfilePicture([FromForm] ProfilePictureUpload profilePicture, CancellationToken cancellationToken = default)
     {
         string? currentUserId = User.GetUserId();
@@ -385,7 +384,7 @@ public class UserController : ControllerBase
     /// استرجاع الوظائف المحفوظة للمستخدم الحالي تلقائياً من التوكن
     /// </summary>
     [HttpGet("me/saved-jobs")]
-    [Authorize] // لازم يكون عامل Login عشان نقدر نعرف الـ ID بتاعه
+    [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")] // لازم يكون عامل Login عشان نقدر نعرف الـ ID بتاعه
     public async Task<IActionResult> GetMySavedJobs()
     {
         // سحب الـ User ID من الـ Claims الموجودة في الـ Token
@@ -410,7 +409,7 @@ public class UserController : ControllerBase
     /// استرجاع قائمة طلبات التقديم الخاصة بالمستخدم الحالي
     /// </summary>
     [HttpGet("me/applications")]
-    [Authorize]
+    [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]
     [ProducesResponseType(typeof(IEnumerable<JobApplicationSummaryResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetMyApplications()

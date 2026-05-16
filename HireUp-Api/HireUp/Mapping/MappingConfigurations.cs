@@ -1,5 +1,6 @@
 ﻿using HireUp.DTOs;
 using HireUp.DTOs.Company;
+using HireUp.DTOs.Disabled;
 using HireUp.DTOs.JobListing;
 
 namespace HireUp.Mapping;

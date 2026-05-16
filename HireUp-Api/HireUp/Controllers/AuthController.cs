@@ -1,6 +1,7 @@
 ﻿using HireUp.Authentication;
 using HireUp.DTOs.Authentication;
 using HireUp.DTOs.Company;
+using HireUp.DTOs.Disabled;
 using HireUp.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +20,13 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authService;
     private readonly JwtOptions _jwtOptions;
     private readonly ICompanyService _companyService;
+    private readonly IUserService _userService;
 
-    public AuthController(IAuthService authService, IOptions<JwtOptions> jwtOptions, ICompanyService companyService)
+    public AuthController(IAuthService authService, IOptions<JwtOptions> jwtOptions, ICompanyService companyService, IUserService userService)
     {
         _authService = authService;
         _companyService = companyService;
+        _userService = userService;
         _jwtOptions = jwtOptions.Value;
     }
 
@@ -31,28 +34,63 @@ public class AuthController : ControllerBase
     /// Authenticates a user and returns JWT access token and refresh token.
     /// </summary>
     /// <remarks>
-    /// Sample request:
+    /// This endpoint authenticates users and returns JWT tokens for subsequent API requests.
+    /// The access token is used for authenticating API requests, while the refresh token is used to obtain new access tokens when the current one expires.
+    ///
+    /// **Available Seeded Users for Testing:**
+    ///
+    /// The system includes three pre-configured test user accounts:
+    ///
+    /// 1. **Freelancer Account** (Role: Freelancer)
+    ///    - Email: Freelancer@Hire-Up.com
+    ///    - Password: P@ssword123
+    ///
+    /// 2. **Disabled Freelancer Account** (Role: DisabledFreelancer)
+    ///    - Email: Disabled-Freelancer@Hire-Up.com
+    ///    - Password: P@ssword123
+    ///
+    /// 3. **Company Owner Account** (Role: Company)
+    ///    - Email: Company@Hire-Up.com
+    ///    - Password: P@ssword123
+    ///
+    /// **Sample request (Freelancer):**
     ///
     ///     POST /auth
     ///     {
-    ///       "email": "user@example.com",
-    ///       "password": "SecurePassword123!"
+    ///       "email": "Freelancer@Hire-Up.com",
+    ///       "password": "P@ssword123"
     ///     }
     ///
-    /// Sample success response (200):
+    /// **Sample request (Disabled Freelancer):**
+    ///
+    ///     POST /auth
+    ///     {
+    ///       "email": "Disabled-Freelancer@Hire-Up.com",
+    ///       "password": "P@ssword123"
+    ///     }
+    ///
+    /// **Sample request (Company Owner):**
+    ///
+    ///     POST /auth
+    ///     {
+    ///       "email": "Company@Hire-Up.com",
+    ///       "password": "P@ssword123"
+    ///     }
+    ///
+    /// **Sample success response (200):**
     ///
     ///     {
-    ///       "id": "user-id",
-    ///       "email": "user@example.com",
-    ///       "firstName": "John",
-    ///       "lastName": "Doe",
-    ///       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    ///       "id": "019e1f8f-4e4e-7ef2-a8e4-1a72436e4b44",
+    ///       "email": "Freelancer@Hire-Up.com",
+    ///       "firstName": "Freelancer",
+    ///       "lastName": "1",
+    ///       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTllMWY4Zi00ZTRlLTdlZjItYThlNC0xYTcyNDM2ZTRiNDQiLCJlbWFpbCI6IkZyZWVsYW5jZXJASGlyZS1VcC5jb20iLCJuYW1lIjoiRnJlZWxhbmNlciAxIiwicm9sZSI6IkZyZWVsYW5jZXIiLCJleHAiOjE3MTU3MDI5OTksImlzcyI6IkhpcmVVcCIsImF1ZCI6IkhpcmVVcCJ9...",
     ///       "expiresIn": 3600,
-    ///       "refreshToken": "refresh-token-value",
-    ///       "refreshTokenExpiration": "2024-12-31T23:59:59Z"
+    ///       "refreshToken": "ABC123DEF456GHI789JKL012MNO345PQR678STU901VWX234YZ567ABC890DEF123GHI456",
+    ///       "refreshTokenExpiration": "2026-05-30T12:34:56Z"
     ///     }
     ///
-    /// Sample error response (401 - Invalid credentials):
+    /// **Sample error response (401 - Invalid credentials):**
     ///
     ///     {
     ///       "type": "https://tools.ietf.org/html/rfc7231#section-6.3.2",
@@ -220,6 +258,67 @@ public class AuthController : ControllerBase
             ? Ok(result.Value) 
             : result.ToProblem();
     }
+     
+     /// <summary>
+     /// Registers a new disabled user account with personal and demographic information.
+     /// </summary>
+     /// <remarks>
+     /// Creates a new user profile specifically for disabled individuals with comprehensive personal details.
+     /// The user account is created with the provided email and password.
+     /// After successful registration, a confirmation email is sent to the user's email address.
+     ///
+     /// Sample request:
+     ///
+     ///     {
+     ///       "firstName": "Ahmed",
+     ///       "lastName": "Al-Mansouri",
+     ///       "email": "ahmed.mansouri@example.com",
+     ///       "password": "SecurePassword123!",
+     ///       "gender": "male",
+     ///       "birthday": "1990-05-15",
+     ///       "phoneNumber": "+201112345678",
+     ///       "locationId": 1
+     ///     }
+     ///
+     /// Sample success response (200):
+     ///
+     ///     {
+     ///       "id": "user-id-123",
+     ///       "email": "ahmed.mansouri@example.com",
+     ///       "firstName": "Ahmed",
+     ///       "lastName": "Al-Mansouri"
+     ///     }
+     ///
+     /// Sample error response (409 - Email already exists):
+     ///
+     ///     {
+     ///       "type": "https://tools.ietf.org/html/rfc7231#section-6.3.2",
+     ///       "title": "Conflict",
+     ///       "status": 409,
+     ///       "detail": "Another user with the same email is already exists",
+     ///       "error": ["User.DuplicatedEmail", "Another user with the same email is already exists"]
+     ///     }
+     /// </remarks>
+     /// <param name="request">Disabled user registration details including personal information, credentials, and location</param>
+     /// <param name="cancellationToken">Cancellation token for the async operation</param>
+     /// <returns>Returns the created disabled user profile information</returns>
+     /// <response code="200">Registration successful - confirmation email sent to user's email address</response>
+     /// <response code="400">Invalid request format or validation failed</response>
+     /// <response code="409">Email already registered by another user</response>
+     /// <response code="422">Validation error (weak password, invalid gender, invalid date, invalid phone number, etc.)</response>
+     [HttpPost("register/disabled")]
+     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+     [ProducesResponseType(StatusCodes.Status409Conflict)]
+     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+     public async Task<IActionResult> RegisterDisabled([FromBody] DisabledRegisterRequest request, CancellationToken cancellationToken)
+     {
+         var result = await _userService.DisabledRegister(request, cancellationToken);
+
+         return result.IsSuccess
+             ? Ok(result.Value)
+             : result.ToProblem();
+     }
     
     /// <summary>
     /// Confirms a user's email address using a confirmation code.

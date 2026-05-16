@@ -8,5 +8,7 @@ public interface ILookupService
     Task<Result<IEnumerable<LocationSummaryResponse>>> GetLocationsAsync(CancellationToken cancellationToken = default);
     Task<Result<IEnumerable<IndustryResponse>>> GetIndustriesAsync(CancellationToken cancellationToken = default);
     Task<Result<IEnumerable<LookupDto>>> GetExperienceLevelsAsync(CancellationToken cancellationToken = default);
+    Task<Result<IEnumerable<LookupDto>>> GetDisabilityTypesAsync(CancellationToken cancellationToken = default);
+    Task<Result<IEnumerable<LookupDto>>> GetAccessibilityNeedsAsync(CancellationToken cancellationToken = default);
 
 }

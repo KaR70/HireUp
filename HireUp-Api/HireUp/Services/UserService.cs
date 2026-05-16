@@ -4,6 +4,7 @@ using HireUp.Database;
 using HireUp.Entities;
 using HireUp.DTOs.User;
 using HireUp.DTOs.Common;
+using HireUp.DTOs.Disabled;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Mapster;
@@ -18,18 +19,21 @@ public class UserService : IUserService
     private readonly ApplicationDbContext _context;
     private readonly UrlBuilderService _urlBuilderService;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IAuthService _authService;
 
     public UserService(
         UserManager<ApplicationUser> userManager,
         IFileService fileService,
         UrlBuilderService urlBuilderService,
         IUnitOfWork unitOfWork,
+        IAuthService authService,
         ApplicationDbContext context)
     {
         _userManager = userManager;
         _fileService = fileService;
         _urlBuilderService = urlBuilderService;
         _unitOfWork = unitOfWork;
+        _authService = authService;
         _context = context;
     }
 
@@ -285,5 +289,75 @@ public class UserService : IUserService
         };
 
         return Result.Success(result);
+    }
+
+    public async Task<Result<AuthResponse>> DisabledRegister(DisabledRegisterRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var strategy = _unitOfWork.CreateExecutionStrategy();
+
+        return await strategy.ExecuteAsync(async () =>
+        {
+
+            await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
+
+            try
+            {
+                var registerRequest = new RegisterRequest
+                {
+                    Email = request.Email,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    Password = request.Password
+                };
+                
+                var registerResult = await _authService.RegisterAsync(registerRequest, DefaultRoles.DisabledFreelancer, cancellationToken);
+
+                if (registerResult.IsFailure)
+                    return Result.Failure<AuthResponse>(registerResult.Error);
+                
+                if (!await _unitOfWork.Locations.ExistsAsync(request.LocationId))
+                    return Result.Failure<AuthResponse>(LocationErrors.NotFound);
+                
+                var user = await _userManager.FindByEmailAsync(request.Email);
+                
+                if (user == null)
+                    return Result.Failure<AuthResponse>(UserErrors.UserNotFound);
+                
+                user.Birthday = request.Birthday;
+                user.PhoneNumber = request.PhoneNumber;
+                user.LocationId = request.LocationId;
+                
+                if (string.IsNullOrEmpty(request.Gender))
+                {
+                    user.Gender = null;
+                }
+                else if (Enum.TryParse<Gender>(request.Gender, true, out var genderEnum))
+                {
+                    user.Gender = genderEnum;
+                }
+                else
+                {
+                    user.Gender = null;
+                }
+                
+                var updatedResult = await _userManager.UpdateAsync(user);
+                if (!updatedResult.Succeeded)
+                    return Result.Failure<AuthResponse>(UserErrors.UserUpdateFailed);
+                
+                await transaction.CommitAsync(cancellationToken);
+            
+                var authResponse = await _authService.GetTokenAsync(request.Email, request.Password, cancellationToken);
+                return authResponse;
+                
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+
+                var realErrorMessage = ex.InnerException?.Message ?? ex.Message;
+                return Result.Failure<AuthResponse>(new Error("Debug.Crash", realErrorMessage));
+            }
+        });
     }
 }

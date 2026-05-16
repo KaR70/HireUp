@@ -1,10 +1,12 @@
 ﻿using HireUp.DTOs.User;
 using HireUp.Abstraction;
+using HireUp.DTOs.Disabled;
 
 namespace HireUp.Abstraction;
 
 public interface IUserService
 {
+    Task<Result<AuthResponse>> DisabledRegister(DisabledRegisterRequest request, CancellationToken cancellationToken = default);
     Task<UserPreferencesResponse> GetUserPreferencesAsync(string userId);
     Task<Result> UpdateUserPreferencesAsync(string userId, UpdateUserPreferencesRequest request);
     Task<Result<MyProfileResponse>> GetMyProfileAsync(string currentUserId, CancellationToken cancellationToken = default);

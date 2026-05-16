@@ -98,4 +98,28 @@ public class LookupService : ILookupService
         
         return Result.Success(response);
     }
+    
+    public async Task<Result<IEnumerable<LookupDto>>> GetDisabilityTypesAsync(CancellationToken cancellationToken = default)
+    {
+        var disabilityTypes = await _unitOfWork.DisabilityTypes.GetAllAsNoTrackingAsync(cancellationToken);
+
+        if (!disabilityTypes.Any())
+            return Result.Failure<IEnumerable<LookupDto>>(DisabilityTypesErrors.NotFound);
+
+        var response = disabilityTypes.Adapt<IEnumerable<LookupDto>>();
+        
+        return Result.Success(response);
+    }
+    
+    public async Task<Result<IEnumerable<LookupDto>>> GetAccessibilityNeedsAsync(CancellationToken cancellationToken = default)
+    {
+        var accessibilityNeeds = await _unitOfWork.AccessibilityNeeds.GetAllAsNoTrackingAsync(cancellationToken);
+
+        if (!accessibilityNeeds.Any())
+            return Result.Failure<IEnumerable<LookupDto>>(AccessbilityNeedsErrors.NotFound);
+
+        var response = accessibilityNeeds.Adapt<IEnumerable<LookupDto>>();
+        
+        return Result.Success(response);
+    }
 }

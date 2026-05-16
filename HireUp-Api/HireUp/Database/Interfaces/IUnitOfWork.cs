@@ -15,6 +15,8 @@ namespace HireUp.Database.Interfaces
         public IFollowsRepository Follows { get;}
         public IRepository<Industry> Industry { get; }
         IExperienceLevelRepository ExperienceLevel { get; }
+        IDisabilityTypesRepository DisabilityTypes { get; }
+        IAccessibilityNeedsRepository AccessibilityNeeds { get; }
         
         Task<int> SaveChangesAsync();
         Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);

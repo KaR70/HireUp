@@ -1,4 +1,6 @@
-﻿namespace HireUp.Database.Interfaces
+﻿using HireUp.DTOs;
+
+namespace HireUp.Database.Interfaces
 {
     public interface IJobListingRepository : IRepository<JobListing>
     {
@@ -14,5 +16,7 @@
             CancellationToken cancellationToken = default);
 
         Task<JobListing?> GetByIdWithDetailsAsync(int id, CancellationToken cancellationToken = default);
+
+        Task<IEnumerable<JobListing>> SearchJobsAsync(JobSearchFilterDto filters, CancellationToken ct);
     }
 }

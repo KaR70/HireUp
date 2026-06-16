@@ -4,6 +4,7 @@ using HireUp.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HireUp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260615113856_addJobAccessibilityNeed")]
+    partial class addJobAccessibilityNeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -319,7 +322,7 @@ namespace HireUp.Migrations
                             Id = "019e1f8f-4e4e-7ef2-a8e4-1a72436e4b44",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "019e1f8f-4e4e-7ef2-a8e4-1a73be063a7f",
-                            CreatedAt = new DateTime(2026, 6, 16, 8, 13, 28, 282, DateTimeKind.Utc).AddTicks(249),
+                            CreatedAt = new DateTime(2026, 6, 15, 11, 38, 54, 904, DateTimeKind.Utc).AddTicks(8174),
                             Email = "Freelancer@Hire-Up.com",
                             EmailConfirmed = true,
                             FirstName = "Freelancer",
@@ -339,7 +342,7 @@ namespace HireUp.Migrations
                             Id = "019e1f8f-4e4e-7ef2-a8e4-1a741a085ba4",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "019e1f8f-4e4e-7ef2-a8e4-1a75706084e3",
-                            CreatedAt = new DateTime(2026, 6, 16, 8, 13, 28, 282, DateTimeKind.Utc).AddTicks(604),
+                            CreatedAt = new DateTime(2026, 6, 15, 11, 38, 54, 904, DateTimeKind.Utc).AddTicks(8529),
                             Email = "Disabled-Freelancer@Hire-Up.com",
                             EmailConfirmed = true,
                             FirstName = "Freelancer",
@@ -359,7 +362,7 @@ namespace HireUp.Migrations
                             Id = "019e1f8f-4e4e-7ef2-a8e4-1a761414137c",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "019e1f8f-4e4e-7ef2-a8e4-1a777d50816d",
-                            CreatedAt = new DateTime(2026, 6, 16, 8, 13, 28, 282, DateTimeKind.Utc).AddTicks(772),
+                            CreatedAt = new DateTime(2026, 6, 15, 11, 38, 54, 904, DateTimeKind.Utc).AddTicks(8711),
                             Email = "Company@Hire-Up.com",
                             EmailConfirmed = true,
                             FirstName = "Company",
@@ -760,9 +763,6 @@ namespace HireUp.Migrations
                     b.Property<int>("LocationId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OfficeTypeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Requirements")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -794,8 +794,6 @@ namespace HireUp.Migrations
                     b.HasIndex("JobTypeId");
 
                     b.HasIndex("LocationId");
-
-                    b.HasIndex("OfficeTypeId");
 
                     b.ToTable("JobListings");
                 });
@@ -1637,10 +1635,6 @@ namespace HireUp.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("HireUp.Entities.OfficeType", "OfficeType")
-                        .WithMany()
-                        .HasForeignKey("OfficeTypeId");
-
                     b.Navigation("Company");
 
                     b.Navigation("Employer");
@@ -1652,8 +1646,6 @@ namespace HireUp.Migrations
                     b.Navigation("JobType");
 
                     b.Navigation("Location");
-
-                    b.Navigation("OfficeType");
                 });
 
             modelBuilder.Entity("HireUp.Entities.MockInterview", b =>

@@ -1,4 +1,5 @@
 ﻿using HireUp.Database.Interfaces;
+using HireUp.DTOs;
 using HireUp.DTOs.JobListing;
 using Microsoft.IdentityModel.Tokens;
 
@@ -121,5 +122,14 @@ public class JobListingService : IJobListingService
         await _unitOfWork.SaveChangesAsync();
         
         return Result.Success();
+    }
+    
+    public async Task<Result<IEnumerable<JobListingSummaryResponse>>> SearchJobsAsync(JobSearchFilterDto filters, CancellationToken ct)
+    {
+        var jobs = await _unitOfWork.JobListings.SearchJobsAsync(filters, ct);
+
+        var response = jobs.Adapt<IEnumerable<JobListingSummaryResponse>>();
+
+        return Result.Success(response);
     }
 }

@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HireUp.Abstraction.Extention;
+using Microsoft.EntityFrameworkCore;
 using HireUp.Database.Interfaces;
+using HireUp.DTOs;
 
 namespace HireUp.Database.Repositories
 {
@@ -73,6 +75,8 @@ namespace HireUp.Database.Repositories
                 .Include(j => j.Company)
                 .Include(j => j.ExperienceLevel)
                 .Include(j => j.JobCategory)
+                .Include(j => j.JobAccessibilityNeeds)
+                    .ThenInclude(jan => jan.AccessibilityNeed)
                 .FirstOrDefaultAsync(j => j.Id == id && !j.IsDeleted);
         }
 
@@ -83,7 +87,21 @@ namespace HireUp.Database.Repositories
                 .Where(x => x.CompanyId == companyId && !x.IsDeleted && x.ExpiryDate > DateOnly.FromDateTime(DateTime.UtcNow))
                 .Include(x => x.Applications)
                 .ToListAsync(cancellationToken);
-
-
+        
+          
+        public async Task<IEnumerable<JobListing>> SearchJobsAsync(JobSearchFilterDto filters, CancellationToken ct)
+        {
+            return await _dbSet
+                .Include(j => j.Company)
+                .Include(j => j.ExperienceLevel)
+                .Include(j => j.JobType)
+                .Include(j => j.Location)
+                .Include(j => j.JobAccessibilityNeeds)
+                    .ThenInclude(jan => jan.AccessibilityNeed)
+                .AsQueryable()
+                .ApplyFilters(filters)
+                .ToListAsync(ct);
+        }
     }
+  
 }

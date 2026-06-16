@@ -36,13 +36,18 @@ namespace HireUp.Entities
         public int LocationId { get; set; }
         public Location Location { get; set; }
         
+        public int? OfficeTypeId { get; set; } 
+        public OfficeType? OfficeType { get; set; }
+        
         public ApplicationUser Employer { get; set; } = null!;
         public ExperienceLevel ExperienceLevel { get; set; }
         public Company Company { get; set; }
         public JobCategory? JobCategory { get; set; }
+        
         public ICollection<Skill> RequiredSkills { get; set; } = new List<Skill>();
         public ICollection<JobApplication> Applications { get; set; } = new List<JobApplication>();
         public ICollection<SavedJob> SavedJobs { get; set; } = new List<SavedJob>();
+        public ICollection<JobAccessibilityNeed> JobAccessibilityNeeds { get; set; } = new List<JobAccessibilityNeed>();
     }
 
    

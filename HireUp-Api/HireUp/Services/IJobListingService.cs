@@ -1,4 +1,5 @@
-﻿using HireUp.DTOs.JobListing;
+﻿using HireUp.DTOs;
+using HireUp.DTOs.JobListing;
 
 namespace HireUp.Services;
 
@@ -12,4 +13,6 @@ public interface IJobListingService
 
     Task<Result> UpdateAsync(string userId, int jobId, UpdateRequest request, CancellationToken cancellationToken = default);
     Task<Result> DeleteAsync(string userId, int jobId, CancellationToken cancellationToken = default);
+
+    Task<Result<IEnumerable<JobListingSummaryResponse>>> SearchJobsAsync(JobSearchFilterDto filters, CancellationToken ct);
 }

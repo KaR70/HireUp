@@ -127,10 +127,7 @@ public class UserController : ControllerBase
         if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
         var result = await _userService.GetMyProfileAsync(currentUserId, cancellationToken);
-        if (result.IsFailure) return result.ToProblem();
-
-        var profile = result.Value;
-        profile.ProfilePictureUrl = _urlBuilderService.ToAbsoluteUrl(profile.ProfilePictureUrl);
+        
         return result.IsSuccess
             ? Ok(result.Value)
             : result.ToProblem();

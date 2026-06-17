@@ -16,7 +16,7 @@ namespace HireUp.Database.Repositories
 
         public virtual async Task<T?> GetByIdAsync(int id) => await _dbSet.FindAsync(id);  
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.ToListAsync();
+        public virtual async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate) => await _dbSet.Where(predicate).ToListAsync();
         public virtual async Task<IEnumerable<T>> GetAllAsNoTrackingAsync(CancellationToken cancellationToken = default) 
             => await _dbSet.AsNoTracking().ToListAsync();
 

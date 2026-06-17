@@ -16,7 +16,4 @@
     <None Include=".dockerignore" />
     <None Include="UpdateMyProfileRequest.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="TOOLS_DOCUMENTATION.md" />
-  </ItemGroup>
 </Project>

@@ -74,6 +74,7 @@ namespace HireUp.Database.Repositories
             return await _dbSet
                 .Include(j => j.Company)
                 .Include(j => j.ExperienceLevel)
+                .Include(j => j.JobType)
                 .Include(j => j.JobCategory)
                 .Include(j => j.JobAccessibilityNeeds)
                     .ThenInclude(jan => jan.AccessibilityNeed)

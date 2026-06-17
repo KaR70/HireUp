@@ -49,7 +49,9 @@ public class MappingConfigurations : IRegister
         config.NewConfig<JobListing, JobListingDetailResponse>()
             .Map(dest => dest.AboutCompany, src => src.Company != null ? src.Company.Description : "Company information not available.")
             .Map(dest => dest.AccessibilityNeeds, 
-                src => src.JobAccessibilityNeeds.Select(jan => jan.AccessibilityNeed.Name).ToList());
+                src => src.JobAccessibilityNeeds != null 
+                    ? src.JobAccessibilityNeeds.Select(jan => jan.AccessibilityNeed.Name).ToList() 
+                    : new List<string>());
 
         config.NewConfig<Company, RegisterProfileRequest>()
             .Map(dest => dest.FoundedYear, src => src.FoundedYear);

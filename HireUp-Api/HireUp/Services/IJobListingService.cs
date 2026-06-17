@@ -15,4 +15,5 @@ public interface IJobListingService
     Task<Result> DeleteAsync(string userId, int jobId, CancellationToken cancellationToken = default);
 
     Task<Result<IEnumerable<JobListingSummaryResponse>>> SearchJobsAsync(JobSearchFilterDto filters, CancellationToken ct);
+    Task<Result<int>> CreateAsync(CreateJobRequest request, string userId, CancellationToken cancellationToken = default);
 }

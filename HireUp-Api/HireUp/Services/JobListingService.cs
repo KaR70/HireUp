@@ -9,11 +9,13 @@ public class JobListingService : IJobListingService
 {
     private readonly IJobListingRepository _jobListingRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public JobListingService(IJobListingRepository jobListingRepository, IUnitOfWork unitOfWork)
+    public JobListingService(IJobListingRepository jobListingRepository, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
     {
         _jobListingRepository = jobListingRepository;
         _unitOfWork = unitOfWork;
+        _userManager = userManager;
     }
 
     public async Task<Result<IEnumerable<JobListingSummaryResponse>>> GetFeaturedAsync()
@@ -131,5 +133,43 @@ public class JobListingService : IJobListingService
         var response = jobs.Adapt<IEnumerable<JobListingSummaryResponse>>();
 
         return Result.Success(response);
+    }
+
+    public async Task<Result<int>> CreateAsync(CreateJobRequest request, string userId, CancellationToken cancellationToken = default)
+    {
+        var company = await _unitOfWork.Companies.GetByUserIdAsync(userId,  cancellationToken);
+        
+        if (company is null)
+            return Result.Failure<int>(CompanyErrors.NotFound);
+
+        var job = new JobListing
+        {
+            Title = request.Title,
+            Description = request.Description,
+            Salary = request.Salary,
+            ExpiryDate = request.EndDate,
+            Requirements = request.Requirements,
+            EmployerId = userId,
+            CompanyId = company.Id,
+            ExperienceLevelId = request.ExperienceLevelId,
+            JobTypeId = request.JobTypeId,
+            LocationId = request.LocationId
+        };
+        
+        if (request.AccessibilityNeedIds?.Any() == true)
+        {
+            var needs = await _unitOfWork.AccessibilityNeeds
+                .GetAllAsync(n => request.AccessibilityNeedIds.Contains(n.Id));
+
+            job.JobAccessibilityNeeds = needs.Select(n => new JobAccessibilityNeed 
+            { 
+                AccessibilityNeedId = n.Id 
+            }).ToList();
+        }
+        
+        await _unitOfWork.JobListings.AddAsync(job);
+        await _unitOfWork.SaveChangesAsync();
+
+        return Result.Success(job.Id);
     }
 }

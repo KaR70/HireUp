@@ -463,4 +463,93 @@ public class JobListingsController : ControllerBase
             ? Ok(result.Value) 
             : result.ToProblem();
     }
+    
+    /// <summary>
+    /// Creates a new job listing posted by the authenticated company.
+    /// </summary>
+    /// <remarks>
+    /// Allows company users to post a new job listing to the platform.
+    /// The job listing is created with the authenticated company's ID automatically.
+    /// Returns 201 Created with the location header pointing to the newly created job listing.
+    ///
+    /// Sample request:
+    ///
+    ///     {
+    ///       "title": "Senior Full Stack Developer",
+    ///       "description": "We are looking for an experienced full stack developer to join our innovative team. You will work on cutting-edge technologies and lead technical initiatives across our products.",
+    ///       "requirements": "7+ years of professional development experience. Expertise in .NET, C#, React, and SQL Server. Experience with cloud platforms (Azure preferred). Strong database design and system architecture knowledge.",
+    ///       "salary": 180000,
+    ///       "isInclusiveHiring": true,
+    ///       "disabilitySupport": "Flexible work hours, fully remote position, adjustable workstations, and screen reader compatible tools available",
+    ///       "expiryDate": "2024-08-31",
+    ///       "isActive": true,
+    ///       "experienceLevelId": 4,
+    ///       "jobRoleId": 2,
+    ///       "locationId": 1,
+    ///       "officeTypeId": 1,
+    ///       "accessibilityNeedIds": [1, 3, 5, 8]
+    ///     }
+    ///
+    /// Sample success response (201 Created):
+    ///
+    ///     {
+    ///       "id": 42,
+    ///       "message": "Job listing created successfully"
+    ///     }
+    ///
+    /// Sample error response (400 - Validation failed):
+    ///
+    ///     {
+    ///       "type": "https://tools.ietf.org/html/rfc7231#section-6.3.2",
+    ///       "title": "Bad Request",
+    ///       "status": 400,
+    ///       "detail": "Job title is required and must be less than 200 characters",
+    ///       "error": ["JobListing.InvalidTitle", "Job title is required and must be less than 200 characters"]
+    ///     }
+    ///
+    /// Sample error response (401 - Unauthorized):
+    ///
+    ///     {
+    ///       "type": "https://tools.ietf.org/html/rfc7231#section-6.3.2",
+    ///       "title": "Unauthorized",
+    ///       "status": 401,
+    ///       "detail": "Invalid or missing JWT token",
+    ///       "error": ["Unauthorized", "Invalid or missing JWT token"]
+    ///     }
+    ///
+    /// Sample error response (403 - Forbidden - User is not a company):
+    ///
+    ///     {
+    ///       "type": "https://tools.ietf.org/html/rfc7231#section-6.3.2",
+    ///       "title": "Forbidden",
+    ///       "status": 403,
+    ///       "detail": "Only company users can create job listings",
+    ///       "error": ["JobListing.Forbidden", "Only company users can create job listings"]
+    ///     }
+    /// </remarks>
+    /// <param name="request">Job listing creation details including title, description, requirements, salary, and accessibility accommodations</param>
+    /// <param name="cancellationToken">Cancellation token for the async operation</param>
+    /// <returns>Returns 201 Created with the ID of the newly created job listing</returns>
+    /// <response code="201">Job listing created successfully - returns the ID and location header to retrieve the new job</response>
+    /// <response code="400">Invalid request format or validation failed (missing required fields, invalid data types, etc.)</response>
+    /// <response code="401">Unauthorized - invalid or missing JWT token</response>
+    /// <response code="403">Forbidden - user role must be Company to create job listings</response>
+    /// <response code="422">Unprocessable Entity - validation error (expiry date in past, invalid IDs, etc.)</response>
+    [HttpPost]
+    [Authorize(Roles = DefaultRoles.Company)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> Create([FromBody] CreateJobRequest request, CancellationToken cancellationToken)
+    {
+        var userId = User.GetUserId();
+    
+        var response = await _jobListingService.CreateAsync(request, userId, cancellationToken);
+    
+        return response.IsSuccess
+            ? CreatedAtAction(nameof(GetJobById), new { id = response.Value }, new { id = response.Value })
+            : response.ToProblem();
+    }
 }

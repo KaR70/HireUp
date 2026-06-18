@@ -153,7 +153,8 @@ public class JobListingService : IJobListingService
             CompanyId = company.Id,
             ExperienceLevelId = request.ExperienceLevelId,
             JobTypeId = request.JobTypeId,
-            LocationId = request.LocationId
+            LocationId = request.LocationId,
+            IsFeatured = true
         };
         
         if (request.AccessibilityNeedIds?.Any() == true)

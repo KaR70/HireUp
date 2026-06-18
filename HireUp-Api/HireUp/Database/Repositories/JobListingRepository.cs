@@ -50,10 +50,13 @@ namespace HireUp.Database.Repositories
         public async Task<IEnumerable<JobListing>> GetFeaturedAsync()
         {
             return await _dbSet
-                .Where(j => j.IsFeatured && j.IsActive && j.ExpiryDate > DateOnly.FromDateTime(DateTime.UtcNow) && !j.IsDeleted)
+                .Where(j => j.IsFeatured && j.IsActive && !j.IsDeleted)
                 .Include(j => j.Company)
+                .Include(j => j.JobType)
                 .Include(j => j.ExperienceLevel)
                 .Include(j => j.JobCategory)
+                .Include(j => j.JobAccessibilityNeeds)
+                    .ThenInclude(jan => jan.AccessibilityNeed)
                 .ToListAsync();
         }
 

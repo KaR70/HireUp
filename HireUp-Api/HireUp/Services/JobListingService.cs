@@ -154,7 +154,8 @@ public class JobListingService : IJobListingService
             ExperienceLevelId = request.ExperienceLevelId,
             JobTypeId = request.JobTypeId,
             LocationId = request.LocationId,
-            IsFeatured = true
+            IsFeatured = true,
+            IsActive = true
         };
         
         if (request.AccessibilityNeedIds?.Any() == true)

@@ -39,8 +39,10 @@ public class MappingConfigurations : IRegister
 
             .Map(dest => dest.Tags, src => new List<string>
             {
-                src.JobType.Name,
+                src.JobType != null ? src.JobType.Name : "General",
+
                 src.ExperienceLevel != null ? src.ExperienceLevel.Name : "Any Level",
+
                 src.JobCategory != null ? src.JobCategory.Name : "General"
             })
             

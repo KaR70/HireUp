@@ -28,43 +28,61 @@ namespace HireUp.Controllers
         }
 
         /// <summary>
-        /// Apply to a job listing with a cover letter and a resume file (multipart/form-data).
+        /// Submit a job application with a cover letter and resume file.
         /// </summary>
         /// <remarks>
+        /// Allows freelance users (both standard and disabled) to apply for job listings by submitting a cover letter and resume file.
+        /// The resume file is securely stored on the server and a database record is created tracking the application.
+        /// This endpoint requires authentication and accepts multipart/form-data content.
+        ///
+        /// Supported file formats: PDF, DOCX, DOC, TXT
+        /// Maximum file size: Handled by server configuration
+        ///
         /// Sample request (multipart/form-data):
-        /// 
-        /// POST /api/JobApplications/apply-job
-        /// Content-Type: multipart/form-data
-        /// Form Data:
-        /// - jobListingId:123
-        /// - coverLetter: "I am excited to apply for this position..."
-        /// - resumeFile: (file upload - PDF or DOCX)
-        /// - userId: "user-1"
-        /// 
+        ///
+        ///     POST /api/jobapplications/apply-job
+        ///     Content-Type: multipart/form-data
+        ///
+        ///     Form Fields:
+        ///     - jobListingId: 42 (integer)
+        ///     - coverLetter: "I am very interested in this Senior C# Developer position. With 7+ years of experience in .NET development and a proven track record of delivering enterprise solutions, I believe I am an excellent fit for your team. I am particularly drawn to your company's commitment to accessibility and inclusive hiring practices." (string)
+        ///     - resumeFile: [binary file] (multipart file - PDF or DOCX)
+        ///     - userId: "user-123abc" (string - current user's ID)
+        ///
         /// Sample success response (200):
-        /// 
-        /// {
-        /// "message": "تم التقديم وحفظ الملف بنجاح!",
-        /// "fileName": "e7b5f6b3-9c3a-4d1f-8a2b-0f1c2d3e4a5b.pdf"
-        /// }
-        /// 
-        /// Sample error response (400 - missing file):
-        /// 
-        /// "ملف السيرة الذاتية مطلوب."
-        /// 
-        /// Sample error response (500 - database/other error):
-        /// 
-        /// "خطأ في الداتابيز: <error message>"
+        ///
+        ///     {
+        ///       "message": "تم التقديم وحفظ الملف بنجاح!",
+        ///       "fileName": "e7b5f6b3-9c3a-4d1f-8a2b-0f1c2d3e4a5b.pdf"
+        ///     }
+        ///
+        /// Sample validation error response (400 - Missing resume file):
+        ///
+        ///     "ملف السيرة الذاتية مطلوب."
+        ///
+        /// Sample server error response (500 - Database/file system error):
+        ///
+        ///     "خطأ في الداتابيز: Exception message details..."
         /// </remarks>
-        /// <param name="dto">Application DTO containing JobListingId, CoverLetter and ResumeFile (IFormFile)</param>
-        /// <param name="userId">The id of the applying user (provided in form data for testing via Swagger)</param>
-        /// <returns>Returns a success message and the saved filename on success</returns>
+        /// <param name="dto">Job application form data containing:
+        ///   - jobListingId: ID of the job listing to apply for (required)
+        ///   - coverLetter: Cover letter text explaining why you're interested (optional but recommended)
+        ///   - resumeFile: Resume file in PDF, DOCX, DOC, or TXT format (required)</param>
+        /// <param name="userId">The unique identifier of the authenticated user submitting the application (required)</param>
+        /// <returns>Returns a success message with the stored filename if application was successfully submitted and resume file was saved</returns>
+        /// <response code="200">Application submitted successfully - resume file saved and database record created</response>
+        /// <response code="400">Invalid request - missing required fields (resume file is required), invalid file format, or file size exceeds limit</response>
+        /// <response code="401">Unauthorized - invalid or missing JWT token, or user is not authenticated as freelancer/disabled-freelancer</response>
+        /// <response code="403">Forbidden - user does not have the required role (Freelancer or DisabledFreelancer)</response>
+        /// <response code="500">Internal server error - database operation failed, file system error, or other unexpected error</response>
         [HttpPost("apply-job")]
         [Authorize(Roles = $"{DefaultRoles.Freelancer},{DefaultRoles.DisabledFreelancer}")]        
         [Consumes("multipart/form-data")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Apply([FromForm] JobApplicationCreateDto dto, [FromForm] string userId)
         {
             try
